@@ -1,0 +1,118 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using RiPOS.API.Utilities.ActionFilters;
+using RiPOS.Core.Interfaces;
+using RiPOS.Shared.Models;
+using RiPOS.Shared.Models.Requests;
+using RiPOS.Shared.Models.Responses;
+
+namespace RiPOS.API.Controllers
+{
+    [Route("api/stores")]
+    public class StoreController : ControllerBase
+    {
+        private readonly IStoreService _storeService;
+        private readonly UserSession session = new UserSession() { CompanyId = 2, UserId = 1 };
+
+        public StoreController(IStoreService storeService)
+        {
+            _storeService = storeService;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<ICollection<StoreResponse>>> GetStores()
+        {
+            var stores = await _storeService.GetAllAsync(session.CompanyId);
+            return Ok(stores);
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<StoreResponse>> GetStoreById([FromRoute] int id)
+        {
+            var store = await _storeService.GetByIdAsync(id, session.CompanyId);
+
+            if (store == null)
+            {
+                var response = new MessageResponse<string>()
+                {
+                    Success = false,
+                    Message = "Tienda no encontrada"
+                };
+                return NotFound(response);
+            }
+
+            return Ok(store);
+        }
+
+        [HttpPost]
+        [ModelValidation]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult<MessageResponse<StoreResponse>>> AddStore([FromBody] StoreRequest request)
+        {
+            var responseMessage = await _storeService.AddAsync(request, session);
+
+            if (!responseMessage.Success)
+            {
+                return BadRequest(responseMessage);
+            }
+
+            return Ok(responseMessage);
+        }
+
+        [HttpPut("{id}")]
+        [ModelValidation]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateStore([FromRoute] int id, [FromBody] StoreRequest request)
+        {
+            if (!await _storeService.ExistsByIdAsync(id, session.CompanyId))
+            {
+                var response = new MessageResponse<string>()
+                {
+                    Success = false,
+                    Message = "Tienda no encontrada"
+                };
+                return NotFound(response);
+            }
+
+            var responseMessage = await _storeService.UpdateAsync(id, request, session);
+
+            if (!responseMessage.Success)
+            {
+                return BadRequest(responseMessage);
+            }
+
+            return Ok(responseMessage);
+        }
+
+        [HttpDelete("{id}")]
+        [ModelValidation]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<MessageResponse<string>>> DeactivateStore([FromRoute] int id)
+        {
+            if (!await _storeService.ExistsByIdAsync(id, session.CompanyId))
+            {
+                var response = new MessageResponse<string>()
+                {
+                    Success = false,
+                    Message = "Tienda no encontrada"
+                };
+                return NotFound(response);
+            }
+
+            var responseMessage = await _storeService.DeactivateAsync(id, session);
+
+            if (!responseMessage.Success)
+            {
+                return BadRequest(responseMessage);
+            }
+
+            return Ok(responseMessage);
+        }
+    }
+}

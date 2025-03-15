@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RiPOS.Domain\RiPOS.Domain.csproj" />
+    <ProjectReference Include="..\RiPOS.Repository\RiPOS.Repository.csproj" />
+    <ProjectReference Include="..\RiPOS.Shared\RiPOS.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

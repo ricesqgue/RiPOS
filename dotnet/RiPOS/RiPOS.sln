@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiPOS.API", "RiPOS.API\RiPOS.API.csproj", "{7BFFD24F-0307-4FB2-81C3-21A69ACDABA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiPOS.Shared", "RiPOS.Shared\RiPOS.Shared.csproj", "{0ADC9D17-81DD-4601-9409-0E10218083A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiPOS.Core", "RiPOS.Core\RiPOS.Core.csproj", "{6C5FAD1B-BDF6-4034-A005-AF7BB44264CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiPOS.Database", "RiPOS.Database\RiPOS.Database.csproj", "{DF598CD7-70A7-4776-B5C1-6EF27CF9427D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiPOS.Domain", "RiPOS.Domain\RiPOS.Domain.csproj", "{E323FE05-53BC-45F1-BDDF-621E1F20EE1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiPOS.Repository", "RiPOS.Repository\RiPOS.Repository.csproj", "{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7BFFD24F-0307-4FB2-81C3-21A69ACDABA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BFFD24F-0307-4FB2-81C3-21A69ACDABA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BFFD24F-0307-4FB2-81C3-21A69ACDABA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BFFD24F-0307-4FB2-81C3-21A69ACDABA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ADC9D17-81DD-4601-9409-0E10218083A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ADC9D17-81DD-4601-9409-0E10218083A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ADC9D17-81DD-4601-9409-0E10218083A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ADC9D17-81DD-4601-9409-0E10218083A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C5FAD1B-BDF6-4034-A005-AF7BB44264CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C5FAD1B-BDF6-4034-A005-AF7BB44264CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C5FAD1B-BDF6-4034-A005-AF7BB44264CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C5FAD1B-BDF6-4034-A005-AF7BB44264CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF598CD7-70A7-4776-B5C1-6EF27CF9427D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF598CD7-70A7-4776-B5C1-6EF27CF9427D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF598CD7-70A7-4776-B5C1-6EF27CF9427D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF598CD7-70A7-4776-B5C1-6EF27CF9427D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E323FE05-53BC-45F1-BDDF-621E1F20EE1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E323FE05-53BC-45F1-BDDF-621E1F20EE1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E323FE05-53BC-45F1-BDDF-621E1F20EE1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E323FE05-53BC-45F1-BDDF-621E1F20EE1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF5F79AD-ADF5-4BF9-A7B0-D06E999797E1}
+	EndGlobalSection
+EndGlobal
