@@ -5,16 +5,16 @@ namespace RiPOS.Repository.Session
 {
     public class RepositorySession : IRepositorySession, IDisposable
     {
-        private readonly RiPOSDbContext _context;
+        private readonly RiPosDbContext _context;
         private IDbContextTransaction _transaction;
 
-        public RepositorySession(RiPOSDbContext context)
+        public RepositorySession(RiPosDbContext context)
         {
             _context = context;
             StartTransaction();
         }
 
-        public RiPOSDbContext DbContext { get { return _context; } }
+        public RiPosDbContext DbContext { get { return _context; } }
 
         public void StartTransaction()
         {

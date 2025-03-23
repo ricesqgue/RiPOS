@@ -8,51 +8,41 @@ using RiPOS.Shared.Models;
 
 namespace RiPOS.Core.Services
 {
-    public class GenderService : IGenderService
+    public class GenderService(IGenderRepository genderRepository, IMapper mapper) : IGenderService
     {
-        private readonly IMapper _mapper;
-        private readonly IGenderRepository _genderRepository;
-
-        public GenderService(IGenderRepository genderRepository, IMapper mapper)
-        {
-            _genderRepository = genderRepository;
-            _mapper = mapper;
-        }
-
-
         public async Task<ICollection<GenderResponse>> GetAllAsync(int companyId, bool includeInactives = false)
         {
-            var genders = await _genderRepository.GetAllAsync(c => c.CompanyId == companyId && (c.IsActive || includeInactives));
+            var genders = await genderRepository.GetAllAsync(c => c.IsActive || includeInactives);
 
-            var gendersReponse = _mapper.Map<ICollection<GenderResponse>>(genders);
-            return gendersReponse;
+            var gendersResponse = mapper.Map<ICollection<GenderResponse>>(genders);
+            return gendersResponse;
         }
 
         public async Task<GenderResponse> GetByIdAsync(int id, int companyId)
         {
-            var gender = await _genderRepository.FindAsync(g => g.Id == id && g.CompanyId == companyId);
+            var gender = await genderRepository.FindAsync(g => g.Id == id);
 
-            var genderResponse = _mapper.Map<GenderResponse>(gender);
+            var genderResponse = mapper.Map<GenderResponse>(gender);
             return genderResponse;
         }
 
         public async Task<bool> ExistsByIdAsync(int id, int companyId)
         {
-            return await _genderRepository.ExistsAsync(g => g.Id == id && g.CompanyId == companyId && g.IsActive);
+            return await genderRepository.ExistsAsync(g => g.Id == id && g.IsActive);
         }
 
         public async Task<MessageResponse<GenderResponse>> AddAsync(GenderRequest request, UserSession userSession)
         {
             var messageResponse = new MessageResponse<GenderResponse>();
 
-            var gender = _mapper.Map<Gender>(request);
+            var gender = mapper.Map<Gender>(request);
 
             gender.CreationByUserId = userSession.UserId;
             gender.LastModificationByUserId = userSession.UserId;
-            gender.CompanyId = userSession.CompanyId;
             gender.IsActive = true;
 
-            var exists = await _genderRepository.ExistsAsync(g => g.Name.ToUpper() == request.Name.Trim().ToUpper() && g.IsActive && g.CompanyId == userSession.CompanyId);
+            var exists = await genderRepository
+                .ExistsAsync(g => g.Name.ToUpper() == request.Name.Trim().ToUpper() && g.IsActive);
 
             if (exists)
             {
@@ -61,13 +51,13 @@ namespace RiPOS.Core.Services
                 return messageResponse;
             }
 
-            messageResponse.Success = await _genderRepository.AddAsync(gender);
+            messageResponse.Success = await genderRepository.AddAsync(gender);
 
             if (messageResponse.Success)
             {
                 messageResponse.Success = true;
                 messageResponse.Message = $"Género agregado correctamente";
-                messageResponse.Data = _mapper.Map<GenderResponse>(gender);
+                messageResponse.Data = mapper.Map<GenderResponse>(gender);
             }
             else
             {
@@ -81,10 +71,10 @@ namespace RiPOS.Core.Services
         {
             var messageResponse = new MessageResponse<GenderResponse>();
 
-            var gender = await _genderRepository.GetByIdAsync(id);
+            var gender = await genderRepository.GetByIdAsync(id);
 
-            var exists = await _genderRepository.ExistsAsync(g => g.Id != gender.Id && g.Name.ToUpper() == gender.Name.ToUpper()
-                && g.CompanyId == userSession.CompanyId && g.IsActive);
+            var exists = await genderRepository
+                .ExistsAsync(g => g.Id != gender.Id && g.Name.ToUpper() == gender.Name.ToUpper() && g.IsActive);
 
             if (exists)
             {
@@ -96,13 +86,13 @@ namespace RiPOS.Core.Services
             gender.Name = request.Name.Trim();
             gender.LastModificationByUserId = userSession.UserId;
 
-            messageResponse.Success = await _genderRepository.UpdateAsync(gender);
+            messageResponse.Success = await genderRepository.UpdateAsync(gender);
 
             if (messageResponse.Success)
             {
                 messageResponse.Success = true;
                 messageResponse.Message = $"Género modificado correctamente";
-                messageResponse.Data = _mapper.Map<GenderResponse>(gender);
+                messageResponse.Data = mapper.Map<GenderResponse>(gender);
             }
             else
             {
@@ -116,12 +106,12 @@ namespace RiPOS.Core.Services
         {
             var messageResponse = new MessageResponse<string>();
 
-            var gender = await _genderRepository.GetByIdAsync(id);
+            var gender = await genderRepository.GetByIdAsync(id);
 
             gender.IsActive = false;
             gender.LastModificationByUserId = userSession.UserId;
 
-            messageResponse.Success = await _genderRepository.UpdateAsync(gender);
+            messageResponse.Success = await genderRepository.UpdateAsync(gender);
 
             if (messageResponse.Success)
             {

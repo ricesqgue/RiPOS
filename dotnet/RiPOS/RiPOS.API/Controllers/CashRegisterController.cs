@@ -8,30 +8,24 @@ using RiPOS.Shared.Models;
 namespace RiPOS.API.Controllers
 {
     [Route("api/cashregisters")]
-    public class CashRegisterController : ControllerBase
+    public class CashRegisterController(ICashRegisterService cashRegisterService) : ControllerBase
     {
-        private readonly ICashRegisterService _cashRegisterService;
-        private readonly UserSession session = new UserSession() { CompanyId = 2, UserId = 1, StoreId = 11 };
-
-        public CashRegisterController(ICashRegisterService cashRegisterService)
-        {
-            _cashRegisterService = cashRegisterService;
-        }
+        private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1, StoreId = 11 };
 
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetCashRegisters([FromQuery] bool includeInactives = false)
         {
-            var cashRegisters = await _cashRegisterService.GetAllAsync(session.StoreId, includeInactives);
+            var cashRegisters = await cashRegisterService.GetAllAsync(_session.StoreId, includeInactives);
             return Ok(cashRegisters);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoreResponse>> GetCashRegisterById([FromRoute] int id)
         {
-            var cashRegister = await _cashRegisterService.GetByIdAsync(id, session.StoreId);
+            var cashRegister = await cashRegisterService.GetByIdAsync(id, _session.StoreId);
 
             if (cashRegister == null)
             {
@@ -52,7 +46,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> AddCashRegister([FromBody] CashRegisterRequest request)
         {
-            var responseMessage = await _cashRegisterService.AddAsync(request, session);
+            var responseMessage = await cashRegisterService.AddAsync(request, _session);
 
             if (!responseMessage.Success)
             {
@@ -62,14 +56,14 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateCashRegister([FromRoute] int id, [FromBody] CashRegisterRequest request)
         {
-            if (!await _cashRegisterService.ExistsByIdAsync(id, session.StoreId))
+            if (!await cashRegisterService.ExistsByIdAsync(id, _session.StoreId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -79,7 +73,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _cashRegisterService.UpdateAsync(id, request, session);
+            var responseMessage = await cashRegisterService.UpdateAsync(id, request, _session);
 
             if (!responseMessage.Success)
             {
@@ -89,13 +83,13 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<string>>> DeactivateCashRegister([FromRoute] int id)
         {
-            if (!await _cashRegisterService.ExistsByIdAsync(id, session.StoreId))
+            if (!await cashRegisterService.ExistsByIdAsync(id, _session.StoreId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -105,7 +99,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _cashRegisterService.DeactivateAsync(id, session);
+            var responseMessage = await cashRegisterService.DeactivateAsync(id, _session);
 
             if (!responseMessage.Success)
             {

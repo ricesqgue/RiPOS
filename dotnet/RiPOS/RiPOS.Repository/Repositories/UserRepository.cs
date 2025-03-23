@@ -6,7 +6,7 @@ namespace RiPOS.Repository.Repositories
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        public UserRepository(RiPOSDbContext dbContext) : base(dbContext)
+        public UserRepository(RiPosDbContext dbContext) : base(dbContext)
         {
         }
     }

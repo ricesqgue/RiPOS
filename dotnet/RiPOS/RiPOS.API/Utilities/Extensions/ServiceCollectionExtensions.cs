@@ -62,7 +62,6 @@ namespace RiPOS.API.Utilities.Extensions
             services.AddTransient<ICashRegisterService, CashRegisterService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IColorService, ColorService>();
-            services.AddTransient<ICompanyService, CompanyService>();
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IGenderService, GenderService>();
             services.AddTransient<IMiscellaneousService, MiscellaneousService>();
@@ -79,7 +78,6 @@ namespace RiPOS.API.Utilities.Extensions
             services.AddTransient<ICashRegisterRepository, CashRegisterRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IColorRepository, ColorRepository>();
-            services.AddTransient<ICompanyRepository, CompanyRepository>();
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IGenderRepository, GenderRepository>();
             services.AddTransient<IMiscellaneousRepository, MiscellaneousRepository>();

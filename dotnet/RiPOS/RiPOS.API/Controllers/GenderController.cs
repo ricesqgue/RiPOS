@@ -8,30 +8,24 @@ using RiPOS.Shared.Models;
 namespace RiPOS.API.Controllers
 {
     [Route("api/genders")]
-    public class GenderController : ControllerBase
+    public class GenderController(IGenderService genderService) : ControllerBase
     {
-        private readonly IGenderService _genderService;
-        private readonly UserSession session = new UserSession() { CompanyId = 2, UserId = 1 };
-
-        public GenderController(IGenderService genderService)
-        {
-            _genderService = genderService;
-        }
+        private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1 };
 
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetGenders([FromQuery] bool includeInactives = false)
         {
-            var genders = await _genderService.GetAllAsync(session.CompanyId, includeInactives);
+            var genders = await genderService.GetAllAsync(_session.CompanyId, includeInactives);
             return Ok(genders);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoreResponse>> GetGenderById([FromRoute] int id)
         {
-            var gender = await _genderService.GetByIdAsync(id, session.CompanyId);
+            var gender = await genderService.GetByIdAsync(id, _session.CompanyId);
 
             if (gender == null)
             {
@@ -52,7 +46,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> AddGender([FromBody] GenderRequest request)
         {
-            var responseMessage = await _genderService.AddAsync(request, session);
+            var responseMessage = await genderService.AddAsync(request, _session);
 
             if (!responseMessage.Success)
             {
@@ -62,14 +56,14 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateGender([FromRoute] int id, [FromBody] GenderRequest request)
         {
-            if (!await _genderService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await genderService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -79,7 +73,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _genderService.UpdateAsync(id, request, session);
+            var responseMessage = await genderService.UpdateAsync(id, request, _session);
 
             if (!responseMessage.Success)
             {
@@ -89,13 +83,13 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<string>>> DeactivateGender([FromRoute] int id)
         {
-            if (!await _genderService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await genderService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -105,7 +99,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _genderService.DeactivateAsync(id, session);
+            var responseMessage = await genderService.DeactivateAsync(id, _session);
 
             if (!responseMessage.Success)
             {

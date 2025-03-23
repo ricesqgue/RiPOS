@@ -8,30 +8,24 @@ using RiPOS.Shared.Models.Responses;
 namespace RiPOS.API.Controllers
 {
     [Route("api/vendors")]
-    public class VendorController : ControllerBase
+    public class VendorController(IVendorService vendorService) : ControllerBase
     {
-        private readonly IVendorService _vendorService;
-        private readonly UserSession session = new UserSession() { CompanyId = 2, UserId = 1 };
-
-        public VendorController(IVendorService vendorService)
-        {
-            _vendorService = vendorService;
-        }
+        private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1 };
 
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetVendors([FromQuery] bool includeInactives = false)
         {
-            var vendors = await _vendorService.GetAllAsync(session.CompanyId, includeInactives);
+            var vendors = await vendorService.GetAllAsync(_session.CompanyId, includeInactives);
             return Ok(vendors);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoreResponse>> GetVendorById([FromRoute] int id)
         {
-            var vendor = await _vendorService.GetByIdAsync(id, session.CompanyId);
+            var vendor = await vendorService.GetByIdAsync(id, _session.CompanyId);
 
             if (vendor == null)
             {
@@ -52,7 +46,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> AddVendor([FromBody] VendorRequest request)
         {
-            var responseMessage = await _vendorService.AddAsync(request, session);
+            var responseMessage = await vendorService.AddAsync(request, _session);
 
             if (!responseMessage.Success)
             {
@@ -62,14 +56,14 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateVendor([FromRoute] int id, [FromBody] VendorRequest request)
         {
-            if (!await _vendorService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await vendorService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -79,7 +73,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _vendorService.UpdateAsync(id, request, session);
+            var responseMessage = await vendorService.UpdateAsync(id, request, _session);
 
             if (!responseMessage.Success)
             {
@@ -89,13 +83,13 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<string>>> DeactivateVendor([FromRoute] int id)
         {
-            if (!await _vendorService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await vendorService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -105,7 +99,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _vendorService.DeactivateAsync(id, session);
+            var responseMessage = await vendorService.DeactivateAsync(id, _session);
 
             if (!responseMessage.Success)
             {

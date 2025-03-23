@@ -6,7 +6,7 @@ namespace RiPOS.Repository.Repositories
 {
     public class SizeRepository : GenericRepository<Size>, ISizeRepository
     {
-        public SizeRepository(RiPOSDbContext dbContext) : base(dbContext)
+        public SizeRepository(RiPosDbContext dbContext) : base(dbContext)
         {
         }
     }

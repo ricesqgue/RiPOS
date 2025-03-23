@@ -8,30 +8,24 @@ using RiPOS.Shared.Models;
 namespace RiPOS.API.Controllers
 {
     [Route("api/colors")]
-    public class ColorController : ControllerBase
+    public class ColorController(IColorService colorService) : ControllerBase
     {
-        private readonly IColorService _colorService;
-        private readonly UserSession session = new UserSession() { CompanyId = 2, UserId = 1 };
-
-        public ColorController(IColorService colorService)
-        {
-            _colorService = colorService;
-        }
+        private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1 };
 
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetColors([FromQuery] bool includeInactives = false)
         {
-            var colors = await _colorService.GetAllAsync(session.CompanyId, includeInactives);
+            var colors = await colorService.GetAllAsync(_session.CompanyId, includeInactives);
             return Ok(colors);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoreResponse>> GetColorById([FromRoute] int id)
         {
-            var color = await _colorService.GetByIdAsync(id, session.CompanyId);
+            var color = await colorService.GetByIdAsync(id, _session.CompanyId);
 
             if (color == null)
             {
@@ -52,7 +46,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> AddColor([FromBody] ColorRequest request)
         {
-            var responseMessage = await _colorService.AddAsync(request, session);
+            var responseMessage = await colorService.AddAsync(request, _session);
 
             if (!responseMessage.Success)
             {
@@ -69,7 +63,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateColor([FromRoute] int id, [FromBody] ColorRequest request)
         {
-            if (!await _colorService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await colorService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -79,7 +73,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _colorService.UpdateAsync(id, request, session);
+            var responseMessage = await colorService.UpdateAsync(id, request, _session);
 
             if (!responseMessage.Success)
             {
@@ -89,13 +83,13 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<string>>> DeactivateColor([FromRoute] int id)
         {
-            if (!await _colorService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await colorService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -105,7 +99,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _colorService.DeactivateAsync(id, session);
+            var responseMessage = await colorService.DeactivateAsync(id, _session);
 
             if (!responseMessage.Success)
             {

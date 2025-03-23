@@ -7,16 +7,19 @@ namespace RiPOS.Domain.Entities
     {
         [Required]
         public int UserId { get; set; }
+        
         [ForeignKey(nameof(UserId))]
         public User User { get; set; }
 
         [Required]
         public int StoreId { get; set; }
+        
         [ForeignKey(nameof(StoreId))]
         public Store Store { get; set; }
 
         [Required]
         public int RoleId { get; set; }
+        
         [ForeignKey(nameof(RoleId))]
         public Role Role { get; set; }
     }

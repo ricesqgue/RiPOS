@@ -2,20 +2,13 @@
 
 namespace RiPOS.API.Utilities.Middleware
 {
-    public class ExceptionMiddleware
+    public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
     {
-
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
-        {
-            _next = next;
-            _logger = logger;
-        }
-
         public async Task InvokeAsync(HttpContext httpContext)
         {
             try
             {
-                await _next(httpContext);
+                await next(httpContext);
             }
             catch (Exception e)
             {
@@ -23,7 +16,7 @@ namespace RiPOS.API.Utilities.Middleware
                           $"Exception: {e} {Environment.NewLine} " +
                           $"{Environment.NewLine} ############################################################################################################# {Environment.NewLine} {Environment.NewLine}";
 
-                _logger.LogCritical(log);
+                logger.LogCritical(log);
                 await HandleExceptionAsync(httpContext, e);
             }
         }
@@ -33,10 +26,7 @@ namespace RiPOS.API.Utilities.Middleware
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            return context.Response.WriteAsync(exception.InnerException.Message);
+            return context.Response.WriteAsync(exception.InnerException?.Message ?? exception.Message);
         }
-
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionMiddleware> _logger;
     }
 }

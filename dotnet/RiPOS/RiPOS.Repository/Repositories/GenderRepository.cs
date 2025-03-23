@@ -6,7 +6,7 @@ namespace RiPOS.Repository.Repositories
 {
     public class GenderRepository : GenericRepository<Gender>, IGenderRepository
     {
-        public GenderRepository(RiPOSDbContext dbContext) : base(dbContext)
+        public GenderRepository(RiPosDbContext dbContext) : base(dbContext)
         {
         }
     }

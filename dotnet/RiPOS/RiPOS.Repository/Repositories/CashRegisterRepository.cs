@@ -6,7 +6,7 @@ namespace RiPOS.Repository.Repositories
 {
     public class CashRegisterRepository : GenericRepository<CashRegister>, ICashRegisterRepository
     {
-        public CashRegisterRepository(RiPOSDbContext dbContext) : base(dbContext)
+        public CashRegisterRepository(RiPosDbContext dbContext) : base(dbContext)
         {
         }
     }

@@ -8,50 +8,42 @@ using RiPOS.Shared.Models;
 
 namespace RiPOS.Core.Services
 {
-    public class ColorService : IColorService
+    public class ColorService(IColorRepository colorRepository, IMapper mapper) : IColorService
     {
-        private readonly IMapper _mapper;
-        private readonly IColorRepository _colorRepository;
-
-        public ColorService(IColorRepository colorRepository, IMapper mapper)
-        {
-            _colorRepository = colorRepository;
-            _mapper = mapper;
-        }
-
         public async Task<ICollection<ColorResponse>> GetAllAsync(int companyId, bool includeInactives = false)
         {
-            var colors = await _colorRepository.GetAllAsync(c => c.CompanyId == companyId && (c.IsActive || includeInactives));
+            var colors = await colorRepository.GetAllAsync(c => c.IsActive || includeInactives);
 
-            var colorsReponse = _mapper.Map<ICollection<ColorResponse>>(colors);
-            return colorsReponse;
+            var colorsResponse = mapper.Map<ICollection<ColorResponse>>(colors);
+            return colorsResponse;
         }
 
         public async Task<ColorResponse> GetByIdAsync(int id, int companyId)
         {
-            var color = await _colorRepository.FindAsync(c => c.Id == id && c.CompanyId == companyId);
+            var color = await colorRepository.FindAsync(c => c.Id == id);
 
-            var colorResponse = _mapper.Map<ColorResponse>(color);
+            var colorResponse = mapper.Map<ColorResponse>(color);
             return colorResponse;
         }
 
         public async Task<bool> ExistsByIdAsync(int id, int companyId)
         {
-            return await _colorRepository.ExistsAsync(c => c.Id == id && c.CompanyId == companyId && c.IsActive);
+            return await colorRepository.ExistsAsync(c => c.Id == id && c.IsActive);
         }
 
         public async Task<MessageResponse<ColorResponse>> AddAsync(ColorRequest request, UserSession userSession)
         {
             var messageResponse = new MessageResponse<ColorResponse>();
 
-            var color = _mapper.Map<Color>(request);
+            var color = mapper.Map<Color>(request);
 
             color.CreationByUserId = userSession.UserId;
             color.LastModificationByUserId = userSession.UserId;
-            color.CompanyId = userSession.CompanyId;
             color.IsActive = true;
 
-            var exists = await _colorRepository.FindAsync(c => (c.Name.ToUpper() == request.Name.Trim().ToUpper() || c.RgbHex.ToUpper() == request.RgbHex.Trim().ToUpper()) && c.IsActive && c.CompanyId == userSession.CompanyId);
+            var exists = await colorRepository
+                .FindAsync(c => (c.Name.ToUpper() == request.Name.Trim().ToUpper() || c.RgbHex.ToUpper() == request.RgbHex.Trim().ToUpper()) 
+                                && c.IsActive);
 
             if (exists != null)
             {
@@ -67,13 +59,13 @@ namespace RiPOS.Core.Services
                 return messageResponse;
             }
 
-            messageResponse.Success = await _colorRepository.AddAsync(color);
+            messageResponse.Success = await colorRepository.AddAsync(color);
 
             if (messageResponse.Success)
             {
                 messageResponse.Success = true;
                 messageResponse.Message = $"Color agregado correctamente";
-                messageResponse.Data = _mapper.Map<ColorResponse>(color);
+                messageResponse.Data = mapper.Map<ColorResponse>(color);
             }
             else
             {
@@ -87,10 +79,11 @@ namespace RiPOS.Core.Services
         {
             var messageResponse = new MessageResponse<ColorResponse>();
 
-            var color = await _colorRepository.GetByIdAsync(id);
+            var color = await colorRepository.GetByIdAsync(id);
 
-            var exists = await _colorRepository.FindAsync(c => c.Id != color.Id && (c.Name.ToUpper() == color.Name.ToUpper() || c.RgbHex.ToUpper() == color.RgbHex.ToUpper())
-                && c.CompanyId == userSession.CompanyId && c.IsActive);
+            var exists = await colorRepository
+                .FindAsync(c => c.Id != color.Id && (c.Name.ToUpper() == color.Name.ToUpper() || c.RgbHex.ToUpper() == color.RgbHex.ToUpper())
+                && c.IsActive);
 
             if (exists != null)
             {
@@ -112,13 +105,13 @@ namespace RiPOS.Core.Services
             color.LastModificationByUserId = userSession.UserId;
 
 
-            messageResponse.Success = await _colorRepository.UpdateAsync(color);
+            messageResponse.Success = await colorRepository.UpdateAsync(color);
 
             if (messageResponse.Success)
             {
                 messageResponse.Success = true;
                 messageResponse.Message = $"Color modificado correctamente";
-                messageResponse.Data = _mapper.Map<ColorResponse>(color);
+                messageResponse.Data = mapper.Map<ColorResponse>(color);
             }
             else
             {
@@ -132,12 +125,12 @@ namespace RiPOS.Core.Services
         {
             var messageResponse = new MessageResponse<string>();
 
-            var color = await _colorRepository.GetByIdAsync(id);
+            var color = await colorRepository.GetByIdAsync(id);
 
             color.IsActive = false;
             color.LastModificationByUserId = userSession.UserId;
 
-            messageResponse.Success = await _colorRepository.UpdateAsync(color);
+            messageResponse.Success = await colorRepository.UpdateAsync(color);
 
             if (messageResponse.Success)
             {

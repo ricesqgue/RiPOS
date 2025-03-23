@@ -7,30 +7,24 @@ namespace RiPOS.API.Controllers
 {
     [Route("api")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController(IUserService userService) : ControllerBase
     {
-        private readonly IUserService _userService;
-        private readonly UserSession session = new UserSession() { CompanyId = 2, UserId = 1, StoreId = 11 };
-
-        public UserController(IUserService userService)
-        {
-            _userService = userService;
-        }
+        private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1, StoreId = 11 };
 
         [HttpGet("company/users")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<ICollection<UserResponse>>> GetCompanyUsers([FromQuery] bool includeInactives = false)
         {
-            var users = await _userService.GetAllByCompanyAsync(session.CompanyId, includeInactives);
+            var users = await userService.GetAllByCompanyAsync(_session.CompanyId, includeInactives);
             return Ok(users);
         }
 
-        [HttpGet("company/users/{id}")]
+        [HttpGet("company/users/{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<ICollection<UserResponse>>> GetUserByIdInCompany([FromRoute] int id)
         {
-            var user = await _userService.GetByIdInCompanyAsync(id, session.CompanyId);
+            var user = await userService.GetByIdInCompanyAsync(id, _session.CompanyId);
 
             if (user == null)
             {
@@ -49,16 +43,16 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<ICollection<UserResponse>>> GetStoreUsers([FromQuery] bool includeInactives = false)
         {
-            var users = await _userService.GetAllByStoreAsync(session.StoreId, includeInactives);
+            var users = await userService.GetAllByStoreAsync(_session.StoreId, includeInactives);
             return Ok(users);
         }
 
-        [HttpGet("store/users/{id}")]
+        [HttpGet("store/users/{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<ICollection<UserResponse>>> GetUserByIdInStore([FromRoute] int id)
         {
-            var user = await _userService.GetByIdInStoreAsync(id, session.StoreId);
+            var user = await userService.GetByIdInStoreAsync(id, _session.StoreId);
 
             if (user == null)
             {

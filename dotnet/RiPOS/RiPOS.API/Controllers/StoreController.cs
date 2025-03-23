@@ -8,30 +8,24 @@ using RiPOS.Shared.Models.Responses;
 namespace RiPOS.API.Controllers
 {
     [Route("api/stores")]
-    public class StoreController : ControllerBase
+    public class StoreController(IStoreService storeService) : ControllerBase
     {
-        private readonly IStoreService _storeService;
-        private readonly UserSession session = new UserSession() { CompanyId = 2, UserId = 1 };
-
-        public StoreController(IStoreService storeService)
-        {
-            _storeService = storeService;
-        }
+        private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1 };
 
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetStores()
         {
-            var stores = await _storeService.GetAllAsync(session.CompanyId);
+            var stores = await storeService.GetAllAsync(_session.CompanyId);
             return Ok(stores);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoreResponse>> GetStoreById([FromRoute] int id)
         {
-            var store = await _storeService.GetByIdAsync(id, session.CompanyId);
+            var store = await storeService.GetByIdAsync(id, _session.CompanyId);
 
             if (store == null)
             {
@@ -52,7 +46,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> AddStore([FromBody] StoreRequest request)
         {
-            var responseMessage = await _storeService.AddAsync(request, session);
+            var responseMessage = await storeService.AddAsync(request, _session);
 
             if (!responseMessage.Success)
             {
@@ -62,14 +56,14 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateStore([FromRoute] int id, [FromBody] StoreRequest request)
         {
-            if (!await _storeService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await storeService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -79,7 +73,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _storeService.UpdateAsync(id, request, session);
+            var responseMessage = await storeService.UpdateAsync(id, request, _session);
 
             if (!responseMessage.Success)
             {
@@ -89,13 +83,13 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<string>>> DeactivateStore([FromRoute] int id)
         {
-            if (!await _storeService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await storeService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -105,7 +99,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _storeService.DeactivateAsync(id, session);
+            var responseMessage = await storeService.DeactivateAsync(id, _session);
 
             if (!responseMessage.Success)
             {

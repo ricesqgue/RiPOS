@@ -7,9 +7,9 @@ namespace RiPOS.Repository.Repositories
 {
     public class MiscellaneousRepository : IMiscellaneousRepository
     {
-        private readonly RiPOSDbContext _dbContext;
+        private readonly RiPosDbContext _dbContext;
 
-        public MiscellaneousRepository(RiPOSDbContext dbContext)
+        public MiscellaneousRepository(RiPosDbContext dbContext)
         {
             _dbContext = dbContext;
         }

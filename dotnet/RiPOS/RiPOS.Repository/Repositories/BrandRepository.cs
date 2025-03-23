@@ -6,7 +6,7 @@ namespace RiPOS.Repository.Repositories
 {
     public class BrandRepository : GenericRepository<Brand>, IBrandRepository
     {
-        public BrandRepository(RiPOSDbContext dbContext) : base(dbContext)
+        public BrandRepository(RiPosDbContext dbContext) : base(dbContext)
         {
         }
     }

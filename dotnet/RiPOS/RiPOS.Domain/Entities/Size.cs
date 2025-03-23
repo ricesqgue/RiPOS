@@ -19,11 +19,5 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         public bool IsActive { get; set; } = true;
-
-        [Required]
-        public int CompanyId { get; set; }
-
-        [ForeignKey(nameof(CompanyId))]
-        public Company Company { get; set; }
     }
 }

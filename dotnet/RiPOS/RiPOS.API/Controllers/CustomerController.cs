@@ -8,30 +8,24 @@ using RiPOS.Shared.Models.Responses;
 namespace RiPOS.API.Controllers
 {
     [Route("api/customers")]
-    public class CustomerController : ControllerBase
+    public class CustomerController(ICustomerService customerService) : ControllerBase
     {
-        private readonly ICustomerService _customerService;
-        private readonly UserSession session = new UserSession() { CompanyId = 2, UserId = 1 };
-
-        public CustomerController(ICustomerService customerService)
-        {
-            _customerService = customerService;
-        }
+        private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1 };
 
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetCustomers([FromQuery] bool includeInactives = false)
         {
-            var customers = await _customerService.GetAllAsync(session.CompanyId, includeInactives);
+            var customers = await customerService.GetAllAsync(_session.CompanyId, includeInactives);
             return Ok(customers);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoreResponse>> GetCustomerById([FromRoute] int id)
         {
-            var customer = await _customerService.GetByIdAsync(id, session.CompanyId);
+            var customer = await customerService.GetByIdAsync(id, _session.CompanyId);
 
             if (customer == null)
             {
@@ -52,7 +46,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> AddCustomer([FromBody] CustomerRequest request)
         {
-            var responseMessage = await _customerService.AddAsync(request, session);
+            var responseMessage = await customerService.AddAsync(request, _session);
 
             if (!responseMessage.Success)
             {
@@ -62,14 +56,14 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateCustomer([FromRoute] int id, [FromBody] CustomerRequest request)
         {
-            if (!await _customerService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await customerService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -79,7 +73,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _customerService.UpdateAsync(id, request, session);
+            var responseMessage = await customerService.UpdateAsync(id, request, _session);
 
             if (!responseMessage.Success)
             {
@@ -89,13 +83,13 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<string>>> DeactivateCustomer([FromRoute] int id)
         {
-            if (!await _customerService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await customerService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -105,7 +99,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _customerService.DeactivateAsync(id, session);
+            var responseMessage = await customerService.DeactivateAsync(id, _session);
 
             if (!responseMessage.Success)
             {

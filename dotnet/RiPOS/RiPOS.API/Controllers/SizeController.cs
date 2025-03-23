@@ -8,30 +8,24 @@ using RiPOS.Shared.Models;
 namespace RiPOS.API.Controllers
 {
     [Route("api/sizes")]
-    public class SizeController : ControllerBase
+    public class SizeController(ISizeService sizeService) : ControllerBase
     {
-        private readonly ISizeService _sizeService;
-        private readonly UserSession session = new UserSession() { CompanyId = 2, UserId = 1 };
-
-        public SizeController(ISizeService sizeService)
-        {
-            _sizeService = sizeService;
-        }
+        private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1 };
 
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetSizes([FromQuery] bool includeInactives = false)
         {
-            var sizes = await _sizeService.GetAllAsync(session.CompanyId, includeInactives);
+            var sizes = await sizeService.GetAllAsync(_session.CompanyId, includeInactives);
             return Ok(sizes);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoreResponse>> GetSizeById([FromRoute] int id)
         {
-            var size = await _sizeService.GetByIdAsync(id, session.CompanyId);
+            var size = await sizeService.GetByIdAsync(id, _session.CompanyId);
 
             if (size == null)
             {
@@ -52,7 +46,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> AddSize([FromBody] SizeRequest request)
         {
-            var responseMessage = await _sizeService.AddAsync(request, session);
+            var responseMessage = await sizeService.AddAsync(request, _session);
 
             if (!responseMessage.Success)
             {
@@ -62,14 +56,14 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateSize([FromRoute] int id, [FromBody] SizeRequest request)
         {
-            if (!await _sizeService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await sizeService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -79,7 +73,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _sizeService.UpdateAsync(id, request, session);
+            var responseMessage = await sizeService.UpdateAsync(id, request, _session);
 
             if (!responseMessage.Success)
             {
@@ -89,13 +83,13 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<string>>> DeactivateSize([FromRoute] int id)
         {
-            if (!await _sizeService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await sizeService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -105,7 +99,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _sizeService.DeactivateAsync(id, session);
+            var responseMessage = await sizeService.DeactivateAsync(id, _session);
 
             if (!responseMessage.Success)
             {

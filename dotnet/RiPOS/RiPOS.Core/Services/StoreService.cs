@@ -9,54 +9,48 @@ using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.Core.Services
 {
-    public class StoreService : IStoreService
+    public class StoreService(
+        IStoreRepository storeRepository,
+        IRepositorySessionFactory repositorySessionFactory,
+        IMapper mapper)
+        : IStoreService
     {
-        private readonly IMapper _mapper;
-        private readonly IStoreRepository _storeRepository;
-        private readonly IRepositorySessionFactory _repositorySessionFactory;
-
-        public StoreService(IStoreRepository storeRepository, IRepositorySessionFactory repositorySessionFactory, IMapper mapper)
-        {
-            _mapper = mapper;
-            _storeRepository = storeRepository;
-            _repositorySessionFactory = repositorySessionFactory;
-        }
+        private readonly IRepositorySessionFactory _repositorySessionFactory = repositorySessionFactory;
 
         public async Task<ICollection<StoreResponse>> GetAllAsync(int companyId)
         {
-            var stores = await _storeRepository.GetAllAsync(s => s.CompanyId == companyId);
+            var stores = await storeRepository.GetAllAsync();
 
-            var storesResponse = _mapper.Map<ICollection<StoreResponse>>(stores);
+            var storesResponse = mapper.Map<ICollection<StoreResponse>>(stores);
 
             return storesResponse;
         }
 
         public async Task<StoreResponse> GetByIdAsync(int id, int companyId)
         {
-            var store = await _storeRepository.FindAsync(s => s.Id == id && s.CompanyId == companyId);
+            var store = await storeRepository.FindAsync(s => s.Id == id);
 
-            var storeResponse = _mapper.Map<StoreResponse>(store);
+            var storeResponse = mapper.Map<StoreResponse>(store);
 
             return storeResponse;
         }
 
         public async Task<bool> ExistsByIdAsync(int id, int companyId)
         {
-            return await _storeRepository.ExistsAsync(s => s.Id == id && s.CompanyId == companyId && s.IsActive);
+            return await storeRepository.ExistsAsync(s => s.Id == id && s.IsActive);
         }
 
         public async Task<MessageResponse<StoreResponse>> AddAsync(StoreRequest request, UserSession userSession)
         {
             var messageResponse = new MessageResponse<StoreResponse>();
 
-            var store = _mapper.Map<Store>(request);
+            var store = mapper.Map<Store>(request);
 
             store.CreationByUserId = userSession.UserId;
             store.LastModificationByUserId = userSession.UserId;
-            store.CompanyId = userSession.CompanyId;
             store.IsActive = true;
 
-            var exists = await _storeRepository.ExistsAsync(s => s.Name.ToUpper() == request.Name.Trim().ToUpper() && s.IsActive && s.CompanyId == userSession.CompanyId);
+            var exists = await storeRepository.ExistsAsync(s => s.Name.ToUpper() == request.Name.Trim().ToUpper() && s.IsActive);
 
             if (exists)
             {
@@ -65,13 +59,13 @@ namespace RiPOS.Core.Services
                 return messageResponse;
             }
 
-            messageResponse.Success = await _storeRepository.AddAsync(store);
+            messageResponse.Success = await storeRepository.AddAsync(store);
 
             if (messageResponse.Success)
             {
                 messageResponse.Success = true;
                 messageResponse.Message = $"Tienda agregada correctamente";
-                messageResponse.Data = _mapper.Map<StoreResponse>(store);
+                messageResponse.Data = mapper.Map<StoreResponse>(store);
             }
             else
             {
@@ -85,10 +79,10 @@ namespace RiPOS.Core.Services
         {
             var messageResponse = new MessageResponse<StoreResponse>();
 
-            var store = await _storeRepository.GetByIdAsync(id);
+            var store = await storeRepository.GetByIdAsync(id);
 
-            var exists = await _storeRepository.ExistsAsync(s => s.Id != store.Id && s.Name.ToUpper() == store.Name.ToUpper()
-                && s.CompanyId == userSession.CompanyId && s.IsActive);
+            var exists = await storeRepository
+                .ExistsAsync(s => s.Id != store.Id && s.Name.ToUpper() == store.Name.ToUpper() && s.IsActive);
 
             if (exists)
             {
@@ -103,13 +97,13 @@ namespace RiPOS.Core.Services
             store.MobilePhone = request.MobilePhone?.Trim();
             store.LastModificationByUserId = userSession.UserId;
 
-            messageResponse.Success = await _storeRepository.UpdateAsync(store);
+            messageResponse.Success = await storeRepository.UpdateAsync(store);
 
             if (messageResponse.Success)
             {
                 messageResponse.Success = true;
                 messageResponse.Message = $"Tienda modificada correctamente";
-                messageResponse.Data = _mapper.Map<StoreResponse>(store);
+                messageResponse.Data = mapper.Map<StoreResponse>(store);
             }
             else
             {
@@ -123,12 +117,12 @@ namespace RiPOS.Core.Services
         {
             var messageResponse = new MessageResponse<string>();
 
-            var store = await _storeRepository.GetByIdAsync(id);
+            var store = await storeRepository.GetByIdAsync(id);
 
             store.IsActive = false;
             store.LastModificationByUserId = userSession.UserId;
 
-            messageResponse.Success = await _storeRepository.UpdateAsync(store);
+            messageResponse.Success = await storeRepository.UpdateAsync(store);
 
             if (messageResponse.Success)
             {

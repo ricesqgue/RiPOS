@@ -9,54 +9,44 @@ using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.Core.Services
 {
-    public class CustomerService : ICustomerService
+    public class CustomerService(ICustomerRepository customerRepository, IMapper mapper) : ICustomerService
     {
-        private readonly IMapper _mapper;
-        private readonly ICustomerRepository _customerRepository;
-
-        public CustomerService(ICustomerRepository customerRepository, IMapper mapper)
-        {
-            _customerRepository = customerRepository;
-            _mapper = mapper;
-        }
-
         public async Task<ICollection<CustomerResponse>> GetAllAsync(int companyId, bool includeInactives = false)
         {
-            var customers = await _customerRepository.GetAllAsync(c => c.CompanyId == companyId && (c.IsActive || includeInactives),
+            var customers = await customerRepository.GetAllAsync(c => c.IsActive || includeInactives,
                 includeProps: c => c.Include(x => x.CountryState));
 
-            var customersReponse = _mapper.Map<ICollection<CustomerResponse>>(customers);
-            return customersReponse;
+            var customersResponse = mapper.Map<ICollection<CustomerResponse>>(customers);
+            return customersResponse;
         }
 
         public async Task<CustomerResponse> GetByIdAsync(int id, int companyId)
         {
-            var customer = await _customerRepository.FindAsync(c => c.Id == id && c.CompanyId == companyId,
+            var customer = await customerRepository.FindAsync(c => c.Id == id,
                 includeProps: c => c.Include(x => x.CountryState));
 
-            var customerResponse = _mapper.Map<CustomerResponse>(customer);
+            var customerResponse = mapper.Map<CustomerResponse>(customer);
             return customerResponse;
         }
 
         public async Task<bool> ExistsByIdAsync(int id, int companyId)
         {
-            return await _customerRepository.ExistsAsync(c => c.Id == id && c.CompanyId == companyId && c.IsActive);
+            return await customerRepository.ExistsAsync(c => c.Id == id && c.IsActive);
         }
 
         public async Task<MessageResponse<CustomerResponse>> AddAsync(CustomerRequest request, UserSession userSession)
         {
             var messageResponse = new MessageResponse<CustomerResponse>();
 
-            var customer = _mapper.Map<Customer>(request);
+            var customer = mapper.Map<Customer>(request);
 
             customer.CreationByUserId = userSession.UserId;
             customer.LastModificationByUserId = userSession.UserId;
-            customer.CompanyId = userSession.CompanyId;
             customer.IsActive = true;
 
-            var exists = await _customerRepository
+            var exists = await customerRepository
                 .FindAsync(c => (customer.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() || customer.Rfc != null && c.Rfc == customer.Rfc)
-                    && c.IsActive && c.CompanyId == userSession.CompanyId);
+                    && c.IsActive);
 
             if (exists != null)
             {
@@ -72,13 +62,13 @@ namespace RiPOS.Core.Services
                 return messageResponse;
             }
 
-            messageResponse.Success = await _customerRepository.AddAsync(customer);
+            messageResponse.Success = await customerRepository.AddAsync(customer);
 
             if (messageResponse.Success)
             {
                 messageResponse.Success = true;
                 messageResponse.Message = $"Cliente agregado correctamente";
-                messageResponse.Data = _mapper.Map<CustomerResponse>(customer);
+                messageResponse.Data = mapper.Map<CustomerResponse>(customer);
             }
             else
             {
@@ -92,10 +82,12 @@ namespace RiPOS.Core.Services
         {
             var messageResponse = new MessageResponse<CustomerResponse>();
 
-            var customer = await _customerRepository.GetByIdAsync(id);
+            var customer = await customerRepository.GetByIdAsync(id);
 
-            var exists = await _customerRepository.FindAsync(c => c.Id != customer.Id && (customer.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() || customer.Rfc != null && c.Rfc == customer.Rfc)
-                && c.CompanyId == userSession.CompanyId && c.IsActive);
+            var exists = await customerRepository
+                .FindAsync(c => c.Id != customer.Id 
+                    && (customer.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() || customer.Rfc != null && c.Rfc == customer.Rfc)
+                    && c.IsActive);
 
             if (exists != null)
             {
@@ -125,13 +117,13 @@ namespace RiPOS.Core.Services
 
             customer.LastModificationByUserId = userSession.UserId;
 
-            messageResponse.Success = await _customerRepository.UpdateAsync(customer);
+            messageResponse.Success = await customerRepository.UpdateAsync(customer);
 
             if (messageResponse.Success)
             {
                 messageResponse.Success = true;
                 messageResponse.Message = $"Cliente modificado correctamente";
-                messageResponse.Data = _mapper.Map<CustomerResponse>(customer);
+                messageResponse.Data = mapper.Map<CustomerResponse>(customer);
             }
             else
             {
@@ -145,12 +137,12 @@ namespace RiPOS.Core.Services
         {
             var messageResponse = new MessageResponse<string>();
 
-            var customer = await _customerRepository.GetByIdAsync(id);
+            var customer = await customerRepository.GetByIdAsync(id);
 
             customer.IsActive = false;
             customer.LastModificationByUserId = userSession.UserId;
 
-            messageResponse.Success = await _customerRepository.UpdateAsync(customer);
+            messageResponse.Success = await customerRepository.UpdateAsync(customer);
 
             if (messageResponse.Success)
             {

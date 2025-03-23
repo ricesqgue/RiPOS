@@ -8,50 +8,42 @@ using RiPOS.Domain.Entities;
 
 namespace RiPOS.Core.Services
 {
-    public class SizeService : ISizeService
+    public class SizeService(ISizeRepository sizeRepository, IMapper mapper) : ISizeService
     {
-        private readonly IMapper _mapper;
-        private readonly ISizeRepository _sizeRepository;
-
-        public SizeService(ISizeRepository sizeRepository, IMapper mapper)
-        {
-            _sizeRepository = sizeRepository;
-            _mapper = mapper;
-        }
-
         public async Task<ICollection<SizeResponse>> GetAllAsync(int companyId, bool includeInactives = false)
         {
-            var sizes = await _sizeRepository.GetAllAsync(s => s.CompanyId == companyId && (s.IsActive || includeInactives));
+            var sizes = await sizeRepository.GetAllAsync(s => s.IsActive || includeInactives);
 
-            var sizesReponse = _mapper.Map<ICollection<SizeResponse>>(sizes);
-            return sizesReponse;
+            var sizesResponse = mapper.Map<ICollection<SizeResponse>>(sizes);
+            return sizesResponse;
         }
 
         public async Task<SizeResponse> GetByIdAsync(int id, int companyId)
         {
-            var size = await _sizeRepository.FindAsync(s => s.Id == id && s.CompanyId == companyId);
+            var size = await sizeRepository.FindAsync(s => s.Id == id);
 
-            var sizeResponse = _mapper.Map<SizeResponse>(size);
+            var sizeResponse = mapper.Map<SizeResponse>(size);
             return sizeResponse;
         }
 
         public async Task<bool> ExistsByIdAsync(int id, int companyId)
         {
-            return await _sizeRepository.ExistsAsync(s => s.Id == id && s.CompanyId == companyId && s.IsActive);
+            return await sizeRepository.ExistsAsync(s => s.Id == id && s.IsActive);
         }
 
         public async Task<MessageResponse<SizeResponse>> AddAsync(SizeRequest request, UserSession userSession)
         {
             var messageResponse = new MessageResponse<SizeResponse>();
 
-            var size = _mapper.Map<Size>(request);
+            var size = mapper.Map<Size>(request);
 
             size.CreationByUserId = userSession.UserId;
             size.LastModificationByUserId = userSession.UserId;
-            size.CompanyId = userSession.CompanyId;
             size.IsActive = true;
 
-            var exists = await _sizeRepository.FindAsync(s => (s.ShortName == request.ShortName.Trim().ToUpper() || s.Name.ToUpper() == request.Name.Trim().ToUpper()) && s.IsActive && s.CompanyId == userSession.CompanyId);
+            var exists = await sizeRepository
+                .FindAsync(s => (s.ShortName == request.ShortName.Trim().ToUpper() || s.Name.ToUpper() == request.Name.Trim().ToUpper()) 
+                                && s.IsActive);
 
             if (exists != null)
             {
@@ -67,13 +59,13 @@ namespace RiPOS.Core.Services
                 return messageResponse;
             }
 
-            messageResponse.Success = await _sizeRepository.AddAsync(size);
+            messageResponse.Success = await sizeRepository.AddAsync(size);
 
             if (messageResponse.Success)
             {
                 messageResponse.Success = true;
                 messageResponse.Message = $"Talla agregada correctamente";
-                messageResponse.Data = _mapper.Map<SizeResponse>(size);
+                messageResponse.Data = mapper.Map<SizeResponse>(size);
             }
             else
             {
@@ -87,10 +79,11 @@ namespace RiPOS.Core.Services
         {
             var messageResponse = new MessageResponse<SizeResponse>();
 
-            var size = await _sizeRepository.GetByIdAsync(id);
+            var size = await sizeRepository.GetByIdAsync(id);
 
-            var exists = await _sizeRepository.FindAsync(s => s.Id != size.Id && (s.ShortName == size.ShortName.ToUpper() || s.Name.ToUpper() == size.Name.ToUpper())
-                && s.CompanyId == userSession.CompanyId && s.IsActive);
+            var exists = await sizeRepository
+                .FindAsync(s => s.Id != size.Id && (s.ShortName == size.ShortName.ToUpper() || s.Name.ToUpper() == size.Name.ToUpper()) 
+                                                && s.IsActive);
 
             if (exists != null)
             {
@@ -110,13 +103,13 @@ namespace RiPOS.Core.Services
             size.ShortName = request.ShortName.ToUpper().Trim();
             size.LastModificationByUserId = userSession.UserId;
 
-            messageResponse.Success = await _sizeRepository.UpdateAsync(size);
+            messageResponse.Success = await sizeRepository.UpdateAsync(size);
 
             if (messageResponse.Success)
             {
                 messageResponse.Success = true;
                 messageResponse.Message = $"Talla modificada correctamente";
-                messageResponse.Data = _mapper.Map<SizeResponse>(size);
+                messageResponse.Data = mapper.Map<SizeResponse>(size);
             }
             else
             {
@@ -130,12 +123,12 @@ namespace RiPOS.Core.Services
         {
             var messageResponse = new MessageResponse<string>();
 
-            var size = await _sizeRepository.GetByIdAsync(id);
+            var size = await sizeRepository.GetByIdAsync(id);
 
             size.IsActive = false;
             size.LastModificationByUserId = userSession.UserId;
 
-            messageResponse.Success = await _sizeRepository.UpdateAsync(size);
+            messageResponse.Success = await sizeRepository.UpdateAsync(size);
 
             if (messageResponse.Success)
             {

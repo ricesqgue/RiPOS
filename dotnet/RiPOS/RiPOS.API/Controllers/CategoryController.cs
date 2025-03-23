@@ -8,30 +8,24 @@ using RiPOS.Shared.Models;
 namespace RiPOS.API.Controllers
 {
     [Route("api/categories")]
-    public class CategoryController : ControllerBase
+    public class CategoryController(ICategoryService categoryService) : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
-        private readonly UserSession session = new UserSession() { CompanyId = 2, UserId = 1 };
-
-        public CategoryController(ICategoryService categoryService)
-        {
-            _categoryService = categoryService;
-        }
+        private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1 };
 
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetCategories([FromQuery] bool includeInactives = false)
         {
-            var categories = await _categoryService.GetAllAsync(session.CompanyId, includeInactives);
+            var categories = await categoryService.GetAllAsync(_session.CompanyId, includeInactives);
             return Ok(categories);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoreResponse>> GetCategoryById([FromRoute] int id)
         {
-            var category = await _categoryService.GetByIdAsync(id, session.CompanyId);
+            var category = await categoryService.GetByIdAsync(id, _session.CompanyId);
 
             if (category == null)
             {
@@ -52,7 +46,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> AddCategory([FromBody] CategoryRequest request)
         {
-            var responseMessage = await _categoryService.AddAsync(request, session);
+            var responseMessage = await categoryService.AddAsync(request, _session);
 
             if (!responseMessage.Success)
             {
@@ -69,7 +63,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateCategory([FromRoute] int id, [FromBody] CategoryRequest request)
         {
-            if (!await _categoryService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await categoryService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -79,7 +73,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _categoryService.UpdateAsync(id, request, session);
+            var responseMessage = await categoryService.UpdateAsync(id, request, _session);
 
             if (!responseMessage.Success)
             {
@@ -89,13 +83,13 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<string>>> DeactivateCategory([FromRoute] int id)
         {
-            if (!await _categoryService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await categoryService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -105,7 +99,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _categoryService.DeactivateAsync(id, session);
+            var responseMessage = await categoryService.DeactivateAsync(id, _session);
 
             if (!responseMessage.Success)
             {

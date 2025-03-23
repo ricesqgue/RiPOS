@@ -4,7 +4,7 @@ namespace RiPOS.Core.Utilities
 {
     public static class PasswordHelper
     {
-        public static byte[] GenerateSalt()
+        private static byte[] GenerateSalt()
         {
             byte[] salt = new byte[16];
             RandomNumberGenerator.Create().GetBytes(salt);

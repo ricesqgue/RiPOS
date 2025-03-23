@@ -30,7 +30,7 @@ try
 
     builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-    builder.Services.AddDbContext<RiPOSDbContext>(d => d.UseSqlServer("name=ConnectionStrings:RiPOS"));
+    builder.Services.AddDbContext<RiPosDbContext>(d => d.UseSqlServer("name=ConnectionStrings:RiPOS"));
 
     builder.Services.AddHttpContextAccessor();
 

@@ -4,9 +4,9 @@ namespace RiPOS.Repository.Session
 {
     public class RepositorySessionFactory : IRepositorySessionFactory
     {
-        private readonly RiPOSDbContext _context;
+        private readonly RiPosDbContext _context;
 
-        public RepositorySessionFactory(RiPOSDbContext context)
+        public RepositorySessionFactory(RiPosDbContext context)
         {
             _context = context;
         }

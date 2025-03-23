@@ -17,13 +17,6 @@ namespace RiPOS.Domain.Entities
         [MaxLength(10)]
         public string RgbHex { get; set; }
 
-        [Required]
-        public bool IsActive { get; set; } = true;
-
-        [Required]
-        public int CompanyId { get; set; }
-
-        [ForeignKey(nameof(CompanyId))]
-        public Company Company { get; set; }
+        [Required] public bool IsActive { get; set; } = true;
     }
 }

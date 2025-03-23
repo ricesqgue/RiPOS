@@ -6,7 +6,7 @@ namespace RiPOS.Repository.Repositories
 {
     public class ColorRepository : GenericRepository<Color>, IColorRepository
     {
-        public ColorRepository(RiPOSDbContext dbContext) : base(dbContext)
+        public ColorRepository(RiPosDbContext dbContext) : base(dbContext)
         {  
         }
     }

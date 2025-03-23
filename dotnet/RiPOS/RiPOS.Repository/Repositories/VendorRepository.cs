@@ -6,7 +6,7 @@ namespace RiPOS.Repository.Repositories
 {
     public class VendorRepository : GenericRepository<Vendor>, IVendorRepository
     {
-        public VendorRepository(RiPOSDbContext dbContext) : base(dbContext)
+        public VendorRepository(RiPosDbContext dbContext) : base(dbContext)
         {
         }
     }

@@ -11,10 +11,10 @@ namespace RiPOS.Repository.Repositories
     public class GenericRepository<TEntity> : IGenericRepository<TEntity>
            where TEntity : TrackEntityChanges, IEntity
     {
-        private readonly RiPOSDbContext _context;
+        private readonly RiPosDbContext _context;
         private readonly DbSet<TEntity> _dbSet;
 
-        protected GenericRepository(RiPOSDbContext context)
+        protected GenericRepository(RiPosDbContext context)
         {
             _context = context;
             _dbSet = _context.Set<TEntity>();

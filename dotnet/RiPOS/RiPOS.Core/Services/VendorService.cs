@@ -9,54 +9,44 @@ using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.Core.Services
 {
-    public class VendorService : IVendorService
+    public class VendorService(IVendorRepository vendorRepository, IMapper mapper) : IVendorService
     {
-        private readonly IMapper _mapper;
-        private readonly IVendorRepository _vendorRepository;
-
-        public VendorService(IVendorRepository vendorRepository, IMapper mapper)
-        {
-            _vendorRepository = vendorRepository;
-            _mapper = mapper;
-        }
-
         public async Task<ICollection<VendorResponse>> GetAllAsync(int companyId, bool includeInactives = false)
         {
-            var vendors = await _vendorRepository.GetAllAsync(v => v.CompanyId == companyId && (v.IsActive || includeInactives),
+            var vendors = await vendorRepository.GetAllAsync(v => v.IsActive || includeInactives,
                 includeProps: v => v.Include(x => x.CountryState));
 
-            var vendorsReponse = _mapper.Map<ICollection<VendorResponse>>(vendors);
+            var vendorsReponse = mapper.Map<ICollection<VendorResponse>>(vendors);
             return vendorsReponse;
         }
 
         public async Task<VendorResponse> GetByIdAsync(int id, int companyId)
         {
-            var vendor = await _vendorRepository.FindAsync(v => v.Id == id && v.CompanyId == companyId,
+            var vendor = await vendorRepository.FindAsync(v => v.Id == id,
                 includeProps: c => c.Include(x => x.CountryState));
 
-            var vendorResponse = _mapper.Map<VendorResponse>(vendor);
+            var vendorResponse = mapper.Map<VendorResponse>(vendor);
             return vendorResponse;
         }
 
         public async Task<bool> ExistsByIdAsync(int id, int companyId)
         {
-            return await _vendorRepository.ExistsAsync(v => v.Id == id && v.CompanyId == companyId && v.IsActive);
+            return await vendorRepository.ExistsAsync(v => v.Id == id && v.IsActive);
         }
 
         public async Task<MessageResponse<VendorResponse>> AddAsync(VendorRequest request, UserSession userSession)
         {
             var messageResponse = new MessageResponse<VendorResponse>();
 
-            var vendor = _mapper.Map<Vendor>(request);
+            var vendor = mapper.Map<Vendor>(request);
 
             vendor.CreationByUserId = userSession.UserId;
             vendor.LastModificationByUserId = userSession.UserId;
-            vendor.CompanyId = userSession.CompanyId;
             vendor.IsActive = true;
 
-            var exists = await _vendorRepository
+            var exists = await vendorRepository
                 .ExistsAsync(v => vendor.Email != null && v.Email.ToUpper() == vendor.Email.ToUpper()
-                    && v.IsActive && v.CompanyId == userSession.CompanyId);
+                    && v.IsActive);
 
             if (exists)
             {
@@ -65,13 +55,13 @@ namespace RiPOS.Core.Services
                 return messageResponse;
             }
 
-            messageResponse.Success = await _vendorRepository.AddAsync(vendor);
+            messageResponse.Success = await vendorRepository.AddAsync(vendor);
 
             if (messageResponse.Success)
             {
                 messageResponse.Success = true;
                 messageResponse.Message = $"Proveedor agregado correctamente";
-                messageResponse.Data = _mapper.Map<VendorResponse>(vendor);
+                messageResponse.Data = mapper.Map<VendorResponse>(vendor);
             }
             else
             {
@@ -85,10 +75,11 @@ namespace RiPOS.Core.Services
         {
             var messageResponse = new MessageResponse<VendorResponse>();
 
-            var vendor = await _vendorRepository.GetByIdAsync(id);
+            var vendor = await vendorRepository.GetByIdAsync(id);
 
-            var exists = await _vendorRepository.ExistsAsync(v => v.Id != vendor.Id && vendor.Email != null && v.Email.ToUpper() == vendor.Email.ToUpper()
-                && v.CompanyId == userSession.CompanyId && v.IsActive);
+            var exists = await vendorRepository.
+                ExistsAsync(v => v.Id != vendor.Id && vendor.Email != null && v.Email.ToUpper() == vendor.Email.ToUpper() 
+                                 && v.IsActive);
 
             if (exists)
             {
@@ -110,13 +101,13 @@ namespace RiPOS.Core.Services
 
             vendor.LastModificationByUserId = userSession.UserId;
 
-            messageResponse.Success = await _vendorRepository.UpdateAsync(vendor);
+            messageResponse.Success = await vendorRepository.UpdateAsync(vendor);
 
             if (messageResponse.Success)
             {
                 messageResponse.Success = true;
                 messageResponse.Message = $"Proveedor modificado correctamente";
-                messageResponse.Data = _mapper.Map<VendorResponse>(vendor);
+                messageResponse.Data = mapper.Map<VendorResponse>(vendor);
             }
             else
             {
@@ -130,12 +121,12 @@ namespace RiPOS.Core.Services
         {
             var messageResponse = new MessageResponse<string>();
 
-            var vendor = await _vendorRepository.GetByIdAsync(id);
+            var vendor = await vendorRepository.GetByIdAsync(id);
 
             vendor.IsActive = false;
             vendor.LastModificationByUserId = userSession.UserId;
 
-            messageResponse.Success = await _vendorRepository.UpdateAsync(vendor);
+            messageResponse.Success = await vendorRepository.UpdateAsync(vendor);
 
             if (messageResponse.Success)
             {

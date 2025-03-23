@@ -16,13 +16,6 @@ namespace RiPOS.Domain.Entities
         [MaxLength(300)]
         public string LogoPath { get; set; }
 
-        [Required]
-        public bool IsActive { get; set; } = true;
-
-        [Required]
-        public int CompanyId { get; set; }
-
-        [ForeignKey(nameof(CompanyId))]
-        public Company Company { get; set; }
+        [Required] public bool IsActive { get; set; } = true;
     }
 }

@@ -8,30 +8,24 @@ using RiPOS.Shared.Models;
 namespace RiPOS.API.Controllers
 {
     [Route("api/brands")]
-    public class BrandController : ControllerBase
+    public class BrandController(IBrandService brandService) : ControllerBase
     {
-        private readonly IBrandService _brandService;
-        private readonly UserSession session = new UserSession() { CompanyId = 2, UserId = 1 };
-
-        public BrandController(IBrandService brandService)
-        {
-            _brandService = brandService;
-        }
+        private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1 };
 
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetBrands([FromQuery] bool includeInactives = false)
         {
-            var brands = await _brandService.GetAllAsync(session.CompanyId, includeInactives);
+            var brands = await brandService.GetAllAsync(_session.CompanyId, includeInactives);
             return Ok(brands);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoreResponse>> GetBrandById([FromRoute] int id)
         {
-            var brand = await _brandService.GetByIdAsync(id, session.CompanyId);
+            var brand = await brandService.GetByIdAsync(id, _session.CompanyId);
 
             if (brand == null)
             {
@@ -52,7 +46,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> AddBrand([FromBody] BrandRequest request)
         {
-            var responseMessage = await _brandService.AddAsync(request, session);
+            var responseMessage = await brandService.AddAsync(request, _session);
 
             if (!responseMessage.Success)
             {
@@ -62,14 +56,14 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateBrand([FromRoute] int id, [FromBody] BrandRequest request)
         {
-            if (!await _brandService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await brandService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -79,7 +73,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _brandService.UpdateAsync(id, request, session);
+            var responseMessage = await brandService.UpdateAsync(id, request, _session);
 
             if (!responseMessage.Success)
             {
@@ -89,13 +83,13 @@ namespace RiPOS.API.Controllers
             return Ok(responseMessage);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<string>>> DeactivateBrand([FromRoute] int id)
         {
-            if (!await _brandService.ExistsByIdAsync(id, session.CompanyId))
+            if (!await brandService.ExistsByIdAsync(id, _session.CompanyId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -105,7 +99,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await _brandService.DeactivateAsync(id, session);
+            var responseMessage = await brandService.DeactivateAsync(id, _session);
 
             if (!responseMessage.Success)
             {

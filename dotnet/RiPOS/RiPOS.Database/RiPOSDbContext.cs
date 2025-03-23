@@ -4,15 +4,13 @@ using RiPOS.Domain.Entities;
 
 namespace RiPOS.Database
 {
-    public class RiPOSDbContext : DbContext
+    public class RiPosDbContext(DbContextOptions<RiPosDbContext> options) : DbContext(options)
     {
         public DbSet<Brand> Brands { get; set; }
 
         public DbSet<CashRegister> CashRegisters { get; set; }
 
         public DbSet<Category> Categories { get; set; }
-
-        public DbSet<Company> Companies { get; set; }
 
         public DbSet<Color> Colors { get; set; }
 
@@ -33,9 +31,7 @@ namespace RiPOS.Database
         public DbSet<UserStoreRole> UserStoreRoles { get; set; }
 
         public DbSet<Vendor> Vendors { get; set; }
-
-        public RiPOSDbContext(DbContextOptions<RiPOSDbContext> options) : base(options) { }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ModelConfigurations.ConfigureDbContext(modelBuilder);
