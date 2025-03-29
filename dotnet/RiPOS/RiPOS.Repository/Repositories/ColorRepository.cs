@@ -4,10 +4,5 @@ using RiPOS.Repository.Interfaces;
 
 namespace RiPOS.Repository.Repositories
 {
-    public class ColorRepository : GenericRepository<Color>, IColorRepository
-    {
-        public ColorRepository(RiPosDbContext dbContext) : base(dbContext)
-        {  
-        }
-    }
+    public class ColorRepository(RiPosDbContext dbContext) : GenericRepository<Color>(dbContext), IColorRepository;
 }

@@ -16,6 +16,8 @@ try
 
     builder.Services.ConfigureJwtAuthentication(builder.Configuration);
 
+    builder.Services.AddMemoryCache();
+    
     builder.Services.ConfigureCors();
 
     builder.Services.ConfigureSwagger();

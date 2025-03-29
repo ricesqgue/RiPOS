@@ -6,13 +6,8 @@ namespace RiPOS.Core.Interfaces
 {
     public interface ILoginService
     {
-        // Task<MessageResponse<UserResponse>> AuthenticateAsync(LoginRequest request);
+        Task<MessageResponse<UserResponse>> AuthenticateAsync(LoginRequest request);
 
-        // string BuildToken(UserResponse user);
-        
-        LoginResponse GenerateToken(UserResponse user);
-        ClaimsIdentity GetPrincipalFromExpiredToken(string accessToken);
-        Task<bool> ValidateRefreshTokenAsync(string refreshToken, int userId, int companyId);
-        Task RevokeRefreshTokenAsync(string refreshToken, int userId, int companyId);
+        TokenResponse BuildTokens(UserResponse user);
     }
 }

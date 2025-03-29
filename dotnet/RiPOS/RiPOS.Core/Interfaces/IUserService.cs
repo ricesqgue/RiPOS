@@ -1,4 +1,5 @@
-﻿using RiPOS.Shared.Models.Responses;
+﻿using RiPOS.Shared.Enums;
+using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.Core.Interfaces
 {
@@ -10,5 +11,6 @@ namespace RiPOS.Core.Interfaces
         Task<UserResponse> GetByIdInStoreAsync(int id, int storeId);
         Task<bool> ExistsByIdInCompanyAsync(int id, int companyId);
         Task<bool> ExistsByIdInStoreAsync(int id, int storeId);
+        Task<ICollection<RoleEnum>> GetUserRolesByStoreIdAsync(int userId, int storeId);
     }
 }

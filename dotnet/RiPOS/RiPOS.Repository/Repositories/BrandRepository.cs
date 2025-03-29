@@ -4,10 +4,5 @@ using RiPOS.Repository.Interfaces;
 
 namespace RiPOS.Repository.Repositories
 {
-    public class BrandRepository : GenericRepository<Brand>, IBrandRepository
-    {
-        public BrandRepository(RiPosDbContext dbContext) : base(dbContext)
-        {
-        }
-    }
+    public class BrandRepository(RiPosDbContext dbContext) : GenericRepository<Brand>(dbContext), IBrandRepository;
 }

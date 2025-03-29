@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\RiPOS.Database\RiPOS.Database.csproj" />
     <ProjectReference Include="..\RiPOS.Domain\RiPOS.Domain.csproj" />
+    <ProjectReference Include="..\RiPOS.Shared\RiPOS.Shared.csproj" />
   </ItemGroup>
 
 </Project>

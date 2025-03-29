@@ -2,7 +2,7 @@
 
 namespace RiPOS.Repository.Interfaces
 {
-    public interface IMiscellaneousRepository
+    public interface IMiscRepository
     {
         Task<ICollection<CountryState>> GetAllCountryStatesAsync();
     }

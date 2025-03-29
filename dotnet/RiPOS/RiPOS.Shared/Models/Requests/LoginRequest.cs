@@ -9,8 +9,5 @@ namespace RiPOS.Shared.Models.Requests
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "La contraseña es requerida")]
         public string Password { get; set; }
-
-        [Required(AllowEmptyStrings = false, ErrorMessage = "El código de la compañía es requerida")]
-        public string CompanyCode { get; set; }
     }
 }

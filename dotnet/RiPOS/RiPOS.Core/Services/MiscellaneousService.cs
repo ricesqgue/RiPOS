@@ -5,7 +5,7 @@ using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.Core.Services
 {
-    public class MiscellaneousService(IMapper mapper, IMiscellaneousRepository repository) : IMiscellaneousService
+    public class MiscellaneousService(IMapper mapper, IMiscRepository repository) : IMiscellaneousService
     {
         public async Task<ICollection<CountryStateResponse>> GetAllCountryStatesAsync()
         {

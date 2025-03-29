@@ -2,6 +2,7 @@
 using RiPOS.API.Utilities.ActionFilters;
 using RiPOS.Core.Interfaces;
 using RiPOS.Shared.Models.Requests;
+using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.API.Controllers
 {
@@ -12,18 +13,17 @@ namespace RiPOS.API.Controllers
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
-        public async Task<ActionResult<string>> GenerateToken([FromBody] LoginRequest request)
+        public async Task<ActionResult<TokenResponse>> Login([FromBody] LoginRequest request)
         {
-            /*var userResponse = await loginService.AuthenticateAsync(request);
-
-            if (!userResponse.Success)
+            var userResponse = await loginService.AuthenticateAsync(request);
+            
+            if (userResponse.Success)
             {
-                return Unauthorized(userResponse.Message);
+                var tokenResponse = loginService.BuildTokens(userResponse.Data);
+                return Ok(tokenResponse);
             }
-
-            var token = loginService.BuildToken(userResponse.Data);*/
-
-            return Ok("");
+            
+            return Unauthorized(userResponse.Message);
         }
     }
 }

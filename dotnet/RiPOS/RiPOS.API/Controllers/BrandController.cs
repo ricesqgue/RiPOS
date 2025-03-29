@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RiPOS.API.Utilities.ActionFilters;
+using RiPOS.API.Utilities.Security;
 using RiPOS.Core.Interfaces;
+using RiPOS.Shared.Enums;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 using RiPOS.Shared.Models;
@@ -8,6 +10,7 @@ using RiPOS.Shared.Models;
 namespace RiPOS.API.Controllers
 {
     [Route("api/brands")]
+    [RoleAuthorize([RoleEnum.Admin])]
     public class BrandController(IBrandService brandService) : ControllerBase
     {
         private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1 };
@@ -16,6 +19,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetBrands([FromQuery] bool includeInactives = false)
         {
+            var user = HttpContext.User;
             var brands = await brandService.GetAllAsync(_session.CompanyId, includeInactives);
             return Ok(brands);
         }

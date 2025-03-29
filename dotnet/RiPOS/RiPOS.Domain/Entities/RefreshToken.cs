@@ -1,22 +1,23 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using RiPOS.Domain.Interfaces;
 
 namespace RiPOS.Domain.Entities;
 
-public class RefreshToken
+public class RefreshToken : IEntity
 {
     public int Id { get; set; }
     
     [Required]
-    [MaxLength(50)]
+    [MaxLength(100)]
     public string Token { get; set; }
     
     [Required]
     public DateTime Expires { get; set; }
     
     [Required]
-    public bool IsRevoked { get; set; }
-
+    public DateTime Created { get; set; }
+    
     [Required]
     public int UserId { get; set; }
     

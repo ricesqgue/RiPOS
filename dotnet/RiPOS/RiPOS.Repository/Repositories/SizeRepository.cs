@@ -4,10 +4,5 @@ using RiPOS.Repository.Interfaces;
 
 namespace RiPOS.Repository.Repositories
 {
-    public class SizeRepository : GenericRepository<Size>, ISizeRepository
-    {
-        public SizeRepository(RiPosDbContext dbContext) : base(dbContext)
-        {
-        }
-    }
+    public class SizeRepository(RiPosDbContext dbContext) : GenericRepository<Size>(dbContext), ISizeRepository;
 }

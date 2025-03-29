@@ -21,6 +21,8 @@ namespace RiPOS.Database
         public DbSet<Gender> Genders { get; set; }
 
         public DbSet<Role> Roles { get; set; }
+        
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public DbSet<Size> Sizes { get; set; }
 

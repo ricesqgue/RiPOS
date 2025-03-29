@@ -4,10 +4,6 @@ using RiPOS.Repository.Interfaces;
 
 namespace RiPOS.Repository.Repositories
 {
-    public class CashRegisterRepository : GenericRepository<CashRegister>, ICashRegisterRepository
-    {
-        public CashRegisterRepository(RiPosDbContext dbContext) : base(dbContext)
-        {
-        }
-    }
+    public class CashRegisterRepository(RiPosDbContext dbContext)
+        : GenericRepository<CashRegister>(dbContext), ICashRegisterRepository;
 }

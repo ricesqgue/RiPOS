@@ -4,11 +4,6 @@ using RiPOS.Repository.Interfaces;
 
 namespace RiPOS.Repository.Repositories
 {
-    public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
-    {
-        public CategoryRepository(RiPosDbContext dbContext) : base(dbContext)
-        {
-
-        }
-    }
+    public class CategoryRepository(RiPosDbContext dbContext)
+        : GenericRepository<Category>(dbContext), ICategoryRepository;
 }
