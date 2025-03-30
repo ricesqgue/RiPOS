@@ -18,7 +18,6 @@ namespace RiPOS.Core.Services
     public class LoginService(IUserRepository userRepository, ILoginRepository loginRepository, IMapper mapper, IConfiguration configuration, IMemoryCache memoryCache)
         : ILoginService
     {
-        
         public async Task<MessageResponse<UserResponse>> AuthenticateAsync(LoginRequest request)
         {
             var response = new MessageResponse<UserResponse>();
@@ -64,14 +63,14 @@ namespace RiPOS.Core.Services
         public TokenResponse BuildTokens(UserResponse user)
         {
             var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
-            var accessToken = GenerateAccessToken(user, jwtSettings);
+            var accessToken = GenerateAccessToken(user, jwtSettings!);
             var refreshToken = GenerateRefreshToken();
 
             return new TokenResponse
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
-                Expires = DateTime.Now.AddMinutes(jwtSettings.AccessTokenExpirationMinutes)
+                Expires = DateTime.Now.AddMinutes(jwtSettings!.AccessTokenExpirationMinutes)
             };
         }
         
@@ -110,5 +109,4 @@ namespace RiPOS.Core.Services
             return Convert.ToBase64String(randomNumber);
         }
     }
-
 }

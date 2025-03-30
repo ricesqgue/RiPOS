@@ -7,7 +7,7 @@ namespace RiPOS.Repository.Repositories;
 
 public class LoginRepository(RiPosDbContext dbContext) : ILoginRepository
 {
-    public async Task<RefreshToken> GetRefreshTokenAsync(string refreshToken)
+    public async Task<RefreshToken?> GetRefreshTokenAsync(string refreshToken)
     {
         return await dbContext.RefreshTokens.FirstOrDefaultAsync(rf => rf.Token == refreshToken);
     }
