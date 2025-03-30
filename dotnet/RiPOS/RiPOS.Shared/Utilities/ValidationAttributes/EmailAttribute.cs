@@ -12,9 +12,9 @@ namespace RiPOS.Shared.Utilities.ValidationAttributes
 
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            string email = value?.ToString();
+            string? email = value?.ToString();
 
             if (AllowEmpty && string.IsNullOrEmpty(email))
                 return ValidationResult.Success;
@@ -25,12 +25,12 @@ namespace RiPOS.Shared.Utilities.ValidationAttributes
 
             var emailRegex = new Regex(validEmailPattern, RegexOptions.IgnoreCase);
 
-            if (emailRegex.IsMatch(email))
+            if (emailRegex.IsMatch(email!))
             {
                 return ValidationResult.Success;
             }
 
-            return new ValidationResult(base.ErrorMessage);
+            return new ValidationResult(ErrorMessage);
         }
     }
 }

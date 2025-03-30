@@ -11,9 +11,9 @@ namespace RiPOS.Shared.Utilities.ValidationAttributes
 
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            string rfc = value?.ToString();
+            string? rfc = value?.ToString();
 
             if (AllowEmpty && string.IsNullOrEmpty(rfc))
                 return ValidationResult.Success;
@@ -22,12 +22,12 @@ namespace RiPOS.Shared.Utilities.ValidationAttributes
 
             var emailRegex = new Regex(validRfcPattern, RegexOptions.IgnoreCase);
 
-            if (emailRegex.IsMatch(rfc))
+            if (emailRegex.IsMatch(rfc!))
             {
                 return ValidationResult.Success;
             }
 
-            return new ValidationResult(base.ErrorMessage);
+            return new ValidationResult(ErrorMessage);
         }
 
     }

@@ -19,6 +19,12 @@ public class RoleAuthorizeAttribute(RoleEnum[] allowedRoles) : AuthorizeAttribut
         var userId = context.HttpContext.GetUserId();
         var userService = context.HttpContext.RequestServices.GetService<IUserService>();
         var memoryCache = context.HttpContext.RequestServices.GetService<IMemoryCache>();
+
+        if (userService == null || memoryCache == null)
+        {
+            context.Result = new UnauthorizedObjectResult("Unable to get services");
+            return;
+        }
         
         if (userId == 0)
         {
@@ -28,7 +34,7 @@ public class RoleAuthorizeAttribute(RoleEnum[] allowedRoles) : AuthorizeAttribut
         
         var userMemoryCacheKey = $"{MemoryCacheKey}_{storeId}_{userId}";
 
-        if (!memoryCache.TryGetValue(userMemoryCacheKey, out ICollection<RoleEnum> userRoles))
+        if (!memoryCache.TryGetValue(userMemoryCacheKey, out ICollection<RoleEnum>? userRoles))
         {
             userRoles = await userService.GetUserRolesByStoreIdAsync(storeId, userId);
             if (userRoles.Count == 0)
@@ -40,7 +46,7 @@ public class RoleAuthorizeAttribute(RoleEnum[] allowedRoles) : AuthorizeAttribut
             memoryCache.Set(userMemoryCacheKey, userRoles, cacheEntryOptions);
         }
         
-        if (!allowedRoles.Any(r => userRoles.Contains(r)) && !userRoles.Contains(RoleEnum.SuperAdmin))
+        if (userRoles == null || !allowedRoles.Any(r => userRoles.Contains(r)) && !userRoles.Contains(RoleEnum.SuperAdmin))
         {
             context.Result = new ForbidResult();
         }
