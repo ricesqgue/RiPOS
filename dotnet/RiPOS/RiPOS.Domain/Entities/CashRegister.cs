@@ -11,7 +11,7 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required]
         public bool IsActive { get; set; } = true;
@@ -20,6 +20,6 @@ namespace RiPOS.Domain.Entities
         public int StoreId { get; set; }
 
         [ForeignKey(nameof(StoreId))]
-        public Store Store { get; set; }
+        public required Store Store { get; set; }
     }
 }

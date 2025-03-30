@@ -5,16 +5,17 @@ using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 using RiPOS.Shared.Models;
 using RiPOS.Domain.Entities;
+using RiPOS.Shared.Models.Session;
 
 namespace RiPOS.Core.Services
 {
-    public class CashRegisterService(ICashRegisterRepository cashRegisterRepository, IMapper mapper)
-        : ICashRegisterService
+    public class CashRegisterService(ICashRegisterRepository cashRegisterRepository, IMapper mapper) : ICashRegisterService
     {
         
         public async Task<ICollection<CashRegisterResponse>> GetAllAsync(int storeId, bool includeInactives = false)
         {
-            var cashRegisters = await cashRegisterRepository.GetAllAsync(c => c.StoreId == storeId && (c.IsActive || includeInactives));
+            var cashRegisters = await cashRegisterRepository
+                .GetAllAsync(c => c.StoreId == storeId && (c.IsActive || includeInactives));
 
             var cashRegistersResponse = mapper.Map<ICollection<CashRegisterResponse>>(cashRegisters);
             return cashRegistersResponse;
@@ -22,7 +23,8 @@ namespace RiPOS.Core.Services
 
         public async Task<CashRegisterResponse> GetByIdAsync(int id, int storeId)
         {
-            var cashRegister = await cashRegisterRepository.FindAsync(c => c.Id == id && c.StoreId == storeId);
+            var cashRegister = await cashRegisterRepository
+                .FindAsync(c => c.Id == id && c.StoreId == storeId);
 
             var cashRegisterResponse = mapper.Map<CashRegisterResponse>(cashRegister);
             return cashRegisterResponse;
@@ -104,14 +106,14 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<string>> DeactivateAsync(int id, UserSession userSession)
+        public async Task<MessageResponse<string>> DeactivateAsync(int id, int userId)
         {
             var messageResponse = new MessageResponse<string>();
 
             var cashRegister = await cashRegisterRepository.GetByIdAsync(id);
 
             cashRegister.IsActive = false;
-            cashRegister.LastModificationByUserId = userSession.UserId;
+            cashRegister.LastModificationByUserId = userId;
 
             messageResponse.Success = await cashRegisterRepository.UpdateAsync(cashRegister);
 

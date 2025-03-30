@@ -11,8 +11,9 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
-        [Required] public bool IsActive { get; set; } = true;
+        [Required] 
+        public bool IsActive { get; set; } = true;
     }
 }

@@ -11,38 +11,38 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required]
         [MaxLength(50)]
-        public string Surname { get; set; }
+        public required string Surname { get; set; }
 
         [MaxLength(50)]
-        public string SecondSurname { get; set; }
+        public string? SecondSurname { get; set; }
 
         [MaxLength(20)]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         [MaxLength(20)]
-        public string MobilePhone { get; set; }
+        public string? MobilePhone { get; set; }
 
         [MaxLength(100)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [MaxLength(400)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         [MaxLength(100)]
-        public string City { get; set; }
+        public string? City { get; set; }
 
         [MaxLength(10)]
-        public string ZipCode { get; set; }
+        public string? ZipCode { get; set; }
 
         [Required]
         public int CountryStateId { get; set; }
 
         [ForeignKey(nameof(CountryStateId))]
-        public CountryState CountryState { get; set; }
+        public required CountryState CountryState { get; set; }
 
         [Required]
         public bool IsActive { get; set; } = true;

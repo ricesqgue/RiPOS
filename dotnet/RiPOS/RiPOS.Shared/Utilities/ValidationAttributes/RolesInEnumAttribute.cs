@@ -10,13 +10,13 @@ namespace RiPOS.Shared.Utilities.ValidationAttributes
 
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             try
             {
-                var roles = (List<int>)value;
+                var roles = (List<int>?)value;
 
-                if (value == null || roles.Count == 0)
+                if (roles == null || roles.Count == 0)
                 {
                     return new ValidationResult("Los roles son requeridos");
                 }

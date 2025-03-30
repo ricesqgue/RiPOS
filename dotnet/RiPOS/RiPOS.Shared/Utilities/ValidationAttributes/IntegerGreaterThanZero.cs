@@ -9,15 +9,14 @@ namespace RiPOS.Shared.Utilities.ValidationAttributes
             
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            if (int.TryParse(value.ToString(), out int number))
+            if (value != null && int.TryParse(value.ToString(), out int number))
             {
                 if (number > 0)
                 {
                     return ValidationResult.Success;
                 }
-
             }
 
             return new ValidationResult(base.ErrorMessage);

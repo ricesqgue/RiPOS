@@ -1,6 +1,7 @@
 ﻿using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 using RiPOS.Shared.Models;
+using RiPOS.Shared.Models.Session;
 
 namespace RiPOS.Core.Interfaces
 {
@@ -11,6 +12,6 @@ namespace RiPOS.Core.Interfaces
         Task<bool> ExistsByIdAsync(int id, int storeId);
         Task<MessageResponse<CashRegisterResponse>> AddAsync(CashRegisterRequest request, UserSession userSession);
         Task<MessageResponse<CashRegisterResponse>> UpdateAsync(int id, CashRegisterRequest request, UserSession userSession);
-        Task<MessageResponse<string>> DeactivateAsync(int id, UserSession userSession);
+        Task<MessageResponse<string>> DeactivateAsync(int id, int userId);
     }
 }

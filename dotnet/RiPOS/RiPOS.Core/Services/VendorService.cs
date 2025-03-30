@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using RiPOS.Core.Interfaces;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
-using RiPOS.Shared.Models;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 
@@ -11,7 +10,7 @@ namespace RiPOS.Core.Services
 {
     public class VendorService(IVendorRepository vendorRepository, IMapper mapper) : IVendorService
     {
-        public async Task<ICollection<VendorResponse>> GetAllAsync(int companyId, bool includeInactives = false)
+        public async Task<ICollection<VendorResponse>> GetAllAsync(bool includeInactives = false)
         {
             var vendors = await vendorRepository.GetAllAsync(v => v.IsActive || includeInactives,
                 includeProps: v => v.Include(x => x.CountryState));
@@ -20,7 +19,7 @@ namespace RiPOS.Core.Services
             return vendorsReponse;
         }
 
-        public async Task<VendorResponse> GetByIdAsync(int id, int companyId)
+        public async Task<VendorResponse> GetByIdAsync(int id)
         {
             var vendor = await vendorRepository.FindAsync(v => v.Id == id,
                 includeProps: c => c.Include(x => x.CountryState));
@@ -29,19 +28,19 @@ namespace RiPOS.Core.Services
             return vendorResponse;
         }
 
-        public async Task<bool> ExistsByIdAsync(int id, int companyId)
+        public async Task<bool> ExistsByIdAsync(int id)
         {
             return await vendorRepository.ExistsAsync(v => v.Id == id && v.IsActive);
         }
 
-        public async Task<MessageResponse<VendorResponse>> AddAsync(VendorRequest request, UserSession userSession)
+        public async Task<MessageResponse<VendorResponse>> AddAsync(VendorRequest request, int userId)
         {
             var messageResponse = new MessageResponse<VendorResponse>();
 
             var vendor = mapper.Map<Vendor>(request);
 
-            vendor.CreationByUserId = userSession.UserId;
-            vendor.LastModificationByUserId = userSession.UserId;
+            vendor.CreationByUserId = userId;
+            vendor.LastModificationByUserId = userId;
             vendor.IsActive = true;
 
             var exists = await vendorRepository
@@ -71,7 +70,7 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<VendorResponse>> UpdateAsync(int id, VendorRequest request, UserSession userSession)
+        public async Task<MessageResponse<VendorResponse>> UpdateAsync(int id, VendorRequest request, int userId)
         {
             var messageResponse = new MessageResponse<VendorResponse>();
 
@@ -99,7 +98,7 @@ namespace RiPOS.Core.Services
             vendor.ZipCode = request.ZipCode?.Trim();
             vendor.CountryStateId = request.CountryStateId;
 
-            vendor.LastModificationByUserId = userSession.UserId;
+            vendor.LastModificationByUserId = userId;
 
             messageResponse.Success = await vendorRepository.UpdateAsync(vendor);
 
@@ -117,14 +116,14 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<string>> DeactivateAsync(int id, UserSession userSession)
+        public async Task<MessageResponse<string>> DeactivateAsync(int id, int userId)
         {
             var messageResponse = new MessageResponse<string>();
 
             var vendor = await vendorRepository.GetByIdAsync(id);
 
             vendor.IsActive = false;
-            vendor.LastModificationByUserId = userSession.UserId;
+            vendor.LastModificationByUserId = userId;
 
             messageResponse.Success = await vendorRepository.UpdateAsync(vendor);
 

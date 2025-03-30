@@ -6,11 +6,11 @@ namespace RiPOS.Core.Interfaces
 {
     public interface IVendorService
     {
-        Task<ICollection<VendorResponse>> GetAllAsync(int storeId, bool includeInactives = false);
-        Task<VendorResponse> GetByIdAsync(int id, int storeId);
-        Task<bool> ExistsByIdAsync(int id, int storeId);
-        Task<MessageResponse<VendorResponse>> AddAsync(VendorRequest request, UserSession userSession);
-        Task<MessageResponse<VendorResponse>> UpdateAsync(int id, VendorRequest request, UserSession userSession);
-        Task<MessageResponse<string>> DeactivateAsync(int id, UserSession userSession);
+        Task<ICollection<VendorResponse>> GetAllAsync(bool includeInactives = false);
+        Task<VendorResponse> GetByIdAsync(int id);
+        Task<bool> ExistsByIdAsync(int id);
+        Task<MessageResponse<VendorResponse>> AddAsync(VendorRequest request, int userId);
+        Task<MessageResponse<VendorResponse>> UpdateAsync(int id, VendorRequest request, int userId);
+        Task<MessageResponse<string>> DeactivateAsync(int id, int userId);
     }
 }

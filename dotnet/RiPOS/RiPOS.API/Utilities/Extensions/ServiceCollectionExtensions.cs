@@ -17,6 +17,11 @@ namespace RiPOS.API.Utilities.Extensions
         {
             var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
 
+            if (jwtSettings == null)
+            {
+                throw new Exception("JwtSettings section not found in configuration file");
+            }
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {

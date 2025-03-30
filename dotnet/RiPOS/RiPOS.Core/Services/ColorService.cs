@@ -1,16 +1,18 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using RiPOS.Core.Interfaces;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 using RiPOS.Shared.Models;
+using RiPOS.Shared.Utilities.Extensions;
 
 namespace RiPOS.Core.Services
 {
     public class ColorService(IColorRepository colorRepository, IMapper mapper) : IColorService
     {
-        public async Task<ICollection<ColorResponse>> GetAllAsync(int companyId, bool includeInactives = false)
+        public async Task<ICollection<ColorResponse>> GetAllAsync(bool includeInactives = false)
         {
             var colors = await colorRepository.GetAllAsync(c => c.IsActive || includeInactives);
 
@@ -18,7 +20,7 @@ namespace RiPOS.Core.Services
             return colorsResponse;
         }
 
-        public async Task<ColorResponse> GetByIdAsync(int id, int companyId)
+        public async Task<ColorResponse> GetByIdAsync(int id)
         {
             var color = await colorRepository.FindAsync(c => c.Id == id);
 
@@ -26,19 +28,19 @@ namespace RiPOS.Core.Services
             return colorResponse;
         }
 
-        public async Task<bool> ExistsByIdAsync(int id, int companyId)
+        public async Task<bool> ExistsByIdAsync(int id)
         {
             return await colorRepository.ExistsAsync(c => c.Id == id && c.IsActive);
         }
 
-        public async Task<MessageResponse<ColorResponse>> AddAsync(ColorRequest request, UserSession userSession)
+        public async Task<MessageResponse<ColorResponse>> AddAsync(ColorRequest request, int userId)
         {
             var messageResponse = new MessageResponse<ColorResponse>();
 
             var color = mapper.Map<Color>(request);
 
-            color.CreationByUserId = userSession.UserId;
-            color.LastModificationByUserId = userSession.UserId;
+            color.CreationByUserId = userId;
+            color.LastModificationByUserId = userId;
             color.IsActive = true;
 
             var exists = await colorRepository
@@ -75,7 +77,7 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<ColorResponse>> UpdateAsync(int id, ColorRequest request, UserSession userSession)
+        public async Task<MessageResponse<ColorResponse>> UpdateAsync(int id, ColorRequest request, int userId)
         {
             var messageResponse = new MessageResponse<ColorResponse>();
 
@@ -102,7 +104,7 @@ namespace RiPOS.Core.Services
             color.Name = request.Name.Trim();
             color.RgbHex = request.RgbHex.Trim();
 
-            color.LastModificationByUserId = userSession.UserId;
+            color.LastModificationByUserId = userId;
 
 
             messageResponse.Success = await colorRepository.UpdateAsync(color);
@@ -121,14 +123,14 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<string>> DeactivateAsync(int id, UserSession userSession)
+        public async Task<MessageResponse<string>> DeactivateAsync(int id, int userId)
         {
             var messageResponse = new MessageResponse<string>();
 
             var color = await colorRepository.GetByIdAsync(id);
 
             color.IsActive = false;
-            color.LastModificationByUserId = userSession.UserId;
+            color.LastModificationByUserId = userId;
 
             messageResponse.Success = await colorRepository.UpdateAsync(color);
 

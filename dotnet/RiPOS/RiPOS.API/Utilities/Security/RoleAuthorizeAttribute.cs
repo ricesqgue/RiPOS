@@ -5,6 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 using RiPOS.API.Utilities.Extensions;
 using RiPOS.Core.Interfaces;
 using RiPOS.Shared.Enums;
+using RiPOS.Shared.Utilities.Extensions;
 
 namespace RiPOS.API.Utilities.Security;
 

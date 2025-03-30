@@ -1,7 +1,6 @@
 ﻿using RiPOS.Domain.Interfaces;
 using RiPOS.Domain.Shared;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RiPOS.Domain.Entities
 {
@@ -11,11 +10,12 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [MaxLength(300)]
-        public string LogoPath { get; set; }
+        public string? LogoPath { get; set; }
 
-        [Required] public bool IsActive { get; set; } = true;
+        [Required] 
+        public bool IsActive { get; set; } = true;
     }
 }

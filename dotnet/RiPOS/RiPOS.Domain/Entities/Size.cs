@@ -11,11 +11,11 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required]
         [MaxLength(10)]
-        public string ShortName { get; set; }
+        public required string ShortName { get; set; }
 
         [Required]
         public bool IsActive { get; set; } = true;

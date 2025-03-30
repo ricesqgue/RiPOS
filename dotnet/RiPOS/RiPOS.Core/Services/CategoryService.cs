@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using RiPOS.Core.Interfaces;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
-using RiPOS.Shared.Models;
+using RiPOS.Shared.Utilities.Extensions;
 
 namespace RiPOS.Core.Services
 {
     public class CategoryService(ICategoryRepository categoryRepository, IMapper mapper) : ICategoryService
     {
-        public async Task<ICollection<CategoryResponse>> GetAllAsync(int companyId, bool includeInactives = false)
+        public async Task<ICollection<CategoryResponse>> GetAllAsync(bool includeInactives = false)
         {
             var categories = await categoryRepository.GetAllAsync(c => (c.IsActive || includeInactives));
 
@@ -18,7 +19,7 @@ namespace RiPOS.Core.Services
             return categoriesResponse;
         }
 
-        public async Task<CategoryResponse> GetByIdAsync(int id, int companyId)
+        public async Task<CategoryResponse> GetByIdAsync(int id)
         {
             var category = await categoryRepository.FindAsync(c => c.Id == id);
 
@@ -26,19 +27,19 @@ namespace RiPOS.Core.Services
             return categoryResponse;
         }
 
-        public async Task<bool> ExistsByIdAsync(int id, int companyId)
+        public async Task<bool> ExistsByIdAsync(int id)
         {
             return await categoryRepository.ExistsAsync(c => c.Id == id && c.IsActive);
         }
 
-        public async Task<MessageResponse<CategoryResponse>> AddAsync(CategoryRequest request, UserSession userSession)
+        public async Task<MessageResponse<CategoryResponse>> AddAsync(CategoryRequest request, int userId)
         {
             var messageResponse = new MessageResponse<CategoryResponse>();
 
             var category = mapper.Map<Category>(request);
 
-            category.CreationByUserId = userSession.UserId;
-            category.LastModificationByUserId = userSession.UserId;
+            category.CreationByUserId = userId;
+            category.LastModificationByUserId = userId;
             category.IsActive = true;
 
             var exists = await categoryRepository
@@ -68,7 +69,7 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<CategoryResponse>> UpdateAsync(int id, CategoryRequest request, UserSession userSession)
+        public async Task<MessageResponse<CategoryResponse>> UpdateAsync(int id, CategoryRequest request, int userId)
         {
             var messageResponse = new MessageResponse<CategoryResponse>();
             var category = await categoryRepository.GetByIdAsync(id);
@@ -84,7 +85,7 @@ namespace RiPOS.Core.Services
             }
 
             category.Name = request.Name.Trim();
-            category.LastModificationByUserId = userSession.UserId;
+            category.LastModificationByUserId = userId;
 
             messageResponse.Success = await categoryRepository.UpdateAsync(category);
 
@@ -102,14 +103,14 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<string>> DeactivateAsync(int id, UserSession userSession)
+        public async Task<MessageResponse<string>> DeactivateAsync(int id, int userId)
         {
             var messageResponse = new MessageResponse<string>();
 
             var category = await categoryRepository.GetByIdAsync(id);
 
             category.IsActive = false;
-            category.LastModificationByUserId = userSession.UserId;
+            category.LastModificationByUserId = userId;
 
             messageResponse.Success = await categoryRepository.UpdateAsync(category);
 

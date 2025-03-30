@@ -6,11 +6,11 @@ namespace RiPOS.Core.Interfaces
 {
     public interface ISizeService
     {
-        Task<ICollection<SizeResponse>> GetAllAsync(int companyId, bool includeInactives = false);
-        Task<SizeResponse> GetByIdAsync(int id, int companyId);
-        Task<bool> ExistsByIdAsync(int id, int companyId);
-        Task<MessageResponse<SizeResponse>> AddAsync(SizeRequest request, UserSession userSession);
-        Task<MessageResponse<SizeResponse>> UpdateAsync(int id, SizeRequest request, UserSession userSession);
-        Task<MessageResponse<string>> DeactivateAsync(int id, UserSession userSession);
+        Task<ICollection<SizeResponse>> GetAllAsync(bool includeInactives = false);
+        Task<SizeResponse> GetByIdAsync(int id);
+        Task<bool> ExistsByIdAsync(int id);
+        Task<MessageResponse<SizeResponse>> AddAsync(SizeRequest request, int userId);
+        Task<MessageResponse<SizeResponse>> UpdateAsync(int id, SizeRequest request, int userId);
+        Task<MessageResponse<string>> DeactivateAsync(int id, int userId);
     }
 }

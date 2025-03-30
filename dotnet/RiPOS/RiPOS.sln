@@ -15,6 +15,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiPOS.Domain", "RiPOS.Domai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiPOS.Repository", "RiPOS.Repository\RiPOS.Repository.csproj", "{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Database", "Database", "{E03DD732-A832-4E89-B241-3DA28EBDC7FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiPOS.Migrations", "RiPOS.Migrations\RiPOS.Migrations.csproj", "{6F2ECCE2-4B3B-4EB0-9067-7CD98F278399}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiPOS.MigrationsRunner", "RiPOS.MigrationsRunner\RiPOS.MigrationsRunner.csproj", "{1B9200B0-B8D9-40D5-B751-5545146E1463}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,11 +51,23 @@ Global
 		{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F2ECCE2-4B3B-4EB0-9067-7CD98F278399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F2ECCE2-4B3B-4EB0-9067-7CD98F278399}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F2ECCE2-4B3B-4EB0-9067-7CD98F278399}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F2ECCE2-4B3B-4EB0-9067-7CD98F278399}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B9200B0-B8D9-40D5-B751-5545146E1463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B9200B0-B8D9-40D5-B751-5545146E1463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B9200B0-B8D9-40D5-B751-5545146E1463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B9200B0-B8D9-40D5-B751-5545146E1463}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BF5F79AD-ADF5-4BF9-A7B0-D06E999797E1}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6F2ECCE2-4B3B-4EB0-9067-7CD98F278399} = {E03DD732-A832-4E89-B241-3DA28EBDC7FC}
+		{1B9200B0-B8D9-40D5-B751-5545146E1463} = {E03DD732-A832-4E89-B241-3DA28EBDC7FC}
 	EndGlobalSection
 EndGlobal

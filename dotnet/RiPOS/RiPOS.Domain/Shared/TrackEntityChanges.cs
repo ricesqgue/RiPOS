@@ -10,13 +10,13 @@ namespace RiPOS.Domain.Shared
         public int? CreationByUserId { get; set; }
 
         [ForeignKey(nameof(CreationByUserId))]
-        public User CreationByUser { get; set; }
+        public User? CreationByUser { get; set; }
 
         public DateTime? LastModificationDate { get; set; }
 
         public int? LastModificationByUserId { get; set; }
 
         [ForeignKey(nameof(LastModificationByUserId))]
-        public User LastModificationByUser { get; set; }
+        public User? LastModificationByUser { get; set; }
     }
 }

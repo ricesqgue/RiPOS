@@ -6,7 +6,7 @@ namespace RiPOS.Repository.Session
     public class RepositorySession : IRepositorySession, IDisposable
     {
         private readonly RiPosDbContext _context;
-        private IDbContextTransaction _transaction;
+        private IDbContextTransaction? _transaction;
 
         public RepositorySession(RiPosDbContext context)
         {
@@ -14,9 +14,9 @@ namespace RiPOS.Repository.Session
             StartTransaction();
         }
 
-        public RiPosDbContext DbContext { get { return _context; } }
+        public RiPosDbContext DbContext => _context;
 
-        public void StartTransaction()
+        private void StartTransaction()
         {
             if (_transaction == null)
             {
@@ -49,11 +49,14 @@ namespace RiPOS.Repository.Session
         {
             try
             {
-                await _transaction?.CommitAsync();
+                if (_transaction != null)
+                {
+                    await _transaction.CommitAsync();
+                }
             }
             catch
             {
-                Rollback();
+                await RollbackAsync();
                 throw;
             }
         }
@@ -75,7 +78,10 @@ namespace RiPOS.Repository.Session
         {
             try
             {
-                await _transaction?.RollbackAsync();
+                if (_transaction != null)
+                {
+                    await _transaction.RollbackAsync();
+                }
             }
             finally
             {

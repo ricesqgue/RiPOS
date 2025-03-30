@@ -10,7 +10,7 @@ public class RefreshToken : IEntity
     
     [Required]
     [MaxLength(100)]
-    public string Token { get; set; }
+    public required string Token { get; set; }
     
     [Required]
     public DateTime Expires { get; set; }
@@ -22,5 +22,5 @@ public class RefreshToken : IEntity
     public int UserId { get; set; }
     
     [ForeignKey(nameof(UserId))]
-    public User User { get; set; }
+    public required User User { get; set; }
 }

@@ -11,20 +11,21 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [MaxLength(400)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         [MaxLength(25)]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         [MaxLength(25)]
-        public string MobilePhone { get; set; }
+        public string? MobilePhone { get; set; }
 
         [MaxLength(300)]
-        public string LogoPath { get; set; }
+        public string? LogoPath { get; set; }
 
-        [Required] public bool IsActive { get; set; } = true;
+        [Required] 
+        public bool IsActive { get; set; } = true;
     }
 }

@@ -1,17 +1,18 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using RiPOS.Core.Interfaces;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
-using RiPOS.Shared.Models;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
+using RiPOS.Shared.Utilities.Extensions;
 
 namespace RiPOS.Core.Services
 {
     public class CustomerService(ICustomerRepository customerRepository, IMapper mapper) : ICustomerService
     {
-        public async Task<ICollection<CustomerResponse>> GetAllAsync(int companyId, bool includeInactives = false)
+        public async Task<ICollection<CustomerResponse>> GetAllAsync(bool includeInactives = false)
         {
             var customers = await customerRepository.GetAllAsync(c => c.IsActive || includeInactives,
                 includeProps: c => c.Include(x => x.CountryState));
@@ -20,7 +21,7 @@ namespace RiPOS.Core.Services
             return customersResponse;
         }
 
-        public async Task<CustomerResponse> GetByIdAsync(int id, int companyId)
+        public async Task<CustomerResponse> GetByIdAsync(int id)
         {
             var customer = await customerRepository.FindAsync(c => c.Id == id,
                 includeProps: c => c.Include(x => x.CountryState));
@@ -29,19 +30,19 @@ namespace RiPOS.Core.Services
             return customerResponse;
         }
 
-        public async Task<bool> ExistsByIdAsync(int id, int companyId)
+        public async Task<bool> ExistsByIdAsync(int id)
         {
             return await customerRepository.ExistsAsync(c => c.Id == id && c.IsActive);
         }
 
-        public async Task<MessageResponse<CustomerResponse>> AddAsync(CustomerRequest request, UserSession userSession)
+        public async Task<MessageResponse<CustomerResponse>> AddAsync(CustomerRequest request, int userId)
         {
             var messageResponse = new MessageResponse<CustomerResponse>();
 
             var customer = mapper.Map<Customer>(request);
 
-            customer.CreationByUserId = userSession.UserId;
-            customer.LastModificationByUserId = userSession.UserId;
+            customer.CreationByUserId = userId;
+            customer.LastModificationByUserId = userId;
             customer.IsActive = true;
 
             var exists = await customerRepository
@@ -51,7 +52,7 @@ namespace RiPOS.Core.Services
             if (exists != null)
             {
                 messageResponse.Success = false;
-                if (exists.Email.ToUpper() == request.Email.Trim().ToUpper())
+                if (exists.Email.ToUpper() == request.Email?.Trim().ToUpper())
                 {
                     messageResponse.Message = $"Ya existe un cliente con el email \"{customer.Email}\"";
                 }
@@ -78,7 +79,7 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<CustomerResponse>> UpdateAsync(int id, CustomerRequest request, UserSession userSession)
+        public async Task<MessageResponse<CustomerResponse>> UpdateAsync(int id, CustomerRequest request, int userId)
         {
             var messageResponse = new MessageResponse<CustomerResponse>();
 
@@ -115,7 +116,7 @@ namespace RiPOS.Core.Services
             customer.Rfc = request.Rfc?.Trim().ToUpper();
             customer.CountryStateId = request.CountryStateId;
 
-            customer.LastModificationByUserId = userSession.UserId;
+            customer.LastModificationByUserId = userId;
 
             messageResponse.Success = await customerRepository.UpdateAsync(customer);
 
@@ -133,14 +134,14 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<string>> DeactivateAsync(int id, UserSession userSession)
+        public async Task<MessageResponse<string>> DeactivateAsync(int id, int userId)
         {
             var messageResponse = new MessageResponse<string>();
 
             var customer = await customerRepository.GetByIdAsync(id);
 
             customer.IsActive = false;
-            customer.LastModificationByUserId = userSession.UserId;
+            customer.LastModificationByUserId = userId;
 
             messageResponse.Success = await customerRepository.UpdateAsync(customer);
 

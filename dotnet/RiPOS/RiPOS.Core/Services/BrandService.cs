@@ -1,16 +1,19 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using RiPOS.Core.Interfaces;
 using RiPOS.Repository.Interfaces;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
-using RiPOS.Shared.Models;
 using RiPOS.Domain.Entities;
+using RiPOS.Shared.Models.Session;
+using RiPOS.Shared.Utilities.Extensions;
+
 
 namespace RiPOS.Core.Services
 {
     public class BrandService(IBrandRepository brandRepository, IMapper mapper) : IBrandService
     {
-        public async Task<ICollection<BrandResponse>> GetAllAsync(int companyId, bool includeInactives = false)
+        public async Task<ICollection<BrandResponse>> GetAllAsync(bool includeInactives = false)
         {
             var brands = await brandRepository.GetAllAsync(b => (b.IsActive || includeInactives));
 
@@ -18,7 +21,7 @@ namespace RiPOS.Core.Services
             return brandsResponse;
         }
 
-        public async Task<BrandResponse> GetByIdAsync(int id, int companyId)
+        public async Task<BrandResponse> GetByIdAsync(int id)
         {
             var brand = await brandRepository.FindAsync(b => b.Id == id);
 
@@ -26,19 +29,19 @@ namespace RiPOS.Core.Services
             return brandResponse;
         }
 
-        public async Task<bool> ExistsByIdAsync(int id, int companyId)
+        public async Task<bool> ExistsByIdAsync(int id)
         {
             return await brandRepository.ExistsAsync(b => b.Id == id && b.IsActive);
         }
 
-        public async Task<MessageResponse<BrandResponse>> AddAsync(BrandRequest request, UserSession userSession)
+        public async Task<MessageResponse<BrandResponse>> AddAsync(BrandRequest request, int userId)
         {
             var messageResponse = new MessageResponse<BrandResponse>();
 
             var brand = mapper.Map<Brand>(request);
 
-            brand.CreationByUserId = userSession.UserId;
-            brand.LastModificationByUserId = userSession.UserId;
+            brand.CreationByUserId = userId;
+            brand.LastModificationByUserId = userId;
             brand.IsActive = true;
 
             var exists = await brandRepository.ExistsAsync(b => b.Name.ToUpper() == request.Name.Trim().ToUpper() && b.IsActive);
@@ -66,7 +69,7 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<BrandResponse>> UpdateAsync(int id, BrandRequest request, UserSession userSession)
+        public async Task<MessageResponse<BrandResponse>> UpdateAsync(int id, BrandRequest request, int userId)
         {
             var messageResponse = new MessageResponse<BrandResponse>();
 
@@ -83,7 +86,7 @@ namespace RiPOS.Core.Services
             }
 
             brand.Name = request.Name.Trim();
-            brand.LastModificationByUserId = userSession.UserId;
+            brand.LastModificationByUserId = userId;
 
             messageResponse.Success = await brandRepository.UpdateAsync(brand);
 
@@ -101,14 +104,14 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<string>> DeactivateAsync(int id, UserSession userSession)
+        public async Task<MessageResponse<string>> DeactivateAsync(int id, int userId)
         {
             var messageResponse = new MessageResponse<string>();
 
             var brand = await brandRepository.GetByIdAsync(id);
 
             brand.IsActive = false;
-            brand.LastModificationByUserId = userSession.UserId;
+            brand.LastModificationByUserId = userId;
 
             messageResponse.Success = await brandRepository.UpdateAsync(brand);
 

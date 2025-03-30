@@ -1,4 +1,7 @@
-namespace RiPOS.API.Utilities.Extensions;
+using Microsoft.AspNetCore.Http;
+using RiPOS.Shared.Models.Session;
+
+namespace RiPOS.Shared.Utilities.Extensions;
 
 public static class HttpContextExtensions
 {
@@ -24,5 +27,16 @@ public static class HttpContextExtensions
             return int.Parse(userIdValue);
         }
         return 0;
+    }
+
+    public static UserSession GetUserSession(this HttpContext context)
+    {
+        var userSession = new UserSession()
+        {
+            UserId = context.GetUserId(),
+            StoreId = context.GetHeaderStoreId(),
+        };
+
+        return userSession;
     }
 }

@@ -1,14 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RiPOS.Core.Interfaces;
 using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.API.Controllers
 {
     [Route("api/misc")]
+    [Authorize]
 
     public class MiscController(IMiscellaneousService miscService) : ControllerBase
     {
         [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [HttpGet("countryStates")]
         public async Task<ActionResult<ICollection<CountryStateResponse>>> GetCountryStates()
         {

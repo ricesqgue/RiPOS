@@ -10,7 +10,7 @@ namespace RiPOS.Core.Services
 {
     public class SizeService(ISizeRepository sizeRepository, IMapper mapper) : ISizeService
     {
-        public async Task<ICollection<SizeResponse>> GetAllAsync(int companyId, bool includeInactives = false)
+        public async Task<ICollection<SizeResponse>> GetAllAsync(bool includeInactives = false)
         {
             var sizes = await sizeRepository.GetAllAsync(s => s.IsActive || includeInactives);
 
@@ -18,7 +18,7 @@ namespace RiPOS.Core.Services
             return sizesResponse;
         }
 
-        public async Task<SizeResponse> GetByIdAsync(int id, int companyId)
+        public async Task<SizeResponse> GetByIdAsync(int id)
         {
             var size = await sizeRepository.FindAsync(s => s.Id == id);
 
@@ -26,19 +26,19 @@ namespace RiPOS.Core.Services
             return sizeResponse;
         }
 
-        public async Task<bool> ExistsByIdAsync(int id, int companyId)
+        public async Task<bool> ExistsByIdAsync(int id)
         {
             return await sizeRepository.ExistsAsync(s => s.Id == id && s.IsActive);
         }
 
-        public async Task<MessageResponse<SizeResponse>> AddAsync(SizeRequest request, UserSession userSession)
+        public async Task<MessageResponse<SizeResponse>> AddAsync(SizeRequest request, int userId)
         {
             var messageResponse = new MessageResponse<SizeResponse>();
 
             var size = mapper.Map<Size>(request);
 
-            size.CreationByUserId = userSession.UserId;
-            size.LastModificationByUserId = userSession.UserId;
+            size.CreationByUserId = userId;
+            size.LastModificationByUserId = userId;
             size.IsActive = true;
 
             var exists = await sizeRepository
@@ -75,7 +75,7 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<SizeResponse>> UpdateAsync(int id, SizeRequest request, UserSession userSession)
+        public async Task<MessageResponse<SizeResponse>> UpdateAsync(int id, SizeRequest request, int userId)
         {
             var messageResponse = new MessageResponse<SizeResponse>();
 
@@ -101,7 +101,7 @@ namespace RiPOS.Core.Services
 
             size.Name = request.Name.Trim();
             size.ShortName = request.ShortName.ToUpper().Trim();
-            size.LastModificationByUserId = userSession.UserId;
+            size.LastModificationByUserId = userId;
 
             messageResponse.Success = await sizeRepository.UpdateAsync(size);
 
@@ -119,14 +119,14 @@ namespace RiPOS.Core.Services
             return messageResponse;
         }
 
-        public async Task<MessageResponse<string>> DeactivateAsync(int id, UserSession userSession)
+        public async Task<MessageResponse<string>> DeactivateAsync(int id, int userId)
         {
             var messageResponse = new MessageResponse<string>();
 
             var size = await sizeRepository.GetByIdAsync(id);
 
             size.IsActive = false;
-            size.LastModificationByUserId = userSession.UserId;
+            size.LastModificationByUserId = userId;
 
             messageResponse.Success = await sizeRepository.UpdateAsync(size);
 

@@ -11,14 +11,14 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(10)]
-        public string Code { get; set; }
+        public required string Code { get; set; }
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required]
         [MaxLength(100)]
-        public string Description { get; set; }
+        public required string Description { get; set; }
     }
 }

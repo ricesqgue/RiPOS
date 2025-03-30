@@ -1,31 +1,42 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RiPOS.API.Utilities.ActionFilters;
+using RiPOS.API.Utilities.Security;
 using RiPOS.Core.Interfaces;
+using RiPOS.Shared.Enums;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
-using RiPOS.Shared.Models;
+using RiPOS.Shared.Utilities.Extensions;
 
 namespace RiPOS.API.Controllers
 {
     [Route("api/cashregisters")]
+    [Authorize]
     public class CashRegisterController(ICashRegisterService cashRegisterService) : ControllerBase
     {
-        private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1, StoreId = 11 };
-
+        
         [HttpGet]
+        [RoleAuthorize([RoleEnum.Admin])]
         [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetCashRegisters([FromQuery] bool includeInactives = false)
         {
-            var cashRegisters = await cashRegisterService.GetAllAsync(_session.StoreId, includeInactives);
+            var storeId = ControllerContext.HttpContext.GetHeaderStoreId();
+            var cashRegisters = await cashRegisterService.GetAllAsync(storeId, includeInactives);
             return Ok(cashRegisters);
         }
 
         [HttpGet("{id:int}")]
+        [RoleAuthorize([RoleEnum.Admin])]
         [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoreResponse>> GetCashRegisterById([FromRoute] int id)
         {
-            var cashRegister = await cashRegisterService.GetByIdAsync(id, _session.StoreId);
+            var storeId = ControllerContext.HttpContext.GetHeaderStoreId();
+            var cashRegister = await cashRegisterService.GetByIdAsync(id, storeId);
 
             if (cashRegister == null)
             {
@@ -41,12 +52,16 @@ namespace RiPOS.API.Controllers
         }
 
         [HttpPost]
+        [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> AddCashRegister([FromBody] CashRegisterRequest request)
         {
-            var responseMessage = await cashRegisterService.AddAsync(request, _session);
+            var userSession = ControllerContext.HttpContext.GetUserSession();
+            var responseMessage = await cashRegisterService.AddAsync(request, userSession);
 
             if (!responseMessage.Success)
             {
@@ -57,13 +72,17 @@ namespace RiPOS.API.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateCashRegister([FromRoute] int id, [FromBody] CashRegisterRequest request)
         {
-            if (!await cashRegisterService.ExistsByIdAsync(id, _session.StoreId))
+            var userSession = ControllerContext.HttpContext.GetUserSession();
+            if (!await cashRegisterService.ExistsByIdAsync(id, userSession.StoreId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -73,7 +92,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await cashRegisterService.UpdateAsync(id, request, _session);
+            var responseMessage = await cashRegisterService.UpdateAsync(id, request, userSession);
 
             if (!responseMessage.Success)
             {
@@ -84,12 +103,16 @@ namespace RiPOS.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
         [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<string>>> DeactivateCashRegister([FromRoute] int id)
         {
-            if (!await cashRegisterService.ExistsByIdAsync(id, _session.StoreId))
+            var userSession = ControllerContext.HttpContext.GetUserSession();
+            if (!await cashRegisterService.ExistsByIdAsync(id, userSession.StoreId))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -99,7 +122,7 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await cashRegisterService.DeactivateAsync(id, _session);
+            var responseMessage = await cashRegisterService.DeactivateAsync(id, userSession.UserId);
 
             if (!responseMessage.Success)
             {

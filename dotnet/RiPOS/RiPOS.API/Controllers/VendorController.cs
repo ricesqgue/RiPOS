@@ -1,31 +1,39 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RiPOS.API.Utilities.ActionFilters;
+using RiPOS.API.Utilities.Security;
 using RiPOS.Core.Interfaces;
-using RiPOS.Shared.Models;
+using RiPOS.Shared.Enums;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
+using RiPOS.Shared.Utilities.Extensions;
 
 namespace RiPOS.API.Controllers
 {
     [Route("api/vendors")]
+    [Authorize]
     public class VendorController(IVendorService vendorService) : ControllerBase
     {
-        private readonly UserSession _session = new UserSession() { CompanyId = 2, UserId = 1 };
-
         [HttpGet]
+        [RoleAuthorize([RoleEnum.Admin])]
         [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetVendors([FromQuery] bool includeInactives = false)
         {
-            var vendors = await vendorService.GetAllAsync(_session.CompanyId, includeInactives);
+            var vendors = await vendorService.GetAllAsync(includeInactives);
             return Ok(vendors);
         }
 
         [HttpGet("{id:int}")]
+        [RoleAuthorize([RoleEnum.Admin])]
         [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<StoreResponse>> GetVendorById([FromRoute] int id)
         {
-            var vendor = await vendorService.GetByIdAsync(id, _session.CompanyId);
+            var vendor = await vendorService.GetByIdAsync(id);
 
             if (vendor == null)
             {
@@ -41,12 +49,16 @@ namespace RiPOS.API.Controllers
         }
 
         [HttpPost]
+        [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
         [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(400)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> AddVendor([FromBody] VendorRequest request)
         {
-            var responseMessage = await vendorService.AddAsync(request, _session);
+            var userId = HttpContext.GetUserId();
+            var responseMessage = await vendorService.AddAsync(request, userId);
 
             if (!responseMessage.Success)
             {
@@ -57,13 +69,16 @@ namespace RiPOS.API.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateVendor([FromRoute] int id, [FromBody] VendorRequest request)
         {
-            if (!await vendorService.ExistsByIdAsync(id, _session.CompanyId))
+            if (!await vendorService.ExistsByIdAsync(id))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -73,7 +88,8 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await vendorService.UpdateAsync(id, request, _session);
+            var userId = HttpContext.GetUserId();
+            var responseMessage = await vendorService.UpdateAsync(id, request, userId);
 
             if (!responseMessage.Success)
             {
@@ -84,12 +100,15 @@ namespace RiPOS.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
         [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MessageResponse<string>>> DeactivateVendor([FromRoute] int id)
         {
-            if (!await vendorService.ExistsByIdAsync(id, _session.CompanyId))
+            if (!await vendorService.ExistsByIdAsync(id))
             {
                 var response = new MessageResponse<string>()
                 {
@@ -99,7 +118,8 @@ namespace RiPOS.API.Controllers
                 return NotFound(response);
             }
 
-            var responseMessage = await vendorService.DeactivateAsync(id, _session);
+            var userId = HttpContext.GetUserId();
+            var responseMessage = await vendorService.DeactivateAsync(id, userId);
 
             if (!responseMessage.Success)
             {

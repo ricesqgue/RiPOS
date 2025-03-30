@@ -7,33 +7,33 @@ namespace RiPOS.Shared.Models.Requests
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "El nombre del proveedor es requerido")]
         [MaxLength(50, ErrorMessage = "El nombre debe ser de máximo de {1} caracteres")]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "El apellido del proveedor es requerido")]
         [MaxLength(50, ErrorMessage = "El apellido debe ser de máximo de {1} caracteres")]
-        public string Surname { get; set; }
+        public required string Surname { get; set; }
 
         [MaxLength(50, ErrorMessage = "El apellido debe ser de máximo de {1} caracteres")]
-        public string SecondSurname { get; set; }
+        public string? SecondSurname { get; set; }
 
         [MaxLength(20, ErrorMessage = "El número de teléfono debe ser de máximo de {1} caracteres")]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         [MaxLength(20, ErrorMessage = "El número de celular debe ser de máximo de {1} caracteres")]
-        public string MobilePhone { get; set; }
+        public string? MobilePhone { get; set; }
 
         [MaxLength(100, ErrorMessage = "El correo electrónico debe ser de máximo de {1} caracteres")]
         [Email(AllowEmpty = true, ErrorMessage = "El correo electrónico no es válido")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [MaxLength(400, ErrorMessage = "La dirección debe ser de máximo de {1} caracteres")]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         [MaxLength(100, ErrorMessage = "La ciudad debe ser de máximo de {1} caracteres")]
-        public string City { get; set; }
+        public string? City { get; set; }
 
         [MaxLength(10, ErrorMessage = "El código postal debe ser de máximo de {1} caracteres")]
-        public string ZipCode { get; set; }
+        public string? ZipCode { get; set; }
 
         [IntegerGreaterThanZero(ErrorMessage = "El estado es requerido")]
         public int CountryStateId { get; set; }

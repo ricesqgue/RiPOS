@@ -11,37 +11,38 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required]
         [MaxLength(50)]
-        public string Surname { get; set; }
+        public required string Surname { get; set; }
 
         [MaxLength(50)]
-        public string SecondSurname { get; set; }
+        public string? SecondSurname { get; set; }
 
         [Required]
         [MaxLength(50)]
-        public string Username { get; set; }
+        public required string Username { get; set; }
 
         [MaxLength(100)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required]
-        public string PasswordHash { get; set; }
+        [MaxLength(500)]
+        public string? PasswordHash { get; set; }
 
         [MaxLength(25)]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         [MaxLength(25)]
-        public string MobilePhone { get; set; }
+        public string? MobilePhone { get; set; }
 
         [MaxLength(300)]
-        public string ProfileImagePath { get; set; }
+        public string? ProfileImagePath { get; set; }
 
         [Required]
         public bool IsActive { get; set; } = true;
 
-        public ICollection<UserStoreRole> UserStoreRoles { get; set; }
+        public required ICollection<UserStoreRole> UserStoreRoles { get; set; }
     }
 }

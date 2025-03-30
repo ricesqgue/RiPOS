@@ -85,10 +85,11 @@ namespace RiPOS.Core.Services
                 new Claim("Username", user.Username),
                 new Claim("Name", user.Name),
                 new Claim("Surname", user.Surname),
+                new Claim("SecondSurname", user.SecondSurname ?? string.Empty),
                 new Claim("UserId", user.Id.ToString()),
                 new Claim("MobilePhone", user.MobilePhone ?? string.Empty),
                 new Claim("PhoneNumber", user.PhoneNumber ?? string.Empty),
-                new Claim("Email", user.Email),
+                new Claim("Email", user.Email ?? string.Empty),
             };
             
             var token = new JwtSecurityToken(

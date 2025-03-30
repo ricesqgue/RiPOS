@@ -6,11 +6,11 @@ namespace RiPOS.Core.Interfaces
 {
     public interface IGenderService
     {
-        Task<ICollection<GenderResponse>> GetAllAsync(int companyId, bool includeInactives = false);
-        Task<GenderResponse> GetByIdAsync(int id, int companyId);
-        Task<bool> ExistsByIdAsync(int id, int companyId);
-        Task<MessageResponse<GenderResponse>> AddAsync(GenderRequest request, UserSession userSession);
-        Task<MessageResponse<GenderResponse>> UpdateAsync(int id, GenderRequest request, UserSession userSession);
-        Task<MessageResponse<string>> DeactivateAsync(int id, UserSession userSession);
+        Task<ICollection<GenderResponse>> GetAllAsync(bool includeInactives = false);
+        Task<GenderResponse> GetByIdAsync(int id);
+        Task<bool> ExistsByIdAsync(int id);
+        Task<MessageResponse<GenderResponse>> AddAsync(GenderRequest request, int userId);
+        Task<MessageResponse<GenderResponse>> UpdateAsync(int id, GenderRequest request, int userId);
+        Task<MessageResponse<string>> DeactivateAsync(int id, int userId);
     }
 }
