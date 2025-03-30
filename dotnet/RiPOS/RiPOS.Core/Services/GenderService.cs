@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using RiPOS.Core.Interfaces;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
-using RiPOS.Shared.Models;
-using RiPOS.Shared.Utilities.Extensions;
 
 namespace RiPOS.Core.Services
 {
@@ -20,7 +17,7 @@ namespace RiPOS.Core.Services
             return gendersResponse;
         }
 
-        public async Task<GenderResponse> GetByIdAsync(int id)
+        public async Task<GenderResponse?> GetByIdAsync(int id)
         {
             var gender = await genderRepository.FindAsync(g => g.Id == id);
 
@@ -75,32 +72,39 @@ namespace RiPOS.Core.Services
 
             var gender = await genderRepository.GetByIdAsync(id);
 
-            var exists = await genderRepository
-                .ExistsAsync(g => g.Id != gender.Id && g.Name.ToUpper() == gender.Name.ToUpper() && g.IsActive);
-
-            if (exists)
+            if (gender != null)
             {
-                messageResponse.Success = false;
-                messageResponse.Message = $"Ya existe un género con el nombre \"{gender.Name}\"";
-                return messageResponse;
-            }
+                var exists = await genderRepository
+                    .ExistsAsync(g => g.Id != gender.Id && g.Name.ToUpper() == gender.Name.ToUpper() && g.IsActive);
 
-            gender.Name = request.Name.Trim();
-            gender.LastModificationByUserId = userId;
+                if (exists)
+                {
+                    messageResponse.Success = false;
+                    messageResponse.Message = $"Ya existe un género con el nombre \"{gender.Name}\"";
+                    return messageResponse;
+                }
 
-            messageResponse.Success = await genderRepository.UpdateAsync(gender);
+                gender.Name = request.Name.Trim();
+                gender.LastModificationByUserId = userId;
 
-            if (messageResponse.Success)
-            {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Género modificado correctamente";
-                messageResponse.Data = mapper.Map<GenderResponse>(gender);
+                messageResponse.Success = await genderRepository.UpdateAsync(gender);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Género modificado correctamente";
+                    messageResponse.Data = mapper.Map<GenderResponse>(gender);
+                }
+                else
+                {
+                    messageResponse.Message = "No se realizó ningún cambio";
+                }
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "Género no encontrado";
             }
-
             return messageResponse;
         }
 
@@ -110,21 +114,28 @@ namespace RiPOS.Core.Services
 
             var gender = await genderRepository.GetByIdAsync(id);
 
-            gender.IsActive = false;
-            gender.LastModificationByUserId = userId;
-
-            messageResponse.Success = await genderRepository.UpdateAsync(gender);
-
-            if (messageResponse.Success)
+            if (gender != null)
             {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Género eliminado correctamente";
+                gender.IsActive = false;
+                gender.LastModificationByUserId = userId;
+
+                messageResponse.Success = await genderRepository.UpdateAsync(gender);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Género eliminado correctamente";
+                }
+                else
+                {
+                    messageResponse.Message = "No se realizó ningún cambio";
+                }
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "Género no encontrado";
             }
-
             return messageResponse;
         }
     }

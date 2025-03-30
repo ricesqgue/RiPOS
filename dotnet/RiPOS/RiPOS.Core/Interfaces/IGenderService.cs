@@ -7,7 +7,7 @@ namespace RiPOS.Core.Interfaces
     public interface IGenderService
     {
         Task<ICollection<GenderResponse>> GetAllAsync(bool includeInactives = false);
-        Task<GenderResponse> GetByIdAsync(int id);
+        Task<GenderResponse?> GetByIdAsync(int id);
         Task<bool> ExistsByIdAsync(int id);
         Task<MessageResponse<GenderResponse>> AddAsync(GenderRequest request, int userId);
         Task<MessageResponse<GenderResponse>> UpdateAsync(int id, GenderRequest request, int userId);

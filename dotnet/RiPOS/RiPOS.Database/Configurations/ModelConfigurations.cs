@@ -78,6 +78,18 @@ namespace RiPOS.Database.Configurations
             modelBuilder.Entity<Size>()
                 .Property(s => s.LastModificationDateTime)
                 .HasDefaultValueSql("GETDATE()");
+            
+            modelBuilder.Entity<Gender>()
+                .Property(g => g.IsActive)
+                .HasDefaultValue(true);
+            
+            modelBuilder.Entity<Gender>()
+                .Property(g => g.CreationDateTime)
+                .HasDefaultValueSql("GETDATE()");
+            
+            modelBuilder.Entity<Gender>()
+                .Property(g => g.LastModificationDateTime)
+                .HasDefaultValueSql("GETDATE()");
         }
     }
 }
