@@ -6,7 +6,7 @@ namespace RiPOS.Database
 {
     public class RiPosDbContext(DbContextOptions<RiPosDbContext> options) : DbContext(options)
     {
-        // public DbSet<Brand> Brands { get; set; }
+        public DbSet<Brand> Brands { get; set; }
 
         // public DbSet<CashRegister> CashRegisters { get; set; }
 

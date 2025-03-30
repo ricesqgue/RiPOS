@@ -15,7 +15,6 @@ namespace RiPOS.Database.Configurations
         {
             modelBuilder.Entity<UserStoreRole>()
                 .HasKey(usr => new { usr.UserId, usr.StoreId, usr.RoleId });
-
         }
 
         private static void ConfigureDefaultValues(ModelBuilder modelBuilder)
@@ -42,6 +41,18 @@ namespace RiPOS.Database.Configurations
             
             modelBuilder.Entity<Store>()
                 .Property(s => s.LastModificationDateTime)
+                .HasDefaultValueSql("GETDATE()");
+            
+            modelBuilder.Entity<Brand>()
+                .Property(b => b.IsActive)
+                .HasDefaultValue(true);
+            
+            modelBuilder.Entity<Brand>()
+                .Property(b => b.CreationDateTime)
+                .HasDefaultValueSql("GETDATE()");
+            
+            modelBuilder.Entity<Brand>()
+                .Property(b => b.LastModificationDateTime)
                 .HasDefaultValueSql("GETDATE()");
         }
     }

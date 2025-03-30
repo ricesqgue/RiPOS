@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using RiPOS.Core.Interfaces;
 using RiPOS.Repository.Interfaces;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 using RiPOS.Domain.Entities;
-using RiPOS.Shared.Models.Session;
-using RiPOS.Shared.Utilities.Extensions;
-
 
 namespace RiPOS.Core.Services
 {
@@ -21,7 +17,7 @@ namespace RiPOS.Core.Services
             return brandsResponse;
         }
 
-        public async Task<BrandResponse> GetByIdAsync(int id)
+        public async Task<BrandResponse?> GetByIdAsync(int id)
         {
             var brand = await brandRepository.FindAsync(b => b.Id == id);
 
@@ -75,32 +71,39 @@ namespace RiPOS.Core.Services
 
             var brand = await brandRepository.GetByIdAsync(id);
 
-            var exists = await brandRepository.ExistsAsync(b => b.Id != brand.Id && b.Name.ToUpper() == brand.Name.ToUpper()
-                && b.IsActive);
-
-            if (exists)
+            if (brand != null)
             {
-                messageResponse.Success = false;
-                messageResponse.Message = $"Ya existe una marca con el nombre \"{brand.Name}\"";
-                return messageResponse;
-            }
+                var exists = await brandRepository.ExistsAsync(b => b.Id != brand.Id && b.Name.ToUpper() == brand.Name.ToUpper()
+                    && b.IsActive);
 
-            brand.Name = request.Name.Trim();
-            brand.LastModificationByUserId = userId;
+                if (exists)
+                {
+                    messageResponse.Success = false;
+                    messageResponse.Message = $"Ya existe una marca con el nombre \"{brand.Name}\"";
+                    return messageResponse;
+                }
 
-            messageResponse.Success = await brandRepository.UpdateAsync(brand);
+                brand.Name = request.Name.Trim();
+                brand.LastModificationByUserId = userId;
 
-            if (messageResponse.Success)
-            {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Marca modificada correctamente";
-                messageResponse.Data = mapper.Map<BrandResponse>(brand);
+                messageResponse.Success = await brandRepository.UpdateAsync(brand);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Marca modificada correctamente";
+                    messageResponse.Data = mapper.Map<BrandResponse>(brand);
+                }
+                else
+                {
+                    messageResponse.Message = "No se realizó ningún cambio";
+                }
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "No se encontró la marca";
             }
-
             return messageResponse;
         }
 
@@ -110,19 +113,27 @@ namespace RiPOS.Core.Services
 
             var brand = await brandRepository.GetByIdAsync(id);
 
-            brand.IsActive = false;
-            brand.LastModificationByUserId = userId;
-
-            messageResponse.Success = await brandRepository.UpdateAsync(brand);
-
-            if (messageResponse.Success)
+            if (brand != null)
             {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Marca eliminada correctamente";
+                brand.IsActive = false;
+                brand.LastModificationByUserId = userId;
+
+                messageResponse.Success = await brandRepository.UpdateAsync(brand);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Marca eliminada correctamente";
+                }
+                else
+                {
+                    messageResponse.Message = "No se realizó ningún cambio";
+                }
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "No se encontró la marca";
             }
 
             return messageResponse;
