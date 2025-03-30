@@ -7,7 +7,7 @@ namespace RiPOS.Core.Interfaces
     public interface IVendorService
     {
         Task<ICollection<VendorResponse>> GetAllAsync(bool includeInactives = false);
-        Task<VendorResponse> GetByIdAsync(int id);
+        Task<VendorResponse?> GetByIdAsync(int id);
         Task<bool> ExistsByIdAsync(int id);
         Task<MessageResponse<VendorResponse>> AddAsync(VendorRequest request, int userId);
         Task<MessageResponse<VendorResponse>> UpdateAsync(int id, VendorRequest request, int userId);

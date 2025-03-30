@@ -19,7 +19,7 @@ namespace RiPOS.Core.Services
             return vendorsReponse;
         }
 
-        public async Task<VendorResponse> GetByIdAsync(int id)
+        public async Task<VendorResponse?> GetByIdAsync(int id)
         {
             var vendor = await vendorRepository.FindAsync(v => v.Id == id,
                 includeProps: c => c.Include(x => x.CountryState));
@@ -44,7 +44,7 @@ namespace RiPOS.Core.Services
             vendor.IsActive = true;
 
             var exists = await vendorRepository
-                .ExistsAsync(v => vendor.Email != null && v.Email.ToUpper() == vendor.Email.ToUpper()
+                .ExistsAsync(v => vendor.Email != null && v.Email != null && vendor.Email != null && v.Email.ToUpper() == vendor.Email.ToUpper()
                     && v.IsActive);
 
             if (exists)
@@ -76,42 +76,51 @@ namespace RiPOS.Core.Services
 
             var vendor = await vendorRepository.GetByIdAsync(id);
 
-            var exists = await vendorRepository.
-                ExistsAsync(v => v.Id != vendor.Id && vendor.Email != null && v.Email.ToUpper() == vendor.Email.ToUpper() 
-                                 && v.IsActive);
-
-            if (exists)
+            if (vendor != null)
             {
-                messageResponse.Success = false;
-                messageResponse.Message = $"Ya existe un proveedor con el email \"{vendor.Email}\"";
-                return messageResponse;
-            }
+                var exists = await vendorRepository.
+                    ExistsAsync(v => v.Id != vendor.Id && vendor.Email != null && v.Email != null && v.Email.ToUpper() == vendor.Email.ToUpper() 
+                                     && v.IsActive);
 
-            vendor.Name = request.Name.Trim();
-            vendor.Surname = request.Surname.Trim();
-            vendor.SecondSurname = request.SecondSurname?.Trim();
-            vendor.Email = request.Email?.Trim();
-            vendor.PhoneNumber = request.PhoneNumber?.Trim();
-            vendor.MobilePhone = request.MobilePhone?.Trim();
-            vendor.Address = request.Address?.Trim();
-            vendor.City = request.City?.Trim();
-            vendor.ZipCode = request.ZipCode?.Trim();
-            vendor.CountryStateId = request.CountryStateId;
+                if (exists)
+                {
+                    messageResponse.Success = false;
+                    messageResponse.Message = $"Ya existe un proveedor con el email \"{vendor.Email}\"";
+                    return messageResponse;
+                }
 
-            vendor.LastModificationByUserId = userId;
+                vendor.Name = request.Name.Trim();
+                vendor.Surname = request.Surname.Trim();
+                vendor.SecondSurname = request.SecondSurname?.Trim();
+                vendor.Email = request.Email?.Trim();
+                vendor.PhoneNumber = request.PhoneNumber?.Trim();
+                vendor.MobilePhone = request.MobilePhone?.Trim();
+                vendor.Address = request.Address?.Trim();
+                vendor.City = request.City?.Trim();
+                vendor.ZipCode = request.ZipCode?.Trim();
+                vendor.CountryStateId = request.CountryStateId;
 
-            messageResponse.Success = await vendorRepository.UpdateAsync(vendor);
+                vendor.LastModificationByUserId = userId;
 
-            if (messageResponse.Success)
-            {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Proveedor modificado correctamente";
-                messageResponse.Data = mapper.Map<VendorResponse>(vendor);
+                messageResponse.Success = await vendorRepository.UpdateAsync(vendor);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Proveedor modificado correctamente";
+                    messageResponse.Data = mapper.Map<VendorResponse>(vendor);
+                }
+                else
+                {
+                    messageResponse.Message = "No se realizó ningún cambio";
+                }
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "Proveedor no encontrado";
             }
+
 
             return messageResponse;
         }
@@ -122,21 +131,29 @@ namespace RiPOS.Core.Services
 
             var vendor = await vendorRepository.GetByIdAsync(id);
 
-            vendor.IsActive = false;
-            vendor.LastModificationByUserId = userId;
-
-            messageResponse.Success = await vendorRepository.UpdateAsync(vendor);
-
-            if (messageResponse.Success)
+            if (vendor != null)
             {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Proveedor eliminado correctamente";
+                vendor.IsActive = false;
+                vendor.LastModificationByUserId = userId;
+
+                messageResponse.Success = await vendorRepository.UpdateAsync(vendor);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Proveedor eliminado correctamente";
+                }
+                else
+                {
+                    messageResponse.Message = "No se realizó ningún cambio";
+                }
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "Proveedor no encontrado";  
             }
-
+            
             return messageResponse;
         }
     }

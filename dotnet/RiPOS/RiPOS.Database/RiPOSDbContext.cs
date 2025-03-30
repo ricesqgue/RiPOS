@@ -32,7 +32,7 @@ namespace RiPOS.Database
 
         public DbSet<UserStoreRole> UserStoreRoles { get; set; }
 
-        // public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<Vendor> Vendors { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
