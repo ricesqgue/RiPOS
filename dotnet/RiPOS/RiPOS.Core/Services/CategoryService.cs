@@ -19,7 +19,7 @@ namespace RiPOS.Core.Services
             return categoriesResponse;
         }
 
-        public async Task<CategoryResponse> GetByIdAsync(int id)
+        public async Task<CategoryResponse?> GetByIdAsync(int id)
         {
             var category = await categoryRepository.FindAsync(c => c.Id == id);
 
@@ -74,32 +74,40 @@ namespace RiPOS.Core.Services
             var messageResponse = new MessageResponse<CategoryResponse>();
             var category = await categoryRepository.GetByIdAsync(id);
 
-            var exists = await categoryRepository
-                .ExistsAsync(c => c.Id != category.Id && c.Name.ToUpper() == category.Name.ToUpper() && c.IsActive);
-
-            if (exists)
+            if (category != null)
             {
-                messageResponse.Success = false;
-                messageResponse.Message = $"Ya existe una categoría con el nombre \"{category.Name}\"";
-                return messageResponse;
-            }
+                var exists = await categoryRepository
+                    .ExistsAsync(c => c.Id != category.Id && c.Name.ToUpper() == category.Name.ToUpper() && c.IsActive);
 
-            category.Name = request.Name.Trim();
-            category.LastModificationByUserId = userId;
+                if (exists)
+                {
+                    messageResponse.Success = false;
+                    messageResponse.Message = $"Ya existe una categoría con el nombre \"{category.Name}\"";
+                    return messageResponse;
+                }
 
-            messageResponse.Success = await categoryRepository.UpdateAsync(category);
+                category.Name = request.Name.Trim();
+                category.LastModificationByUserId = userId;
 
-            if (messageResponse.Success)
-            {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Categoría modificada correctamente";
-                messageResponse.Data = mapper.Map<CategoryResponse>(category);
+                messageResponse.Success = await categoryRepository.UpdateAsync(category);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Categoría modificada correctamente";
+                    messageResponse.Data = mapper.Map<CategoryResponse>(category);
+                }
+                else
+                {
+                    messageResponse.Message = "No se realizó ningún cambio";
+                }
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "Categoría no encontrada";
             }
-
+            
             return messageResponse;
         }
 
@@ -109,19 +117,27 @@ namespace RiPOS.Core.Services
 
             var category = await categoryRepository.GetByIdAsync(id);
 
-            category.IsActive = false;
-            category.LastModificationByUserId = userId;
-
-            messageResponse.Success = await categoryRepository.UpdateAsync(category);
-
-            if (messageResponse.Success)
+            if (category != null)
             {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Categoría eliminada correctamente";
+                category.IsActive = false;
+                category.LastModificationByUserId = userId;
+
+                messageResponse.Success = await categoryRepository.UpdateAsync(category);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Categoría eliminada correctamente";
+                }
+                else
+                {
+                    messageResponse.Message = "No se realizó ningún cambio";
+                }
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "Categoría no encontrada";
             }
 
             return messageResponse;

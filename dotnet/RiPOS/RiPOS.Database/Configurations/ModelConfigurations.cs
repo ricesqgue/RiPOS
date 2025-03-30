@@ -102,6 +102,18 @@ namespace RiPOS.Database.Configurations
             modelBuilder.Entity<Color>()
                 .Property(c => c.LastModificationDateTime)
                 .HasDefaultValueSql("GETDATE()");
+            
+            modelBuilder.Entity<Category>()
+                .Property(c => c.IsActive)
+                .HasDefaultValue(true);
+            
+            modelBuilder.Entity<Category>()
+                .Property(c => c.CreationDateTime)
+                .HasDefaultValueSql("GETDATE()");
+            
+            modelBuilder.Entity<Category>()
+                .Property(c => c.LastModificationDateTime)
+                .HasDefaultValueSql("GETDATE()");
         }
     }
 }

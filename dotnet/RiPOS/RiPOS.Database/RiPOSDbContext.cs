@@ -10,7 +10,7 @@ namespace RiPOS.Database
 
         public DbSet<CashRegister> CashRegisters { get; set; }
 
-        // public DbSet<Category> Categories { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         public DbSet<Color> Colors { get; set; }
         
