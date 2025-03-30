@@ -4,7 +4,6 @@ using RiPOS.API.Utilities.ActionFilters;
 using RiPOS.API.Utilities.Security;
 using RiPOS.Core.Interfaces;
 using RiPOS.Shared.Enums;
-using RiPOS.Shared.Models;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 using RiPOS.Shared.Utilities.Extensions;

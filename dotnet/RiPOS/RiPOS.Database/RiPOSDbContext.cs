@@ -16,7 +16,7 @@ namespace RiPOS.Database
         
         public DbSet<CountryState> CountryStates { get; set; }
 
-        // public DbSet<Customer> Customers { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Gender> Genders { get; set; }
 

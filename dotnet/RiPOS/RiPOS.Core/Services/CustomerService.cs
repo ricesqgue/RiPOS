@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using RiPOS.Core.Interfaces;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
-using RiPOS.Shared.Utilities.Extensions;
 
 namespace RiPOS.Core.Services
 {
@@ -21,7 +19,7 @@ namespace RiPOS.Core.Services
             return customersResponse;
         }
 
-        public async Task<CustomerResponse> GetByIdAsync(int id)
+        public async Task<CustomerResponse?> GetByIdAsync(int id)
         {
             var customer = await customerRepository.FindAsync(c => c.Id == id,
                 includeProps: c => c.Include(x => x.CountryState));
@@ -46,17 +44,18 @@ namespace RiPOS.Core.Services
             customer.IsActive = true;
 
             var exists = await customerRepository
-                .FindAsync(c => (customer.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() || customer.Rfc != null && c.Rfc == customer.Rfc)
+                .FindAsync(c => (customer.Email != null && c.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() 
+                                 || (customer.Rfc != null && c.Rfc != null && customer.Rfc != null && c.Rfc == customer.Rfc))
                                 && c.IsActive);
 
             if (exists != null)
             {
                 messageResponse.Success = false;
-                if (exists.Email.ToUpper() == request.Email?.Trim().ToUpper())
+                if (exists.Email != null && exists.Email.ToUpper() == request.Email?.Trim().ToUpper())
                 {
                     messageResponse.Message = $"Ya existe un cliente con el email \"{customer.Email}\"";
                 }
-                else
+                else if (customer.Rfc != null)
                 {
                     messageResponse.Message = $"Ya existe un cliente con el RFC \"{customer.Rfc.ToUpper()}\"";
                 }
@@ -85,50 +84,59 @@ namespace RiPOS.Core.Services
 
             var customer = await customerRepository.GetByIdAsync(id);
 
-            var exists = await customerRepository
-                .FindAsync(c => c.Id != customer.Id 
-                                && (customer.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() || customer.Rfc != null && c.Rfc == customer.Rfc)
-                                && c.IsActive);
-
-            if (exists != null)
+            if (customer != null)
             {
-                messageResponse.Success = false;
-                if (exists.Name.ToUpper() == request.Name.Trim().ToUpper())
+                var exists = await customerRepository
+                    .FindAsync(c => c.Id != customer.Id 
+                                    && (customer.Email != null && c.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() 
+                                       || (customer.Rfc != null && c.Rfc != null && customer.Rfc != null && c.Rfc == customer.Rfc))
+                                    && c.IsActive);
+
+                if (exists != null)
                 {
-                    messageResponse.Message = $"Ya existe un cliente con el email \"{customer.Email}\"";
+                    messageResponse.Success = false;
+                    if (exists.Email != null && exists.Email.ToUpper() == request.Name.Trim().ToUpper())
+                    {
+                        messageResponse.Message = $"Ya existe un cliente con el email \"{customer.Email}\"";
+                    }
+                    else if (customer.Rfc != null)
+                    {
+                        messageResponse.Message = $"Ya existe un cliente con el RFC  \"{customer.Rfc.ToUpper()}\"";
+                    }
+                    return messageResponse;
+                }
+
+                customer.Name = request.Name.Trim();
+                customer.Surname = request.Surname.Trim();
+                customer.SecondSurname = request.SecondSurname?.Trim();
+                customer.Email = request.Email?.Trim();
+                customer.PhoneNumber = request.PhoneNumber?.Trim();
+                customer.MobilePhone = request.MobilePhone?.Trim();
+                customer.Address = request.Address?.Trim();
+                customer.City = request.City?.Trim();
+                customer.ZipCode = request.ZipCode?.Trim();
+                customer.Rfc = request.Rfc?.Trim().ToUpper();
+                customer.CountryStateId = request.CountryStateId;
+
+                customer.LastModificationByUserId = userId;
+
+                messageResponse.Success = await customerRepository.UpdateAsync(customer);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Cliente modificado correctamente";
+                    messageResponse.Data = mapper.Map<CustomerResponse>(customer);
                 }
                 else
                 {
-                    messageResponse.Message = $"Ya existe un cliente con el RFC  \"{customer.Rfc.ToUpper()}\"";
+                    messageResponse.Message = "No se realizó ningún cambio";
                 }
-                return messageResponse;
-            }
-
-            customer.Name = request.Name.Trim();
-            customer.Surname = request.Surname.Trim();
-            customer.SecondSurname = request.SecondSurname?.Trim();
-            customer.Email = request.Email?.Trim();
-            customer.PhoneNumber = request.PhoneNumber?.Trim();
-            customer.MobilePhone = request.MobilePhone?.Trim();
-            customer.Address = request.Address?.Trim();
-            customer.City = request.City?.Trim();
-            customer.ZipCode = request.ZipCode?.Trim();
-            customer.Rfc = request.Rfc?.Trim().ToUpper();
-            customer.CountryStateId = request.CountryStateId;
-
-            customer.LastModificationByUserId = userId;
-
-            messageResponse.Success = await customerRepository.UpdateAsync(customer);
-
-            if (messageResponse.Success)
-            {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Cliente modificado correctamente";
-                messageResponse.Data = mapper.Map<CustomerResponse>(customer);
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "Cliente no encontrado";
             }
 
             return messageResponse;
@@ -140,21 +148,29 @@ namespace RiPOS.Core.Services
 
             var customer = await customerRepository.GetByIdAsync(id);
 
-            customer.IsActive = false;
-            customer.LastModificationByUserId = userId;
-
-            messageResponse.Success = await customerRepository.UpdateAsync(customer);
-
-            if (messageResponse.Success)
+            if (customer != null)
             {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Cliente eliminado correctamente";
+                customer.IsActive = false;
+                customer.LastModificationByUserId = userId;
+
+                messageResponse.Success = await customerRepository.UpdateAsync(customer);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Cliente eliminado correctamente";
+                }
+                else
+                {
+                    messageResponse.Message = "No se realizó ningún cambio";
+                }
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "Cliente no encontrado";
             }
-
+            
             return messageResponse;
         }
     }
