@@ -17,7 +17,7 @@ namespace RiPOS.API.Controllers
         {
             var userResponse = await loginService.AuthenticateAsync(request);
             
-            if (userResponse.Success)
+            if (userResponse is { Success: true, Data: not null })
             {
                 var tokenResponse = loginService.BuildTokens(userResponse.Data);
                 return Ok(tokenResponse);

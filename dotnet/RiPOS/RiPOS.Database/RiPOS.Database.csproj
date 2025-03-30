@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RiPOS.Domain\RiPOS.Domain.csproj" />
+    <ProjectReference Include="..\RiPOS.Shared\RiPOS.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

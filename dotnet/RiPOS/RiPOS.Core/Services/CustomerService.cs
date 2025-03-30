@@ -47,7 +47,7 @@ namespace RiPOS.Core.Services
 
             var exists = await customerRepository
                 .FindAsync(c => (customer.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() || customer.Rfc != null && c.Rfc == customer.Rfc)
-                    && c.IsActive);
+                                && c.IsActive);
 
             if (exists != null)
             {
@@ -87,8 +87,8 @@ namespace RiPOS.Core.Services
 
             var exists = await customerRepository
                 .FindAsync(c => c.Id != customer.Id 
-                    && (customer.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() || customer.Rfc != null && c.Rfc == customer.Rfc)
-                    && c.IsActive);
+                                && (customer.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() || customer.Rfc != null && c.Rfc == customer.Rfc)
+                                && c.IsActive);
 
             if (exists != null)
             {

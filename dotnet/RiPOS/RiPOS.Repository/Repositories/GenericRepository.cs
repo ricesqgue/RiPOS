@@ -25,7 +25,7 @@ namespace RiPOS.Repository.Repositories
             return await _dbSet.AsNoTracking().AnyAsync(filter);
         }
 
-        public async Task<ICollection<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeProps = null, Expression<Func<TEntity, object>> orderBy = null, bool orderDesc = false, int pageNumber = 0, int pageSize = 0)
+        public async Task<ICollection<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null, Expression<Func<TEntity, object>>? orderBy = null, bool orderDesc = false, int pageNumber = 0, int pageSize = 0)
         {
             var query = GenerateQuery(filter, includeProps, orderBy, orderDesc, pageNumber, pageSize);
 
@@ -39,12 +39,12 @@ namespace RiPOS.Repository.Repositories
             return await query.CountAsync();
         }
 
-        public async Task<TEntity> GetByIdAsync(int id)
+        public async Task<TEntity?> GetByIdAsync(int id)
         {
             return await _dbSet.AsNoTracking().SingleOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeProps = null)
+        public async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null)
         {
             IQueryable<TEntity> query = _dbSet.AsNoTracking();
 
@@ -59,8 +59,8 @@ namespace RiPOS.Repository.Repositories
         public async Task<bool> AddAsync(TEntity entity)
         {
             var currentDate = DateTime.Now;
-            entity.CreationDate = currentDate;
-            entity.LastModificationDate = currentDate;
+            entity.CreationDateTime = currentDate;
+            entity.LastModificationDateTime = currentDate;
             await _dbSet.AddAsync(entity);
             return await _context.SaveChangesAsync() > 0;
         }
@@ -70,8 +70,8 @@ namespace RiPOS.Repository.Repositories
             _dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
 
-            entity.LastModificationDate = DateTime.Now;
-            _context.Entry(entity).Property(e => e.CreationDate).IsModified = false;
+            entity.LastModificationDateTime = DateTime.Now;
+            _context.Entry(entity).Property(e => e.CreationDateTime).IsModified = false;
             _context.Entry(entity).Property(e => e.CreationByUserId).IsModified = false;
 
             foreach (var prop in propsToIgnore)
@@ -82,7 +82,7 @@ namespace RiPOS.Repository.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
-        private IQueryable<TEntity> GenerateQuery(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeProps = null, Expression<Func<TEntity, object>> orderBy = null, bool orderDesc = false, int pageNumber = 0, int pageSize = 0)
+        private IQueryable<TEntity> GenerateQuery(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null, Expression<Func<TEntity, object>>? orderBy = null, bool orderDesc = false, int pageNumber = 0, int pageSize = 0)
         {
             IQueryable<TEntity> query = _dbSet.AsNoTracking();
 

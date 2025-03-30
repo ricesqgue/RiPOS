@@ -1,4 +1,5 @@
-﻿using RiPOS.Domain.Interfaces;
+﻿using System.ComponentModel;
+using RiPOS.Domain.Interfaces;
 using RiPOS.Domain.Shared;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -29,7 +30,7 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(500)]
-        public string? PasswordHash { get; set; }
+        public required string PasswordHash { get; set; }
 
         [MaxLength(25)]
         public string? PhoneNumber { get; set; }
@@ -41,7 +42,8 @@ namespace RiPOS.Domain.Entities
         public string? ProfileImagePath { get; set; }
 
         [Required]
-        public bool IsActive { get; set; } = true;
+        [DefaultValue(true)]
+        public bool IsActive { get; set; }
 
         public required ICollection<UserStoreRole> UserStoreRoles { get; set; }
     }
