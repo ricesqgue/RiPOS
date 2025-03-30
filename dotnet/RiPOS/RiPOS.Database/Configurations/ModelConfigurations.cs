@@ -54,6 +54,18 @@ namespace RiPOS.Database.Configurations
             modelBuilder.Entity<Brand>()
                 .Property(b => b.LastModificationDateTime)
                 .HasDefaultValueSql("GETDATE()");
+            
+            modelBuilder.Entity<CashRegister>()
+                .Property(c => c.IsActive)
+                .HasDefaultValue(true);
+            
+            modelBuilder.Entity<CashRegister>()
+                .Property(c => c.CreationDateTime)
+                .HasDefaultValueSql("GETDATE()");
+            
+            modelBuilder.Entity<CashRegister>()
+                .Property(c => c.LastModificationDateTime)
+                .HasDefaultValueSql("GETDATE()");
         }
     }
 }

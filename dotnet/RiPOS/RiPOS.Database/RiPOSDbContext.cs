@@ -8,7 +8,7 @@ namespace RiPOS.Database
     {
         public DbSet<Brand> Brands { get; set; }
 
-        // public DbSet<CashRegister> CashRegisters { get; set; }
+        public DbSet<CashRegister> CashRegisters { get; set; }
 
         // public DbSet<Category> Categories { get; set; }
 
