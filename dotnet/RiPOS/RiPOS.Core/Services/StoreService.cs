@@ -2,14 +2,12 @@
 using RiPOS.Core.Interfaces;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
-using RiPOS.Repository.Session;
-using RiPOS.Shared.Models;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.Core.Services
 {
-    public class StoreService(IStoreRepository storeRepository, IRepositorySessionFactory repositorySessionFactory, IMapper mapper) : IStoreService
+    public class StoreService(IStoreRepository storeRepository, IMapper mapper) : IStoreService
     {
         public async Task<ICollection<StoreResponse>> GetAllAsync()
         {
@@ -20,7 +18,7 @@ namespace RiPOS.Core.Services
             return storesResponse;
         }
 
-        public async Task<StoreResponse> GetByIdAsync(int id)
+        public async Task<StoreResponse?> GetByIdAsync(int id)
         {
             var store = await storeRepository.FindAsync(s => s.Id == id);
 
@@ -75,35 +73,43 @@ namespace RiPOS.Core.Services
 
             var store = await storeRepository.GetByIdAsync(id);
 
-            var exists = await storeRepository
-                .ExistsAsync(s => s.Id != store.Id && s.Name.ToUpper() == store.Name.ToUpper() && s.IsActive);
-
-            if (exists)
+            if (store != null)
             {
-                messageResponse.Success = false;
-                messageResponse.Message = $"Ya existe una tienda con el nombre \"{store.Name}\"";
-                return messageResponse;
-            }
+                var exists = await storeRepository
+                    .ExistsAsync(s => s.Id != store.Id && s.Name.ToUpper() == store.Name.ToUpper() && s.IsActive);
 
-            store.Name = request.Name.Trim();
-            store.Address = request.Address?.Trim();
-            store.PhoneNumber = request.PhoneNumber?.Trim();
-            store.MobilePhone = request.MobilePhone?.Trim();
-            store.LastModificationByUserId = userId;
+                if (exists)
+                {
+                    messageResponse.Success = false;
+                    messageResponse.Message = $"Ya existe una tienda con el nombre \"{store.Name}\"";
+                    return messageResponse;
+                }
 
-            messageResponse.Success = await storeRepository.UpdateAsync(store);
+                store.Name = request.Name.Trim();
+                store.Address = request.Address?.Trim();
+                store.PhoneNumber = request.PhoneNumber?.Trim();
+                store.MobilePhone = request.MobilePhone?.Trim();
+                store.LastModificationByUserId = userId;
 
-            if (messageResponse.Success)
-            {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Tienda modificada correctamente";
-                messageResponse.Data = mapper.Map<StoreResponse>(store);
+                messageResponse.Success = await storeRepository.UpdateAsync(store);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Tienda modificada correctamente";
+                    messageResponse.Data = mapper.Map<StoreResponse>(store);
+                }
+                else
+                {
+                    messageResponse.Message = "No se realizó ningún cambio";
+                }
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "Tienda no encontrada";
             }
-
+            
             return messageResponse;
         }
 
@@ -113,19 +119,27 @@ namespace RiPOS.Core.Services
 
             var store = await storeRepository.GetByIdAsync(id);
 
-            store.IsActive = false;
-            store.LastModificationByUserId = userId;
-
-            messageResponse.Success = await storeRepository.UpdateAsync(store);
-
-            if (messageResponse.Success)
+            if (store != null)
             {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Tienda eliminada correctamente";
+                store.IsActive = false;
+                store.LastModificationByUserId = userId;
+
+                messageResponse.Success = await storeRepository.UpdateAsync(store);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Tienda eliminada correctamente";
+                }
+                else
+                {
+                    messageResponse.Message = "No se realizó ningún cambio";
+                }
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "Tienda no encontrada";
             }
 
             return messageResponse;
