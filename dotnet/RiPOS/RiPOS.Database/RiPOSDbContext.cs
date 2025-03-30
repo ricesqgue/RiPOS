@@ -12,7 +12,8 @@ namespace RiPOS.Database
 
         // public DbSet<Category> Categories { get; set; }
 
-        // public DbSet<Color> Colors { get; set; }
+        public DbSet<Color> Colors { get; set; }
+        
         public DbSet<CountryState> CountryStates { get; set; }
 
         // public DbSet<Customer> Customers { get; set; }

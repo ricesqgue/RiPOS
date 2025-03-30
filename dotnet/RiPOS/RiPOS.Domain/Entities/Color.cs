@@ -15,7 +15,7 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(10)]
-        public string? RgbHex { get; set; }
+        public required string RgbHex { get; set; }
 
         [Required] 
         public bool IsActive { get; set; } = true;

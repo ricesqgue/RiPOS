@@ -6,7 +6,6 @@ using RiPOS.Core.Interfaces;
 using RiPOS.Shared.Enums;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
-using RiPOS.Shared.Models;
 using RiPOS.Shared.Utilities.Extensions;
 
 namespace RiPOS.API.Controllers
