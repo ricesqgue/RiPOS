@@ -80,36 +80,36 @@ namespace RiPOS.API.Utilities.Extensions
 
         public static void ConfigureCoreServices(this IServiceCollection services)
         {
-            // services.AddTransient<IBrandService, BrandService>();
-            // services.AddTransient<ICashRegisterService, CashRegisterService>();
-            // services.AddTransient<ICategoryService, CategoryService>();
-            // services.AddTransient<IColorService, ColorService>();
-            // services.AddTransient<ICustomerService, CustomerService>();
-            // services.AddTransient<IGenderService, GenderService>();
-            // services.AddTransient<ILoginService, LoginService>();
-            // services.AddTransient<IMiscellaneousService, MiscellaneousService>();
-            // services.AddTransient<ISizeService, SizeService>();
-            // services.AddTransient<IStoreService, StoreService>();
-            // services.AddTransient<IUserService, UserService>();
-            // services.AddTransient<IVendorService, VendorService>();
+            services.AddTransient<IBrandService, BrandService>();
+            services.AddTransient<ICashRegisterService, CashRegisterService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IColorService, ColorService>();
+            services.AddTransient<ICustomerService, CustomerService>();
+            services.AddTransient<IGenderService, GenderService>();
+            services.AddTransient<ILoginService, LoginService>();
+            services.AddTransient<IMiscellaneousService, MiscellaneousService>();
+            services.AddTransient<ISizeService, SizeService>();
+            services.AddTransient<IStoreService, StoreService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IVendorService, VendorService>();
         }
 
         public static void ConfigureRepositories(this IServiceCollection services)
         {
-            // services.AddScoped<IRepositorySessionFactory, RepositorySessionFactory>();
+            services.AddScoped<IRepositorySessionFactory, RepositorySessionFactory>();
 
-            // services.AddTransient<IBrandRepository, BrandRepository>();
-            // services.AddTransient<ICashRegisterRepository, CashRegisterRepository>();
-            // services.AddTransient<ICategoryRepository, CategoryRepository>();
-            // services.AddTransient<IColorRepository, ColorRepository>();
-            // services.AddTransient<ICustomerRepository, CustomerRepository>();
-            // services.AddTransient<IGenderRepository, GenderRepository>();
-            // services.AddTransient<ILoginRepository, LoginRepository>();
-            // services.AddTransient<IMiscRepository, MiscRepository>();
-            // services.AddTransient<ISizeRepository, SizeRepository>();
-            // services.AddTransient<IStoreRepository, StoreRepository>();
-            // services.AddTransient<IUserRepository, UserRepository>();
-            // services.AddTransient<IVendorRepository, VendorRepository>();
+            services.AddTransient<IBrandRepository, BrandRepository>();
+            services.AddTransient<ICashRegisterRepository, CashRegisterRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IColorRepository, ColorRepository>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<IGenderRepository, GenderRepository>();
+            services.AddTransient<ILoginRepository, LoginRepository>();
+            services.AddTransient<IMiscRepository, MiscRepository>();
+            services.AddTransient<ISizeRepository, SizeRepository>();
+            services.AddTransient<IStoreRepository, StoreRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IVendorRepository, VendorRepository>();
         }
     }
 }
