@@ -23,7 +23,7 @@ namespace RiPOS.Database
         
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
-        // public DbSet<Size> Sizes { get; set; }
+        public DbSet<Size> Sizes { get; set; }
 
         public DbSet<Store> Stores { get; set; }
 

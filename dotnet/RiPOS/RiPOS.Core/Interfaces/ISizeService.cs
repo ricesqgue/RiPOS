@@ -7,7 +7,7 @@ namespace RiPOS.Core.Interfaces
     public interface ISizeService
     {
         Task<ICollection<SizeResponse>> GetAllAsync(bool includeInactives = false);
-        Task<SizeResponse> GetByIdAsync(int id);
+        Task<SizeResponse?> GetByIdAsync(int id);
         Task<bool> ExistsByIdAsync(int id);
         Task<MessageResponse<SizeResponse>> AddAsync(SizeRequest request, int userId);
         Task<MessageResponse<SizeResponse>> UpdateAsync(int id, SizeRequest request, int userId);

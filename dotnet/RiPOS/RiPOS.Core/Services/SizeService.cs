@@ -3,7 +3,6 @@ using RiPOS.Core.Interfaces;
 using RiPOS.Repository.Interfaces;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
-using RiPOS.Shared.Models;
 using RiPOS.Domain.Entities;
 
 namespace RiPOS.Core.Services
@@ -18,7 +17,7 @@ namespace RiPOS.Core.Services
             return sizesResponse;
         }
 
-        public async Task<SizeResponse> GetByIdAsync(int id)
+        public async Task<SizeResponse?> GetByIdAsync(int id)
         {
             var size = await sizeRepository.FindAsync(s => s.Id == id);
 
@@ -81,39 +80,51 @@ namespace RiPOS.Core.Services
 
             var size = await sizeRepository.GetByIdAsync(id);
 
-            var exists = await sizeRepository
-                .FindAsync(s => s.Id != size.Id && (s.ShortName == size.ShortName.ToUpper() || s.Name.ToUpper() == size.Name.ToUpper()) 
-                                                && s.IsActive);
-
-            if (exists != null)
+            if (size != null)
             {
-                messageResponse.Success = false;
-                if (exists.Name.ToUpper() == request.Name.Trim().ToUpper())
+                var exists = await sizeRepository
+                    .FindAsync(s =>
+                        s.Id != size.Id && (s.ShortName == size.ShortName.ToUpper() ||
+                                            s.Name.ToUpper() == size.Name.ToUpper())
+                                        && s.IsActive);
+
+                if (exists != null)
                 {
-                    messageResponse.Message = $"Ya existe una talla con el nombre \"{size.Name}\"";
+                    messageResponse.Success = false;
+                    if (exists.Name.ToUpper() == request.Name.Trim().ToUpper())
+                    {
+                        messageResponse.Message = $"Ya existe una talla con el nombre \"{size.Name}\"";
+                    }
+                    else
+                    {
+                        messageResponse.Message =
+                            $"Ya existe una talla con el nombre corto \"{size.ShortName.ToUpper()}\"";
+                    }
+
+                    return messageResponse;
+                }
+
+                size.Name = request.Name.Trim();
+                size.ShortName = request.ShortName.ToUpper().Trim();
+                size.LastModificationByUserId = userId;
+
+                messageResponse.Success = await sizeRepository.UpdateAsync(size);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Talla modificada correctamente";
+                    messageResponse.Data = mapper.Map<SizeResponse>(size);
                 }
                 else
                 {
-                    messageResponse.Message = $"Ya existe una talla con el nombre corto \"{size.ShortName.ToUpper()}\"";
+                    messageResponse.Message = "No se realizó ningún cambio";
                 }
-                return messageResponse;
-            }
-
-            size.Name = request.Name.Trim();
-            size.ShortName = request.ShortName.ToUpper().Trim();
-            size.LastModificationByUserId = userId;
-
-            messageResponse.Success = await sizeRepository.UpdateAsync(size);
-
-            if (messageResponse.Success)
-            {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Talla modificada correctamente";
-                messageResponse.Data = mapper.Map<SizeResponse>(size);
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "Talla no encontrada";
             }
 
             return messageResponse;
@@ -125,21 +136,29 @@ namespace RiPOS.Core.Services
 
             var size = await sizeRepository.GetByIdAsync(id);
 
-            size.IsActive = false;
-            size.LastModificationByUserId = userId;
-
-            messageResponse.Success = await sizeRepository.UpdateAsync(size);
-
-            if (messageResponse.Success)
+            if (size != null)
             {
-                messageResponse.Success = true;
-                messageResponse.Message = $"Talla eliminada correctamente";
+                size.IsActive = false;
+                size.LastModificationByUserId = userId;
+
+                messageResponse.Success = await sizeRepository.UpdateAsync(size);
+
+                if (messageResponse.Success)
+                {
+                    messageResponse.Success = true;
+                    messageResponse.Message = $"Talla eliminada correctamente";
+                }
+                else
+                {
+                    messageResponse.Message = "No se realizó ningún cambio";
+                }    
             }
             else
             {
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Success = false;
+                messageResponse.Message = "Talla no encontrada";
             }
-
+            
             return messageResponse;
         }
     }
