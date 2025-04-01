@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiPOS.Domain", "RiPOS.Domai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiPOS.Repository", "RiPOS.Repository\RiPOS.Repository.csproj", "{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D2D56A89-30FF-48FC-A595-9A4FB2A21DC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiPOS.Core.Tests", "RiPOS.Core.Tests\RiPOS.Core.Tests.csproj", "{1CF45B90-6641-4B37-BEA5-992628ED787C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,10 @@ Global
 		{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{591BB8D1-7085-4DCE-B0B4-7EB4466D34FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CF45B90-6641-4B37-BEA5-992628ED787C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CF45B90-6641-4B37-BEA5-992628ED787C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CF45B90-6641-4B37-BEA5-992628ED787C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CF45B90-6641-4B37-BEA5-992628ED787C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,5 +61,6 @@ Global
 		SolutionGuid = {BF5F79AD-ADF5-4BF9-A7B0-D06E999797E1}
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{1CF45B90-6641-4B37-BEA5-992628ED787C} = {D2D56A89-30FF-48FC-A595-9A4FB2A21DC7}
 	EndGlobalSection
 EndGlobal

@@ -87,7 +87,7 @@ namespace RiPOS.API.Utilities.Extensions
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IGenderService, GenderService>();
             services.AddTransient<ILoginService, LoginService>();
-            services.AddTransient<IMiscellaneousService, MiscellaneousService>();
+            services.AddTransient<IMiscService, MiscService>();
             services.AddTransient<ISizeService, SizeService>();
             services.AddTransient<IStoreService, StoreService>();
             services.AddTransient<IUserService, UserService>();

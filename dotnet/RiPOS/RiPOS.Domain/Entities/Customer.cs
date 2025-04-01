@@ -45,7 +45,7 @@ namespace RiPOS.Domain.Entities
         public int CountryStateId { get; set; }
 
         [ForeignKey(nameof(CountryStateId))]
-        public required CountryState CountryState { get; set; }
+        public CountryState? CountryState { get; set; }
 
         [Required] 
         public bool IsActive { get; set; } = true;

@@ -8,7 +8,7 @@ namespace RiPOS.API.Controllers
     [Route("api/misc")]
     [Authorize]
 
-    public class MiscController(IMiscellaneousService miscService) : ControllerBase
+    public class MiscController(IMiscService miscService) : ControllerBase
     {
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]

@@ -20,6 +20,6 @@ namespace RiPOS.Domain.Entities
         public int StoreId { get; set; }
 
         [ForeignKey(nameof(StoreId))]
-        public required Store Store { get; set; }
+        public Store? Store { get; set; }
     }
 }

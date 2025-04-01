@@ -7,5 +7,7 @@
         public required string Name { get; set; }
 
         public bool IsActive { get; set; }
+        
+        public int StoreId { get; set; }
     }
 }

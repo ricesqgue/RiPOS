@@ -20,8 +20,8 @@ namespace RiPOS.Core.Services
         public async Task<ICollection<UserResponse>> GetAllByStoreAsync(int storeId, bool includeInactives = false)
         {
             var users = await userRepository
-                .GetAllAsync(u => u.UserStoreRoles.Any(usr => usr.StoreId == storeId) && (u.IsActive || includeInactives),
-                    includeProps: u => u.Include(ur => ur.UserStoreRoles));
+                .GetAllAsync(u => u.UserStoreRoles!.Any(usr => usr.StoreId == storeId) && (u.IsActive || includeInactives),
+                    includeProps: u => u.Include(ur => ur.UserStoreRoles)!);
 
             var usersResponse = mapper.Map<ICollection<UserResponse>>(users);
 
@@ -30,8 +30,8 @@ namespace RiPOS.Core.Services
         
         public async Task<UserResponse> GetByIdInStoreAsync(int id, int storeId)
         {
-            var user = await userRepository.FindAsync(u => u.UserStoreRoles.Any(usr => usr.StoreId == storeId),
-                includeProps: u => u.Include(ur => ur.UserStoreRoles));
+            var user = await userRepository.FindAsync(u => u.UserStoreRoles!.Any(usr => usr.StoreId == storeId),
+                includeProps: u => u.Include(ur => ur.UserStoreRoles)!);
 
             var userResponse = mapper.Map<UserResponse>(user);
 
@@ -40,7 +40,7 @@ namespace RiPOS.Core.Services
         
         public async Task<bool> ExistsByIdInStoreAsync(int id, int storeId)
         {
-            return await userRepository.ExistsAsync(u => u.UserStoreRoles.Any(usr => usr.StoreId == storeId));
+            return await userRepository.ExistsAsync(u => u.UserStoreRoles!.Any(usr => usr.StoreId == storeId));
         }
 
         public async Task<ICollection<RoleEnum>> GetUserRolesByStoreIdAsync(int userId, int storeId)

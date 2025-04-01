@@ -20,6 +20,6 @@
 
         public bool IsActive { get; set; }
 
-        public required ICollection<RoleResponse> Roles { get; set; }
+        public ICollection<RoleResponse>? Roles { get; set; }
     }
 }

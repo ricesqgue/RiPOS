@@ -45,6 +45,6 @@ namespace RiPOS.Domain.Entities
         [DefaultValue(true)]
         public bool IsActive { get; set; }
 
-        public required ICollection<UserStoreRole> UserStoreRoles { get; set; }
+        public ICollection<UserStoreRole>? UserStoreRoles { get; set; }
     }
 }
