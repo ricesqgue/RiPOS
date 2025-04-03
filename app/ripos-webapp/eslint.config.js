@@ -6,6 +6,7 @@ import pluginReactHooks from 'eslint-plugin-react-hooks';
 import pluginReactRefresh from 'eslint-plugin-react-refresh';
 import pluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import prettierConfig from 'eslint-config-prettier/flat';
+import pluginQuery from '@tanstack/eslint-plugin-query';
 
 export default tseslint.config(
   { ignores: ['dist'] },
@@ -29,6 +30,7 @@ export default tseslint.config(
   pluginReact.configs.flat['jsx-runtime'],
   pluginReactRefresh.configs.recommended,
   pluginReactHooks.configs['recommended-latest'],
+  ...pluginQuery.configs['flat/recommended'],
   pluginPrettierRecommended,
   {
     rules: {
