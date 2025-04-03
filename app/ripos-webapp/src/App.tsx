@@ -5,6 +5,8 @@ import { darkTheme, lightTheme } from '@styles/themes';
 import esEs from 'antd/locale/es_ES';
 import { useThemeStore } from '@stores/themeStore';
 import { useEffect } from 'react';
+import { QueryClientProvider } from '@tanstack/react-query';
+import queryClient from '@api/queryClient';
 
 const App = () => {
   const { darkMode } = useThemeStore();
@@ -15,9 +17,11 @@ const App = () => {
   }, [darkMode]);
 
   return (
-    <ConfigProvider theme={darkMode ? darkTheme : lightTheme} locale={esEs}>
-      <RouterProvider router={router} />
-    </ConfigProvider>
+    <QueryClientProvider client={queryClient}>
+      <ConfigProvider theme={darkMode ? darkTheme : lightTheme} locale={esEs}>
+        <RouterProvider router={router} />
+      </ConfigProvider>
+    </QueryClientProvider>
   );
 };
 
