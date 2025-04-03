@@ -9,10 +9,5 @@ export default defineConfig({
     modules: {
       localsConvention: 'camelCaseOnly',
     },
-    preprocessorOptions: {
-      scss: {
-        additionalData: '@import "./src/styles/_variables.scss";',
-      },
-    },
   },
 });
