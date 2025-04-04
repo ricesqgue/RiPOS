@@ -32,7 +32,7 @@ namespace RiPOS.API.Utilities.Extensions
                         ValidateLifetime = true,
                         RequireExpirationTime = true,
                         RequireSignedTokens = true,
-                        ClockSkew = TimeSpan.FromMinutes(2),
+                        ClockSkew = TimeSpan.FromSeconds(10),
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = jwtSettings.Issuer,
                         ValidAudience = jwtSettings.Audience,
@@ -41,13 +41,24 @@ namespace RiPOS.API.Utilities.Extensions
                 });
         }
 
-        public static void ConfigureCors(this IServiceCollection services)
+        public static void ConfigureCors(this IServiceCollection services, IConfiguration configuration)
         {
+            var appSettings = configuration.GetSection("AppSettings").Get<AppSettings>();
+            
+            if (appSettings == null)
+            {
+                throw new Exception("AppSettings section not found in configuration file");
+            }
+
+            var allowedOrigins = appSettings.AllowedCorsOrigins;
+            var origins = allowedOrigins.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder
-                        .AllowAnyOrigin()
+                        .WithOrigins(origins)
+                        .AllowCredentials()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                 );
@@ -86,7 +97,7 @@ namespace RiPOS.API.Utilities.Extensions
             services.AddTransient<IColorService, ColorService>();
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IGenderService, GenderService>();
-            services.AddTransient<ILoginService, LoginService>();
+            services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IMiscService, MiscService>();
             services.AddTransient<ISizeService, SizeService>();
             services.AddTransient<IStoreService, StoreService>();
@@ -104,7 +115,7 @@ namespace RiPOS.API.Utilities.Extensions
             services.AddTransient<IColorRepository, ColorRepository>();
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IGenderRepository, GenderRepository>();
-            services.AddTransient<ILoginRepository, LoginRepository>();
+            services.AddTransient<IAuthRepository, AuthRepository>();
             services.AddTransient<IMiscRepository, MiscRepository>();
             services.AddTransient<ISizeRepository, SizeRepository>();
             services.AddTransient<IStoreRepository, StoreRepository>();

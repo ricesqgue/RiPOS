@@ -18,7 +18,7 @@ try
 
     builder.Services.AddMemoryCache();
     
-    builder.Services.ConfigureCors();
+    builder.Services.ConfigureCors(builder.Configuration);
 
     builder.Services.ConfigureSwagger();
 

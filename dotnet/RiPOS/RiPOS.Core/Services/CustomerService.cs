@@ -13,7 +13,7 @@ namespace RiPOS.Core.Services
         public async Task<ICollection<CustomerResponse>> GetAllAsync(bool includeInactives = false)
         {
             var customers = await customerRepository.GetAllAsync(c => c.IsActive || includeInactives,
-                includeProps: c => c.Include(x => x.CountryState));
+                includeProps: c => c.Include(x => x.CountryState!));
 
             var customersResponse = mapper.Map<ICollection<CustomerResponse>>(customers);
             return customersResponse;
@@ -22,7 +22,7 @@ namespace RiPOS.Core.Services
         public async Task<CustomerResponse?> GetByIdAsync(int id)
         {
             var customer = await customerRepository.FindAsync(c => c.Id == id,
-                includeProps: c => c.Include(x => x.CountryState));
+                includeProps: c => c.Include(x => x.CountryState!));
 
             var customerResponse = mapper.Map<CustomerResponse>(customer);
             return customerResponse;

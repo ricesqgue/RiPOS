@@ -11,20 +11,23 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using RiPOS.Domain.Entities;
+using RiPOS.Repository.Repositories;
 
 namespace RiPOS.Core.Services
 {
     public class AuthService(IUserRepository userRepository, IAuthRepository authRepository, IMapper mapper, IConfiguration configuration, IMemoryCache memoryCache)
         : IAuthService
     {
-        public async Task<MessageResponse<UserResponse>> AuthenticateAsync(AuthRequest request)
+        public async Task<MessageResponse<UserWithStoresResponse>> AuthenticateAsync(AuthRequest request)
         {
-            var response = new MessageResponse<UserResponse>();
+            var response = new MessageResponse<UserWithStoresResponse>();
 
             var user = await userRepository
-                .FindAsync(u => u.Username.ToUpper() == request.Username.ToUpper());
+                .FindAsync(u => u.Username.ToUpper() == request.Username.ToUpper(), 
+                    includeProps: u => u.Include(x => x.UserStoreRoles)!.ThenInclude(ur => ur.Store)!);
 
             if (user == null)
             {
@@ -55,20 +58,20 @@ namespace RiPOS.Core.Services
                 return response;
             }
 
-            var userResponse = mapper.Map<UserResponse>(user);
+            var userResponse = mapper.Map<UserWithStoresResponse>(user);
             response.Success = true;
             response.Data = userResponse;
             return response;
         }
 
-        public async Task<TokenResponse> BuildAndStoreTokensAsync(UserResponse user)
+        public async Task<TokenResponse> BuildAndStoreTokensAsync(UserWithStoresResponse user)
         {
             var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
             
             var accessTokenExpiresDateTime = DateTime.Now.AddMinutes(jwtSettings!.AccessTokenExpirationMinutes);
             var refreshTokenExpiresDateTime = DateTime.Now.AddHours(jwtSettings.RefreshTokenExpirationHours);
             
-            var accessToken = GenerateAccessToken(user, accessTokenExpiresDateTime, jwtSettings!);
+            var accessToken = GenerateAccessToken(user, accessTokenExpiresDateTime, jwtSettings);
             var refreshToken = GenerateRefreshToken();
             
 
@@ -91,7 +94,8 @@ namespace RiPOS.Core.Services
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
-                Expires = accessTokenExpiresDateTime
+                Expires = accessTokenExpiresDateTime,
+                AvailableStores = user.Stores
             };
         }
 
@@ -120,7 +124,8 @@ namespace RiPOS.Core.Services
                 };
             }
 
-            var user = await userRepository.GetByIdAsync(int.Parse(userId));
+            var user = await userRepository.FindAsync(u => u.Id == int.Parse(userId), 
+                includeProps: u => u.Include(x => x.UserStoreRoles)!.ThenInclude(ur => ur.Store)!);
 
             if (user == null)
             {
@@ -142,7 +147,7 @@ namespace RiPOS.Core.Services
                 };
             }
             
-            var userResponse = mapper.Map<UserResponse>(user);
+            var userResponse = mapper.Map<UserWithStoresResponse>(user);
             
             var newTokens = await BuildAndStoreTokensAsync(userResponse);
 

@@ -1,11 +1,13 @@
 using System.Linq.Expressions;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using RiPOS.Core.Services;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
+using RiPOS.Repository.Repositories;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 using RiPOS.Shared.Models.Settings;
@@ -57,9 +59,9 @@ public class AuthServiceTests
     {
         var request = new AuthRequest { Username = "validUser", Password = "password" };
         var user = new User { Name = "User1", Surname = "User1", Username = "validUser", PasswordHash = "dh3TVAEOnBb9wUqqiz+Izb3SSUSKVemPrPTOUEMQ0xg6lDdY", IsActive = true };
-        var userResponse = new UserResponse { Name = "User1",  Surname = "User1", Username = "validUser" };
+        var userResponse = new UserWithStoresResponse { Name = "User1",  Surname = "User1", Username = "validUser" };
 
-        _userRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), null))
+        _userRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<Func<IQueryable<User>,IIncludableQueryable<User, object>>>()))
             .ReturnsAsync(user);
         _mapperMock.Setup(mapper => mapper.Map<UserResponse>(user))
             .Returns(userResponse);
@@ -88,9 +90,9 @@ public class AuthServiceTests
     public async Task AuthenticateAsync_ReturnsError_WhenUserIsInactive()
     {
         var request = new AuthRequest { Username = "inactiveUser", Password = "password" };
-        var user = new User { Name = "InactiveUser", Surname = "test", Username = "inactiveUser", PasswordHash = "ZXMiN0NbKXi5ohoR2bH9+gjs+FaLAN9dosxywFeMPZ6AXJVJ", IsActive = false };
+        var user = new User { Name = "inactiveUser", Surname = "test", Username = "inactiveUser", PasswordHash = "Uc8n+zzkYC8gTW30vI/X9WM6JhQ9yym8/i+dWpwNV+zhNcJT", IsActive = false };
 
-        _userRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), null))
+        _userRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<Func<IQueryable<User>,IIncludableQueryable<User, object>>>()))
             .ReturnsAsync(user);
 
         var result = await _authService.AuthenticateAsync(request);
@@ -102,7 +104,7 @@ public class AuthServiceTests
     [Fact]
     public async Task BuildTokens_ReturnsValidTokenResponse()
     {
-        var user = new UserResponse { Username = "validUser", Name = "User1", Surname = "User1" };
+        var user = new UserWithStoresResponse { Username = "validUser", Name = "User1", Surname = "User1" };
         var result = await _authService.BuildAndStoreTokensAsync(user);
 
         Assert.NotNull(result.AccessToken);

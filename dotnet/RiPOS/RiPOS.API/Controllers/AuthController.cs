@@ -6,23 +6,28 @@ using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.API.Controllers
 {
-    [Route("api/login")]
-    public class AuthController(ILoginService loginService) : ControllerBase
+    [Route("api/auth")]
+    public class AuthController(IAuthService authService) : ControllerBase
     {
         [HttpPost]
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
-        public async Task<ActionResult<TokenResponse>> Login([FromBody] LoginRequest request)
+        public async Task<ActionResult<LoginResponse>> Login([FromBody] AuthRequest request)
         {
-            var userResponse = await loginService.AuthenticateAsync(request);
-            
+            var userResponse = await authService.AuthenticateAsync(request);
+
             if (userResponse is { Success: true, Data: not null })
             {
-                var tokenResponse = await loginService.BuildAndStoreTokensAsync(userResponse.Data);
-                return Ok(tokenResponse);
+                var tokenResponse = await authService.BuildAndStoreTokensAsync(userResponse.Data);
+                SetRefreshTokenCookie(tokenResponse.RefreshToken);
+                return Ok(new LoginResponse
+                {
+                    AccessToken = tokenResponse.AccessToken,
+                    Expires = tokenResponse.Expires,
+                    AvailableStores = tokenResponse.AvailableStores
+                });
             }
-            
             return Unauthorized(userResponse.Message);
         }
 
@@ -30,7 +35,7 @@ namespace RiPOS.API.Controllers
         [ModelValidation]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
-        public async Task<ActionResult<TokenResponse>> RefreshToken([FromBody] RefreshTokenRequest request)
+        public async Task<ActionResult<LoginResponse>> RefreshToken([FromBody] RefreshTokenRequest request)
         {
             var refreshToken = Request.Cookies["refreshToken"];
 
@@ -38,15 +43,41 @@ namespace RiPOS.API.Controllers
             {
                 return Unauthorized("Refresh token no encontrado");
             }
-            
-            var tokenResponse = await loginService.RefreshTokenAsync(request.AccessToken, refreshToken);
+
+            var tokenResponse = await authService.RefreshTokenAsync(request.AccessToken, refreshToken);
 
             if (tokenResponse is { Success: true, Data: not null })
             {
-                return Ok(tokenResponse.Data);
+                SetRefreshTokenCookie(tokenResponse.Data.RefreshToken);
+                return Ok(new LoginResponse()
+                {
+                    AccessToken = tokenResponse.Data.AccessToken,
+                    Expires = tokenResponse.Data.Expires,
+                    AvailableStores = tokenResponse.Data.AvailableStores
+                });
             }
 
             return Unauthorized(tokenResponse.Message);
+        }
+
+        [HttpPost("logout")]
+        [ProducesResponseType(200)]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("refreshToken");
+            return Ok();
+        }
+
+        private void SetRefreshTokenCookie(string refreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTimeOffset.UtcNow.AddHours(24)
+            };
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
         }
     }
 }
