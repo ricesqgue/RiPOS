@@ -12,13 +12,13 @@ using RiPOS.Shared.Models.Settings;
 
 namespace RiPOS.Core.Tests.Services;
 
-public class LoginServiceTests
+public class AuthServiceTests
 {
-    private readonly LoginService _loginService;
+    private readonly AuthService _authService;
     private readonly Mock<IUserRepository> _userRepositoryMock;
     private readonly Mock<IMapper> _mapperMock;
     
-    public LoginServiceTests()
+    public AuthServiceTests()
     {
         var jwtSettings = new JwtSettings
         {
@@ -39,11 +39,11 @@ public class LoginServiceTests
             }!)
             .Build();
         
-        Mock<ILoginRepository> loginRepositoryMock = new Mock<ILoginRepository>();
+        Mock<IAuthRepository> loginRepositoryMock = new Mock<IAuthRepository>();
         Mock<IMemoryCache> memoryCacheMock = new Mock<IMemoryCache>();
         _userRepositoryMock = new Mock<IUserRepository>();
         _mapperMock = new Mock<IMapper>();
-        _loginService = new LoginService(
+        _authService = new AuthService(
             _userRepositoryMock.Object,
             loginRepositoryMock.Object,
             _mapperMock.Object,
@@ -55,7 +55,7 @@ public class LoginServiceTests
     [Fact]
     public async Task AuthenticateAsync_ReturnsSuccess_WhenCredentialsAreValid()
     {
-        var request = new LoginRequest { Username = "validUser", Password = "password" };
+        var request = new AuthRequest { Username = "validUser", Password = "password" };
         var user = new User { Name = "User1", Surname = "User1", Username = "validUser", PasswordHash = "dh3TVAEOnBb9wUqqiz+Izb3SSUSKVemPrPTOUEMQ0xg6lDdY", IsActive = true };
         var userResponse = new UserResponse { Name = "User1",  Surname = "User1", Username = "validUser" };
 
@@ -64,7 +64,7 @@ public class LoginServiceTests
         _mapperMock.Setup(mapper => mapper.Map<UserResponse>(user))
             .Returns(userResponse);
 
-        var result = await _loginService.AuthenticateAsync(request);
+        var result = await _authService.AuthenticateAsync(request);
 
         Assert.True(result.Success);
         Assert.Equal(userResponse, result.Data);
@@ -73,12 +73,12 @@ public class LoginServiceTests
     [Fact]
     public async Task AuthenticateAsync_ReturnsError_WhenUserDoesNotExist()
     {
-        var request = new LoginRequest { Username = "invalidUser", Password = "password" };
+        var request = new AuthRequest { Username = "invalidUser", Password = "password" };
 
         _userRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), null))
             .ReturnsAsync((User?)null);
 
-        var result = await _loginService.AuthenticateAsync(request);
+        var result = await _authService.AuthenticateAsync(request);
 
         Assert.False(result.Success);
         Assert.Equal("Nombre de usuario y/o contraseña incorrectos", result.Message);
@@ -87,23 +87,23 @@ public class LoginServiceTests
     [Fact]
     public async Task AuthenticateAsync_ReturnsError_WhenUserIsInactive()
     {
-        var request = new LoginRequest { Username = "inactiveUser", Password = "password" };
+        var request = new AuthRequest { Username = "inactiveUser", Password = "password" };
         var user = new User { Name = "InactiveUser", Surname = "test", Username = "inactiveUser", PasswordHash = "ZXMiN0NbKXi5ohoR2bH9+gjs+FaLAN9dosxywFeMPZ6AXJVJ", IsActive = false };
 
         _userRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), null))
             .ReturnsAsync(user);
 
-        var result = await _loginService.AuthenticateAsync(request);
+        var result = await _authService.AuthenticateAsync(request);
 
         Assert.False(result.Success);
         Assert.Equal("Usuario inactivo", result.Message);
     }
 
     [Fact]
-    public void BuildTokens_ReturnsValidTokenResponse()
+    public async Task BuildTokens_ReturnsValidTokenResponse()
     {
         var user = new UserResponse { Username = "validUser", Name = "User1", Surname = "User1" };
-        var result = _loginService.BuildTokens(user);
+        var result = await _authService.BuildAndStoreTokensAsync(user);
 
         Assert.NotNull(result.AccessToken);
         Assert.NotNull(result.RefreshToken);
