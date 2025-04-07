@@ -12,13 +12,14 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Repositories;
+using RiPOS.Shared.Enums;
 
 namespace RiPOS.Core.Services
 {
-    public class AuthService(IUserRepository userRepository, IAuthRepository authRepository, IMapper mapper, IConfiguration configuration, IMemoryCache memoryCache)
+    public class AuthService(IUserRepository userRepository, IAuthRepository authRepository,
+        IMemoryCacheService memoryCacheService, IMapper mapper, IConfiguration configuration)
         : IAuthService
     {
         public async Task<MessageResponse<UserWithStoresResponse>> AuthenticateAsync(AuthRequest request)
@@ -158,6 +159,37 @@ namespace RiPOS.Core.Services
             };
         }
         
+        public async Task<UserResponse> GetUserFromClaims(IEnumerable<Claim> userClaims, int storeId)
+        {
+            var userClaimsList = userClaims.ToList();
+            var userResponse = new UserResponse
+            {   
+                Id = int.Parse(userClaimsList.First(c => c.Type == "UserId").Value),
+                Name = userClaimsList.First(c => c.Type == "Name").Value,
+                Surname = userClaimsList.First(c => c.Type == "Surname").Value,
+                SecondSurname = userClaimsList.First(c => c.Type == "SecondSurname").Value,
+                Username = userClaimsList.First(c => c.Type == "Username").Value,
+            };
+
+            var userRoles = memoryCacheService.GetUserStoreRoles(userResponse.Id, storeId);
+
+            if (!userRoles.Any())
+            {
+                var roles = await userRepository.GetStoreRolesAsync(userResponse.Id, storeId);
+                userRoles = roles.Select(r => (RoleEnum)r.Id).ToList();
+                
+                if (userRoles.Any())
+                {
+                    memoryCacheService.SetUserStoreRoles(userResponse.Id, storeId, userRoles);
+                }
+            }
+
+            userResponse.Roles = mapper.Map<ICollection<RoleResponse>>(userRoles);
+            
+            return userResponse;
+
+        }
+        
         private string GenerateAccessToken(UserResponse user, DateTime expiresDateTime, JwtSettings jwtSettings)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key));
@@ -184,7 +216,7 @@ namespace RiPOS.Core.Services
             
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
+        
         private string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
@@ -222,12 +254,6 @@ namespace RiPOS.Core.Services
                 {
                     return null;
                 }
-                
-                // var jwtToken = securityToken;
-                // if (jwtToken.ValidTo > DateTime.UtcNow)
-                // {
-                //     isTokenExpired = false;
-                // }
 
                 return principal;
             }

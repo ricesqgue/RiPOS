@@ -1,0 +1,19 @@
+.appContainer {
+  min-height: 100vh;
+}
+
+.appContentContainer {
+  padding: 12px 24px 24px 24px;
+}
+
+.appContent {
+  padding: 24px;
+  background-color: var(--bg-color);
+  border-radius: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}

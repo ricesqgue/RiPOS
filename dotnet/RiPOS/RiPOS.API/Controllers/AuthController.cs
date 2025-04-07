@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RiPOS.API.Utilities.ActionFilters;
 using RiPOS.Core.Interfaces;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
+using RiPOS.Shared.Utilities.Extensions;
 
 namespace RiPOS.API.Controllers
 {
@@ -66,6 +68,18 @@ namespace RiPOS.API.Controllers
         {
             Response.Cookies.Delete("refreshToken");
             return Ok();
+        }
+
+        [HttpGet("userInfo")]
+        [Authorize]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        public async Task<ActionResult<UserResponse>> GetUserInfo()
+        {
+            var storeId = HttpContext.GetHeaderStoreId();
+            var userInfo = await authService.GetUserFromClaims(HttpContext.User.Claims, storeId);
+
+            return Ok(userInfo);
         }
 
         private void SetRefreshTokenCookie(string refreshToken)

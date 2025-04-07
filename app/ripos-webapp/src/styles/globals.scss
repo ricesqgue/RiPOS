@@ -1,10 +1,10 @@
 [data-theme='light'] {
-  --bg-color: #ffffff;
+   --bg-color: #ffffff;
   --text-color: #414141;
 }
 
 [data-theme='dark'] {
-  --bg-color: #141414;
+  --bg-color: #242424;
   --text-color: #ffffff;
 }
 
@@ -14,4 +14,5 @@ body {
   transition:
     background-color 0.3s ease-in-out,
     color 0.3s ease-in-out;
+  margin: 0;
 }

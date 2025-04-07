@@ -12,5 +12,7 @@ namespace RiPOS.Core.Interfaces
         Task<TokenResponse> BuildAndStoreTokensAsync(UserWithStoresResponse user);
         
         Task<MessageResponse<TokenResponse>> RefreshTokenAsync(string accessToken, string refreshToken);
+        
+        Task<UserResponse> GetUserFromClaims(IEnumerable<Claim> userClaims, int storeId);
     }
 }

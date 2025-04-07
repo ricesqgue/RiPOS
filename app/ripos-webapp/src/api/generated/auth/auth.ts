@@ -4,18 +4,27 @@
  * RiPOS API
  * OpenAPI spec version: v1
  */
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
   MutationFunction,
+  QueryFunction,
+  QueryKey,
+  UndefinedInitialDataOptions,
   UseMutationOptions,
   UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
 } from '@tanstack/react-query';
 
-import type { AuthRequest, LoginResponse, RefreshTokenRequest } from '.././models';
+import type { AuthRequest, LoginResponse, RefreshTokenRequest, UserResponse } from '.././models';
 
 import postApiAuthMutator from '../../axiosMutator';
 import postApiAuthRefreshTokenMutator from '../../axiosMutator';
 import postApiAuthLogoutMutator from '../../axiosMutator';
+import getApiAuthUserInfoMutator from '../../axiosMutator';
 
 export const postApiAuth = (authRequest: AuthRequest, signal?: AbortSignal) => {
   return postApiAuthMutator<LoginResponse>({
@@ -198,3 +207,91 @@ export const usePostApiAuthLogout = <TError = unknown, TContext = unknown>(optio
 
   return useMutation(mutationOptions);
 };
+export const getApiAuthUserInfo = (signal?: AbortSignal) => {
+  return getApiAuthUserInfoMutator<UserResponse>({
+    url: `/api/auth/userInfo`,
+    method: 'GET',
+    signal,
+  });
+};
+
+export const getGetApiAuthUserInfoQueryKey = () => {
+  return [`/api/auth/userInfo`] as const;
+};
+
+export const getGetApiAuthUserInfoQueryOptions = <
+  TData = Awaited<ReturnType<typeof getApiAuthUserInfo>>,
+  TError = void,
+>(options?: {
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthUserInfo>>, TError, TData>>;
+}) => {
+  const { query: queryOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetApiAuthUserInfoQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiAuthUserInfo>>> = ({ signal }) =>
+    getApiAuthUserInfo(signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getApiAuthUserInfo>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetApiAuthUserInfoQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getApiAuthUserInfo>>
+>;
+export type GetApiAuthUserInfoQueryError = void;
+
+export function useGetApiAuthUserInfo<
+  TData = Awaited<ReturnType<typeof getApiAuthUserInfo>>,
+  TError = void,
+>(options: {
+  query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthUserInfo>>, TError, TData>> &
+    Pick<
+      DefinedInitialDataOptions<
+        Awaited<ReturnType<typeof getApiAuthUserInfo>>,
+        TError,
+        Awaited<ReturnType<typeof getApiAuthUserInfo>>
+      >,
+      'initialData'
+    >;
+}): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetApiAuthUserInfo<
+  TData = Awaited<ReturnType<typeof getApiAuthUserInfo>>,
+  TError = void,
+>(options?: {
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthUserInfo>>, TError, TData>> &
+    Pick<
+      UndefinedInitialDataOptions<
+        Awaited<ReturnType<typeof getApiAuthUserInfo>>,
+        TError,
+        Awaited<ReturnType<typeof getApiAuthUserInfo>>
+      >,
+      'initialData'
+    >;
+}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetApiAuthUserInfo<
+  TData = Awaited<ReturnType<typeof getApiAuthUserInfo>>,
+  TError = void,
+>(options?: {
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthUserInfo>>, TError, TData>>;
+}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+export function useGetApiAuthUserInfo<
+  TData = Awaited<ReturnType<typeof getApiAuthUserInfo>>,
+  TError = void,
+>(options?: {
+  query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiAuthUserInfo>>, TError, TData>>;
+}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetApiAuthUserInfoQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}

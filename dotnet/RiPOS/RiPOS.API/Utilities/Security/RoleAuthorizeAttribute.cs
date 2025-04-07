@@ -11,16 +11,14 @@ namespace RiPOS.API.Utilities.Security;
 
 public class RoleAuthorizeAttribute(RoleEnum[] allowedRoles) : AuthorizeAttribute, IAsyncAuthorizationFilter
 {
-    private const string MemoryCacheKey = "user_roles_store";
-    
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
         var storeId = context.HttpContext.GetHeaderStoreId();
         var userId = context.HttpContext.GetUserId();
         var userService = context.HttpContext.RequestServices.GetService<IUserService>();
-        var memoryCache = context.HttpContext.RequestServices.GetService<IMemoryCache>();
+        var memoryCacheService = context.HttpContext.RequestServices.GetService<IMemoryCacheService>();
 
-        if (userService == null || memoryCache == null)
+        if (userService == null || memoryCacheService == null)
         {
             context.Result = new UnauthorizedObjectResult("Unable to get services");
             return;
@@ -32,21 +30,20 @@ public class RoleAuthorizeAttribute(RoleEnum[] allowedRoles) : AuthorizeAttribut
             return;
         }
         
-        var userMemoryCacheKey = $"{MemoryCacheKey}_{storeId}_{userId}";
+        var userRoles = memoryCacheService.GetUserStoreRoles(userId, storeId);
 
-        if (!memoryCache.TryGetValue(userMemoryCacheKey, out ICollection<RoleEnum>? userRoles))
+        if (userRoles.Count == 0)
         {
-            userRoles = await userService.GetUserRolesByStoreIdAsync(storeId, userId);
+            userRoles = await userService.GetUserRolesByStoreIdAsync(userId, storeId);
             if (userRoles.Count == 0)
             {
                 context.Result = new ForbidResult();
                 return;
             }
-            var cacheEntryOptions = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
-            memoryCache.Set(userMemoryCacheKey, userRoles, cacheEntryOptions);
+            memoryCacheService.SetUserStoreRoles(userId, storeId, userRoles);
         }
         
-        if (userRoles == null || !allowedRoles.Any(r => userRoles.Contains(r)) && !userRoles.Contains(RoleEnum.SuperAdmin))
+        if (!allowedRoles.Any(r => userRoles.Contains(r)) && !userRoles.Contains(RoleEnum.SuperAdmin))
         {
             context.Result = new ForbidResult();
         }

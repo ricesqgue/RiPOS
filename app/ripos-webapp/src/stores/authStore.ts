@@ -1,4 +1,4 @@
-import { StoreResponse } from '@api/generated/models';
+import { StoreResponse, UserResponse } from '@api/generated/models';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -7,11 +7,11 @@ interface AuthState {
   storeId: number | null;
   isAuthenticated: boolean;
   availableStores: StoreResponse[];
-  isRefreshingToken: boolean;
+  userInfo: UserResponse | null;
   setAccessToken: (accessToken: string) => void;
   setStoreId: (storeId: number) => void;
   setAvailableStores: (stores: StoreResponse[]) => void;
-  setIsRefreshingToken: (isRefreshing: boolean) => void;
+  setUserInfo: (userInfo: UserResponse) => void;
   logout: () => void;
 }
 
@@ -22,7 +22,7 @@ const useAuthStore = create<AuthState>()(
       storeId: null,
       isAuthenticated: false,
       availableStores: [],
-      isRefreshingToken: false,
+      userInfo: null,
       setAccessToken: (accessToken) => {
         set({ accessToken, isAuthenticated: !!accessToken });
       },
@@ -32,11 +32,11 @@ const useAuthStore = create<AuthState>()(
       setAvailableStores: (stores: StoreResponse[]) => {
         set({ availableStores: stores });
       },
-      setIsRefreshingToken: (isRefreshing) => {
-        set({ isRefreshingToken: isRefreshing });
+      setUserInfo: (userInfo: UserResponse) => {
+        set({ userInfo: userInfo });
       },
       logout: () => {
-        set({ accessToken: null, isAuthenticated: false });
+        set({ accessToken: null, userInfo: null, isAuthenticated: false });
       },
     }),
     {

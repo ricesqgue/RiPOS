@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Moq;
+using RiPOS.Core.Interfaces;
 using RiPOS.Core.Services;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
@@ -41,16 +42,16 @@ public class AuthServiceTests
             }!)
             .Build();
         
-        Mock<IAuthRepository> loginRepositoryMock = new Mock<IAuthRepository>();
-        Mock<IMemoryCache> memoryCacheMock = new Mock<IMemoryCache>();
+        Mock<IAuthRepository> authRepositoryMock = new Mock<IAuthRepository>();
+        Mock<IMemoryCacheService> memoryCacheServiceMock = new Mock<IMemoryCacheService>();
         _userRepositoryMock = new Mock<IUserRepository>();
         _mapperMock = new Mock<IMapper>();
         _authService = new AuthService(
             _userRepositoryMock.Object,
-            loginRepositoryMock.Object,
+            authRepositoryMock.Object,
+            memoryCacheServiceMock.Object,
             _mapperMock.Object,
-            configuration,
-            memoryCacheMock.Object
+            configuration
         );
     }
 

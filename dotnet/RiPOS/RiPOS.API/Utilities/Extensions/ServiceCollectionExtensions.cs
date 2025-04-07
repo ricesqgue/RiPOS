@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RiPOS.API.Utilities.Helpers;
@@ -98,6 +99,7 @@ namespace RiPOS.API.Utilities.Extensions
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<IGenderService, GenderService>();
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IMemoryCacheService, MemoryCacheService>();
             services.AddTransient<IMiscService, MiscService>();
             services.AddTransient<ISizeService, SizeService>();
             services.AddTransient<IStoreService, StoreService>();
