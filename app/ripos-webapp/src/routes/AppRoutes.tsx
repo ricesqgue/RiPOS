@@ -2,9 +2,11 @@ import { Navigate, Route, Routes } from 'react-router';
 import ProtectedRoute from './ProtectedRoute';
 import AppLayout from '@layout/AppLayout';
 import LoginPage from '@pages/login/LoginPage';
-import HomePage from '@pages/home/HomePage';
 import SelectStorePage from '@pages/login/SelectStorePage';
 import AuthRoutesWrapper from './AuthRoutesWrapper';
+import { Suspense } from 'react';
+import Loading from '@components/shared/Loading';
+import { layoutRoutes } from './layoutRoutes';
 
 const AppRoutes = () => {
   return (
@@ -18,7 +20,9 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/login/store" element={<SelectStorePage />} />
           <Route element={<AppLayout />}>
-            <Route path="/" element={<HomePage />} />
+            {layoutRoutes.map((route) => (
+              <Route path={route.path} element={route.element}></Route>
+            ))}
           </Route>
         </Route>
 

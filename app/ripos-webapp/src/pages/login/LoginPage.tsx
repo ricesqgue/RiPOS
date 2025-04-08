@@ -15,7 +15,7 @@ type FormFields = {
 
 const LoginPage = () => {
   const [form] = Form.useForm();
-  const { mutateAsync: login } = usePostApiAuth();
+  const { mutateAsync: login, isPending } = usePostApiAuth();
   const navigate = useNavigate();
 
   const onFinish: FormProps<FormFields>['onFinish'] = (values) => {
@@ -75,6 +75,7 @@ const LoginPage = () => {
                   <Button
                     htmlType="submit"
                     type="primary"
+                    loading={isPending}
                     disabled={
                       !form.isFieldsTouched(true) ||
                       !!form.getFieldsError().some(({ errors }) => errors.length > 0)
