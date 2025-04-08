@@ -22,7 +22,7 @@ const AuthRoutesWrapper = () => {
   const isLoginRoute = location.pathname === '/login';
 
   if (isLoading || isLoadingUserInfo) {
-    return <Loading />;
+    return <Loading fullscreen size="large" />;
   }
 
   if (!isAuthenticated && !isLoginRoute) {

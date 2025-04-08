@@ -1,5 +1,7 @@
 .appContainer {
   min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 .appContentContainer {
@@ -10,6 +12,7 @@
   padding: 24px;
   background-color: var(--bg-color);
   border-radius: 10px;
+  overflow: auto;
 }
 
 .header {
