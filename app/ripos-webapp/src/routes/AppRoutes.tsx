@@ -4,8 +4,6 @@ import AppLayout from '@layout/AppLayout';
 import LoginPage from '@pages/login/LoginPage';
 import SelectStorePage from '@pages/login/SelectStorePage';
 import AuthRoutesWrapper from './AuthRoutesWrapper';
-import { Suspense } from 'react';
-import Loading from '@components/shared/Loading';
 import { layoutRoutes } from './layoutRoutes';
 
 const AppRoutes = () => {

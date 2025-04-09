@@ -1,17 +1,26 @@
-import { lazy } from 'react';
+import { ItemType } from 'antd/es/breadcrumb/Breadcrumb';
+import { lazy, ReactNode } from 'react';
+import { Link } from 'react-router';
 
 const HomePage = lazy(() => import('@pages/home/HomePage'));
 const BrandsPage = lazy(() => import('@pages/brands/BrandsPage'));
 
-export const layoutRoutes = [
+interface RouteConfig {
+  path: string;
+  element: ReactNode;
+  breadcrumb: ItemType[];
+  children?: RouteConfig[];
+}
+
+export const layoutRoutes: RouteConfig[] = [
   {
     path: '/',
     element: <HomePage />,
-    breadcrumb: 'Inicio',
+    breadcrumb: [{ title: 'Inicio' }],
   },
   {
     path: '/marcas',
     element: <BrandsPage />,
-    breadcrumb: 'Marcas',
+    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Marcas' }],
   },
 ];
