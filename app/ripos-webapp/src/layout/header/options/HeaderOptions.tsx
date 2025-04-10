@@ -45,7 +45,7 @@ const HeaderOptions = () => {
     <Dropdown menu={{ items }} trigger={['click']}>
       <Button
         type="text"
-        icon={<FontAwesomeIcon style={{ color: '#FFF' }} icon={faEllipsisVertical} />}
+        icon={<FontAwesomeIcon icon={faEllipsisVertical} />}
         size="middle"
         shape="circle"
       ></Button>

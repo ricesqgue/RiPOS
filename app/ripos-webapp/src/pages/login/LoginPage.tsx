@@ -50,7 +50,7 @@ const LoginPage = () => {
             layout="vertical"
             autoComplete="off"
             onFinish={onFinish}
-            size="large"
+            size="middle"
             variant="filled"
           >
             <Form.Item<FormFields>

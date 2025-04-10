@@ -9,9 +9,6 @@
 }
 
 .appContent {
-  padding: 24px;
-  background-color: var(--bg-color);
-  border-radius: 10px;
   overflow: auto;
 }
 
@@ -19,4 +16,5 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  border-bottom: 1px solid var(--rp-surface-a20);
 }

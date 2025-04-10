@@ -1,5 +1,6 @@
 import { useAuthStore } from '@stores/authStore';
 import { Avatar, Flex } from 'antd';
+import styles from './userInfo.module.scss';
 
 const UserInfo = () => {
   const { userInfo } = useAuthStore();
@@ -13,7 +14,7 @@ const UserInfo = () => {
 
   return (
     <Flex justify="center" align="center" gap={8}>
-      <Avatar>{initials}</Avatar>
+      <Avatar className={styles.avatar}>{initials}</Avatar>
       <div>{fullName}</div>
     </Flex>
   );
