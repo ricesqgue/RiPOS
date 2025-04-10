@@ -2,7 +2,11 @@ import { useAuthStore } from '@stores/authStore';
 import { Avatar, Flex } from 'antd';
 import styles from './userInfo.module.scss';
 
-const UserInfo = () => {
+interface UserInfoProps {
+  collapsed: boolean;
+}
+
+const UserInfo = (props: UserInfoProps) => {
   const { userInfo } = useAuthStore();
 
   if (!userInfo) {
@@ -14,8 +18,10 @@ const UserInfo = () => {
 
   return (
     <Flex justify="center" align="center" gap={8}>
-      <Avatar className={styles.avatar}>{initials}</Avatar>
-      <div>{fullName}</div>
+      <Avatar className={styles.avatar}>
+        <span title={fullName}>{initials}</span>
+      </Avatar>
+      {!props.collapsed && <div>{fullName}</div>}
     </Flex>
   );
 };

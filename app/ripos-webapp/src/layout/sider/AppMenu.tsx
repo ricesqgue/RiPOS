@@ -19,13 +19,17 @@ import { Link, matchPath, useLocation } from 'react-router';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-interface AppMenuItem {
+type AppMenuItem = {
   key: string;
   label: string;
   icon?: IconProp;
   navigateTo?: string;
   subItems?: AppMenuItem[];
   pathPattern?: string[];
+};
+
+interface AppMenuProps {
+  collapsed: boolean;
 }
 
 const menuItems: AppMenuItem[] = [
@@ -96,8 +100,7 @@ const buildMenuItems = (items: AppMenuItem[]): MenuItem[] =>
     children: item.subItems ? buildMenuItems(item.subItems) : undefined,
   }));
 
-const AppMenu = () => {
-  const [collapsed] = useState(false);
+const AppMenu = (props: AppMenuProps) => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const items = useMemo(() => buildMenuItems(menuItems), []);
   const location = useLocation();
@@ -138,7 +141,13 @@ const AppMenu = () => {
 
   return (
     <div>
-      <Menu mode="inline" inlineCollapsed={collapsed} items={items} selectedKeys={selectedKeys} />
+      <Menu
+        style={{ borderInlineEnd: 'none' }}
+        mode="inline"
+        inlineCollapsed={props.collapsed}
+        items={items}
+        selectedKeys={selectedKeys}
+      />
     </div>
   );
 };

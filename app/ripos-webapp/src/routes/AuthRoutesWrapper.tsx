@@ -1,5 +1,5 @@
 import { useGetApiAuthUserInfo } from '@api/generated/auth/auth';
-import Loading from '@components/shared/Loading';
+import Loading from '@components/shared/loading/Loading';
 import useReauthenticate from '@hooks/useReauthenticate';
 import { useAuthStore } from '@stores/authStore';
 import { useEffect } from 'react';
