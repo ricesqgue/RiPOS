@@ -19,7 +19,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<ICollection<StoreResponse>>> GetCustomers([FromQuery] bool includeInactives = false)
+        public async Task<ActionResult<ICollection<CustomerResponse>>> GetCustomers([FromQuery] bool includeInactives = false)
         {
             var customers = await customerService.GetAllAsync(includeInactives);
             return Ok(customers);
@@ -31,7 +31,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<StoreResponse>> GetCustomerById([FromRoute] int id)
+        public async Task<ActionResult<CustomerResponse>> GetCustomerById([FromRoute] int id)
         {
             var customer = await customerService.GetByIdAsync(id);
 
@@ -55,7 +55,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> AddCustomer([FromBody] CustomerRequest request)
+        public async Task<ActionResult<MessageResponse<CustomerResponse>>> AddCustomer([FromBody] CustomerRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await customerService.AddAsync(request, userId);
@@ -76,7 +76,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateCustomer([FromRoute] int id, [FromBody] CustomerRequest request)
+        public async Task<ActionResult<MessageResponse<CustomerResponse>>> UpdateCustomer([FromRoute] int id, [FromBody] CustomerRequest request)
         {
             if (!await customerService.ExistsByIdAsync(id))
             {

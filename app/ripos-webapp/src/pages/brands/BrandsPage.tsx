@@ -1,20 +1,46 @@
-import { Grid } from 'antd';
-
-const { useBreakpoint } = Grid;
+import { useGetApiBrands } from '@api/generated/brand/brand';
+import { Table } from 'antd';
+import { useEffect } from 'react';
 
 const BrandsPage = () => {
-  const screens = useBreakpoint();
+  const { data: brands } = useGetApiBrands(
+    { includeInactives: false },
+    {
+      query: {
+        select: (response) => response.data,
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (brands) console.log(brands);
+  }, [brands]);
+
+  const columns = [
+    {
+      title: 'Nombre',
+      key: 'name',
+      dataIndex: 'name',
+    },
+    {
+      title: 'Dirección',
+      key: 'address',
+      dataIndex: 'address',
+    },
+    {
+      title: 'Tel',
+      key: 'name',
+      dataIndex: 'name',
+    },
+    {
+      title: 'Nombre',
+      key: 'name',
+      dataIndex: 'name',
+    },
+  ];
   return (
     <>
-      <h1>Brands page</h1>
-      <div>
-        {screens.xs && <p>Extra small screen</p>}
-        {screens.sm && <p>Small screen</p>}
-        {screens.md && <p>Medium screen</p>}
-        {screens.lg && <p>Large screen</p>}
-        {screens.xl && <p>Extra large screen</p>}
-        {screens.xxl && <p>2x Extra large screen</p>}
-      </div>
+      <Table columns={columns}></Table>
     </>
   );
 };

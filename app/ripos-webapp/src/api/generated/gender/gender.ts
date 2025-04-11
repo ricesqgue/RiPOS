@@ -21,9 +21,9 @@ import type {
 
 import type {
   GenderRequest,
+  GenderResponse,
+  GenderResponseMessageResponse,
   GetApiGendersParams,
-  StoreResponse,
-  StoreResponseMessageResponse,
   StringMessageResponse,
 } from '.././models';
 
@@ -34,7 +34,7 @@ import putApiGendersIdMutator from '../../axiosMutator';
 import deleteApiGendersIdMutator from '../../axiosMutator';
 
 export const getApiGenders = (params?: GetApiGendersParams, signal?: AbortSignal) => {
-  return getApiGendersMutator<StoreResponse[]>({
+  return getApiGendersMutator<GenderResponse[]>({
     url: `/api/genders`,
     method: 'GET',
     params,
@@ -125,7 +125,7 @@ export function useGetApiGenders<TData = Awaited<ReturnType<typeof getApiGenders
 }
 
 export const postApiGenders = (genderRequest: GenderRequest, signal?: AbortSignal) => {
-  return postApiGendersMutator<StoreResponseMessageResponse>({
+  return postApiGendersMutator<GenderResponseMessageResponse>({
     url: `/api/genders`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -188,7 +188,7 @@ export const usePostApiGenders = <TError = void, TContext = unknown>(options?: {
   return useMutation(mutationOptions);
 };
 export const getApiGendersId = (id: number, signal?: AbortSignal) => {
-  return getApiGendersIdMutator<StoreResponse>({
+  return getApiGendersIdMutator<GenderResponse>({
     url: `/api/genders/${id}`,
     method: 'GET',
     signal,
@@ -290,7 +290,7 @@ export function useGetApiGendersId<
 }
 
 export const putApiGendersId = (id: number, genderRequest: GenderRequest) => {
-  return putApiGendersIdMutator<StoreResponseMessageResponse>({
+  return putApiGendersIdMutator<GenderResponseMessageResponse>({
     url: `/api/genders/${id}`,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

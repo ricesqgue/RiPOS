@@ -19,7 +19,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<ICollection<StoreResponse>>> GetCategories([FromQuery] bool includeInactives = false)
+        public async Task<ActionResult<ICollection<CategoryResponse>>> GetCategories([FromQuery] bool includeInactives = false)
         {
             var categories = await categoryService.GetAllAsync(includeInactives);
             return Ok(categories);
@@ -31,7 +31,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<StoreResponse>> GetCategoryById([FromRoute] int id)
+        public async Task<ActionResult<CategoryResponse>> GetCategoryById([FromRoute] int id)
         {
             var category = await categoryService.GetByIdAsync(id);
 
@@ -55,7 +55,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> AddCategory([FromBody] CategoryRequest request)
+        public async Task<ActionResult<MessageResponse<CategoryResponse>>> AddCategory([FromBody] CategoryRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await categoryService.AddAsync(request, userId);
@@ -76,7 +76,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateCategory([FromRoute] int id, [FromBody] CategoryRequest request)
+        public async Task<ActionResult<MessageResponse<CategoryResponse>>> UpdateCategory([FromRoute] int id, [FromBody] CategoryRequest request)
         {
             if (!await categoryService.ExistsByIdAsync(id))
             {

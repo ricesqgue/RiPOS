@@ -21,9 +21,9 @@ import type {
 
 import type {
   CategoryRequest,
+  CategoryResponse,
+  CategoryResponseMessageResponse,
   GetApiCategoriesParams,
-  StoreResponse,
-  StoreResponseMessageResponse,
   StringMessageResponse,
 } from '.././models';
 
@@ -34,7 +34,7 @@ import putApiCategoriesIdMutator from '../../axiosMutator';
 import deleteApiCategoriesIdMutator from '../../axiosMutator';
 
 export const getApiCategories = (params?: GetApiCategoriesParams, signal?: AbortSignal) => {
-  return getApiCategoriesMutator<StoreResponse[]>({
+  return getApiCategoriesMutator<CategoryResponse[]>({
     url: `/api/categories`,
     method: 'GET',
     params,
@@ -137,7 +137,7 @@ export function useGetApiCategories<
 }
 
 export const postApiCategories = (categoryRequest: CategoryRequest, signal?: AbortSignal) => {
-  return postApiCategoriesMutator<StoreResponseMessageResponse>({
+  return postApiCategoriesMutator<CategoryResponseMessageResponse>({
     url: `/api/categories`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -202,7 +202,7 @@ export const usePostApiCategories = <TError = void, TContext = unknown>(options?
   return useMutation(mutationOptions);
 };
 export const getApiCategoriesId = (id: number, signal?: AbortSignal) => {
-  return getApiCategoriesIdMutator<StoreResponse>({
+  return getApiCategoriesIdMutator<CategoryResponse>({
     url: `/api/categories/${id}`,
     method: 'GET',
     signal,
@@ -308,7 +308,7 @@ export function useGetApiCategoriesId<
 }
 
 export const putApiCategoriesId = (id: number, categoryRequest: CategoryRequest) => {
-  return putApiCategoriesIdMutator<StoreResponseMessageResponse>({
+  return putApiCategoriesIdMutator<CategoryResponseMessageResponse>({
     url: `/api/categories/${id}`,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

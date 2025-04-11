@@ -21,10 +21,10 @@ import type {
 
 import type {
   GetApiVendorsParams,
-  StoreResponse,
-  StoreResponseMessageResponse,
   StringMessageResponse,
   VendorRequest,
+  VendorResponse,
+  VendorResponseMessageResponse,
 } from '.././models';
 
 import getApiVendorsMutator from '../../axiosMutator';
@@ -34,7 +34,7 @@ import putApiVendorsIdMutator from '../../axiosMutator';
 import deleteApiVendorsIdMutator from '../../axiosMutator';
 
 export const getApiVendors = (params?: GetApiVendorsParams, signal?: AbortSignal) => {
-  return getApiVendorsMutator<StoreResponse[]>({
+  return getApiVendorsMutator<VendorResponse[]>({
     url: `/api/vendors`,
     method: 'GET',
     params,
@@ -125,7 +125,7 @@ export function useGetApiVendors<TData = Awaited<ReturnType<typeof getApiVendors
 }
 
 export const postApiVendors = (vendorRequest: VendorRequest, signal?: AbortSignal) => {
-  return postApiVendorsMutator<StoreResponseMessageResponse>({
+  return postApiVendorsMutator<VendorResponseMessageResponse>({
     url: `/api/vendors`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -188,7 +188,7 @@ export const usePostApiVendors = <TError = void, TContext = unknown>(options?: {
   return useMutation(mutationOptions);
 };
 export const getApiVendorsId = (id: number, signal?: AbortSignal) => {
-  return getApiVendorsIdMutator<StoreResponse>({
+  return getApiVendorsIdMutator<VendorResponse>({
     url: `/api/vendors/${id}`,
     method: 'GET',
     signal,
@@ -290,7 +290,7 @@ export function useGetApiVendorsId<
 }
 
 export const putApiVendorsId = (id: number, vendorRequest: VendorRequest) => {
-  return putApiVendorsIdMutator<StoreResponseMessageResponse>({
+  return putApiVendorsIdMutator<VendorResponseMessageResponse>({
     url: `/api/vendors/${id}`,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

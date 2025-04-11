@@ -22,8 +22,8 @@ import type {
 import type {
   GetApiSizesParams,
   SizeRequest,
-  StoreResponse,
-  StoreResponseMessageResponse,
+  SizeResponse,
+  SizeResponseMessageResponse,
   StringMessageResponse,
 } from '.././models';
 
@@ -34,7 +34,7 @@ import putApiSizesIdMutator from '../../axiosMutator';
 import deleteApiSizesIdMutator from '../../axiosMutator';
 
 export const getApiSizes = (params?: GetApiSizesParams, signal?: AbortSignal) => {
-  return getApiSizesMutator<StoreResponse[]>({ url: `/api/sizes`, method: 'GET', params, signal });
+  return getApiSizesMutator<SizeResponse[]>({ url: `/api/sizes`, method: 'GET', params, signal });
 };
 
 export const getGetApiSizesQueryKey = (params?: GetApiSizesParams) => {
@@ -120,7 +120,7 @@ export function useGetApiSizes<TData = Awaited<ReturnType<typeof getApiSizes>>, 
 }
 
 export const postApiSizes = (sizeRequest: SizeRequest, signal?: AbortSignal) => {
-  return postApiSizesMutator<StoreResponseMessageResponse>({
+  return postApiSizesMutator<SizeResponseMessageResponse>({
     url: `/api/sizes`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -183,7 +183,7 @@ export const usePostApiSizes = <TError = void, TContext = unknown>(options?: {
   return useMutation(mutationOptions);
 };
 export const getApiSizesId = (id: number, signal?: AbortSignal) => {
-  return getApiSizesIdMutator<StoreResponse>({ url: `/api/sizes/${id}`, method: 'GET', signal });
+  return getApiSizesIdMutator<SizeResponse>({ url: `/api/sizes/${id}`, method: 'GET', signal });
 };
 
 export const getGetApiSizesIdQueryKey = (id: number) => {
@@ -269,7 +269,7 @@ export function useGetApiSizesId<TData = Awaited<ReturnType<typeof getApiSizesId
 }
 
 export const putApiSizesId = (id: number, sizeRequest: SizeRequest) => {
-  return putApiSizesIdMutator<StoreResponseMessageResponse>({
+  return putApiSizesIdMutator<SizeResponseMessageResponse>({
     url: `/api/sizes/${id}`,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

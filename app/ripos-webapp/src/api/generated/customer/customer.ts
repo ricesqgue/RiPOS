@@ -21,9 +21,9 @@ import type {
 
 import type {
   CustomerRequest,
+  CustomerResponse,
+  CustomerResponseMessageResponse,
   GetApiCustomersParams,
-  StoreResponse,
-  StoreResponseMessageResponse,
   StringMessageResponse,
 } from '.././models';
 
@@ -34,7 +34,7 @@ import putApiCustomersIdMutator from '../../axiosMutator';
 import deleteApiCustomersIdMutator from '../../axiosMutator';
 
 export const getApiCustomers = (params?: GetApiCustomersParams, signal?: AbortSignal) => {
-  return getApiCustomersMutator<StoreResponse[]>({
+  return getApiCustomersMutator<CustomerResponse[]>({
     url: `/api/customers`,
     method: 'GET',
     params,
@@ -137,7 +137,7 @@ export function useGetApiCustomers<
 }
 
 export const postApiCustomers = (customerRequest: CustomerRequest, signal?: AbortSignal) => {
-  return postApiCustomersMutator<StoreResponseMessageResponse>({
+  return postApiCustomersMutator<CustomerResponseMessageResponse>({
     url: `/api/customers`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -202,7 +202,7 @@ export const usePostApiCustomers = <TError = void, TContext = unknown>(options?:
   return useMutation(mutationOptions);
 };
 export const getApiCustomersId = (id: number, signal?: AbortSignal) => {
-  return getApiCustomersIdMutator<StoreResponse>({
+  return getApiCustomersIdMutator<CustomerResponse>({
     url: `/api/customers/${id}`,
     method: 'GET',
     signal,
@@ -306,7 +306,7 @@ export function useGetApiCustomersId<
 }
 
 export const putApiCustomersId = (id: number, customerRequest: CustomerRequest) => {
-  return putApiCustomersIdMutator<StoreResponseMessageResponse>({
+  return putApiCustomersIdMutator<CustomerResponseMessageResponse>({
     url: `/api/customers/${id}`,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

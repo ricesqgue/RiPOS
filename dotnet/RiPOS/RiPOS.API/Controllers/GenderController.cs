@@ -19,7 +19,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<ICollection<StoreResponse>>> GetGenders([FromQuery] bool includeInactives = false)
+        public async Task<ActionResult<ICollection<GenderResponse>>> GetGenders([FromQuery] bool includeInactives = false)
         {
             var genders = await genderService.GetAllAsync(includeInactives);
             return Ok(genders);
@@ -31,7 +31,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<StoreResponse>> GetGenderById([FromRoute] int id)
+        public async Task<ActionResult<GenderResponse>> GetGenderById([FromRoute] int id)
         {
             var gender = await genderService.GetByIdAsync(id);
 
@@ -55,7 +55,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> AddGender([FromBody] GenderRequest request)
+        public async Task<ActionResult<MessageResponse<GenderResponse>>> AddGender([FromBody] GenderRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await genderService.AddAsync(request, userId);
@@ -76,7 +76,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateGender([FromRoute] int id, [FromBody] GenderRequest request)
+        public async Task<ActionResult<MessageResponse<GenderResponse>>> UpdateGender([FromRoute] int id, [FromBody] GenderRequest request)
         {
             if (!await genderService.ExistsByIdAsync(id))
             {

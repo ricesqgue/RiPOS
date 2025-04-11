@@ -28,7 +28,7 @@ namespace RiPOS.Core.Services
             return usersResponse;
         }   
         
-        public async Task<UserResponse> GetByIdInStoreAsync(int id, int storeId)
+        public async Task<UserResponse?> GetByIdInStoreAsync(int id, int storeId)
         {
             var user = await userRepository.FindAsync(u => u.UserStoreRoles!.Any(usr => usr.StoreId == storeId),
                 includeProps: u => u.Include(ur => ur.UserStoreRoles)!);

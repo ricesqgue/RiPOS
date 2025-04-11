@@ -21,9 +21,9 @@ import type {
 
 import type {
   ColorRequest,
+  ColorResponse,
+  ColorResponseMessageResponse,
   GetApiColorsParams,
-  StoreResponse,
-  StoreResponseMessageResponse,
   StringMessageResponse,
 } from '.././models';
 
@@ -34,7 +34,7 @@ import putApiColorsIdMutator from '../../axiosMutator';
 import deleteApiColorsIdMutator from '../../axiosMutator';
 
 export const getApiColors = (params?: GetApiColorsParams, signal?: AbortSignal) => {
-  return getApiColorsMutator<StoreResponse[]>({
+  return getApiColorsMutator<ColorResponse[]>({
     url: `/api/colors`,
     method: 'GET',
     params,
@@ -125,7 +125,7 @@ export function useGetApiColors<TData = Awaited<ReturnType<typeof getApiColors>>
 }
 
 export const postApiColors = (colorRequest: ColorRequest, signal?: AbortSignal) => {
-  return postApiColorsMutator<StoreResponseMessageResponse>({
+  return postApiColorsMutator<ColorResponseMessageResponse>({
     url: `/api/colors`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -188,7 +188,7 @@ export const usePostApiColors = <TError = void, TContext = unknown>(options?: {
   return useMutation(mutationOptions);
 };
 export const getApiColorsId = (id: number, signal?: AbortSignal) => {
-  return getApiColorsIdMutator<StoreResponse>({ url: `/api/colors/${id}`, method: 'GET', signal });
+  return getApiColorsIdMutator<ColorResponse>({ url: `/api/colors/${id}`, method: 'GET', signal });
 };
 
 export const getGetApiColorsIdQueryKey = (id: number) => {
@@ -286,7 +286,7 @@ export function useGetApiColorsId<
 }
 
 export const putApiColorsId = (id: number, colorRequest: ColorRequest) => {
-  return putApiColorsIdMutator<StoreResponseMessageResponse>({
+  return putApiColorsIdMutator<ColorResponseMessageResponse>({
     url: `/api/colors/${id}`,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

@@ -21,9 +21,9 @@ import type {
 
 import type {
   BrandRequest,
+  BrandResponse,
+  BrandResponseMessageResponse,
   GetApiBrandsParams,
-  StoreResponse,
-  StoreResponseMessageResponse,
   StringMessageResponse,
 } from '.././models';
 
@@ -34,7 +34,7 @@ import putApiBrandsIdMutator from '../../axiosMutator';
 import deleteApiBrandsIdMutator from '../../axiosMutator';
 
 export const getApiBrands = (params?: GetApiBrandsParams, signal?: AbortSignal) => {
-  return getApiBrandsMutator<StoreResponse[]>({
+  return getApiBrandsMutator<BrandResponse[]>({
     url: `/api/brands`,
     method: 'GET',
     params,
@@ -125,7 +125,7 @@ export function useGetApiBrands<TData = Awaited<ReturnType<typeof getApiBrands>>
 }
 
 export const postApiBrands = (brandRequest: BrandRequest, signal?: AbortSignal) => {
-  return postApiBrandsMutator<StoreResponseMessageResponse>({
+  return postApiBrandsMutator<BrandResponseMessageResponse>({
     url: `/api/brands`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -188,7 +188,7 @@ export const usePostApiBrands = <TError = void, TContext = unknown>(options?: {
   return useMutation(mutationOptions);
 };
 export const getApiBrandsId = (id: number, signal?: AbortSignal) => {
-  return getApiBrandsIdMutator<StoreResponse>({ url: `/api/brands/${id}`, method: 'GET', signal });
+  return getApiBrandsIdMutator<BrandResponse>({ url: `/api/brands/${id}`, method: 'GET', signal });
 };
 
 export const getGetApiBrandsIdQueryKey = (id: number) => {
@@ -286,7 +286,7 @@ export function useGetApiBrandsId<
 }
 
 export const putApiBrandsId = (id: number, brandRequest: BrandRequest) => {
-  return putApiBrandsIdMutator<StoreResponseMessageResponse>({
+  return putApiBrandsIdMutator<BrandResponseMessageResponse>({
     url: `/api/brands/${id}`,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

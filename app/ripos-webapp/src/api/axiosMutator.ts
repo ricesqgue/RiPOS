@@ -1,9 +1,12 @@
 import api from './axiosConfig';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const customMutator = (args: any) => {
-  const { url, method, params, data, ...rest } = args;
-  return api({ url, method, params, data, ...rest });
+// Define a generic type for your mutator
+const customMutator = async <T = unknown, D = unknown>(
+  config: AxiosRequestConfig<D>
+): Promise<AxiosResponse<T>> => {
+  const { url, method, params, data, ...rest } = config;
+  return api.request<T>({ url, method, params, data, ...rest });
 };
 
 export default customMutator;

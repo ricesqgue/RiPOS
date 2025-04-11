@@ -19,7 +19,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<ICollection<StoreResponse>>> GetVendors([FromQuery] bool includeInactives = false)
+        public async Task<ActionResult<ICollection<VendorResponse>>> GetVendors([FromQuery] bool includeInactives = false)
         {
             var vendors = await vendorService.GetAllAsync(includeInactives);
             return Ok(vendors);
@@ -31,7 +31,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<StoreResponse>> GetVendorById([FromRoute] int id)
+        public async Task<ActionResult<VendorResponse>> GetVendorById([FromRoute] int id)
         {
             var vendor = await vendorService.GetByIdAsync(id);
 
@@ -55,7 +55,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> AddVendor([FromBody] VendorRequest request)
+        public async Task<ActionResult<MessageResponse<VendorResponse>>> AddVendor([FromBody] VendorRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await vendorService.AddAsync(request, userId);
@@ -76,7 +76,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateVendor([FromRoute] int id, [FromBody] VendorRequest request)
+        public async Task<ActionResult<MessageResponse<VendorResponse>>> UpdateVendor([FromRoute] int id, [FromBody] VendorRequest request)
         {
             if (!await vendorService.ExistsByIdAsync(id))
             {

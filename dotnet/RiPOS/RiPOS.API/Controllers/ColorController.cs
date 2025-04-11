@@ -19,7 +19,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<ICollection<StoreResponse>>> GetColors([FromQuery] bool includeInactives = false)
+        public async Task<ActionResult<ICollection<ColorResponse>>> GetColors([FromQuery] bool includeInactives = false)
         {
             var colors = await colorService.GetAllAsync(includeInactives);
             return Ok(colors);
@@ -31,7 +31,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<StoreResponse>> GetColorById([FromRoute] int id)
+        public async Task<ActionResult<ColorResponse>> GetColorById([FromRoute] int id)
         {
             var color = await colorService.GetByIdAsync(id);
 
@@ -55,7 +55,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> AddColor([FromBody] ColorRequest request)
+        public async Task<ActionResult<MessageResponse<ColorResponse>>> AddColor([FromBody] ColorRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await colorService.AddAsync(request, userId);
@@ -76,7 +76,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateColor([FromRoute] int id, [FromBody] ColorRequest request)
+        public async Task<ActionResult<MessageResponse<ColorResponse>>> UpdateColor([FromRoute] int id, [FromBody] ColorRequest request)
         {
             if (!await colorService.ExistsByIdAsync(id))
             {

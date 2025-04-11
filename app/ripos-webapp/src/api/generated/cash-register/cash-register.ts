@@ -21,9 +21,9 @@ import type {
 
 import type {
   CashRegisterRequest,
+  CashRegisterResponse,
+  CashRegisterResponseMessageResponse,
   GetApiCashregistersParams,
-  StoreResponse,
-  StoreResponseMessageResponse,
   StringMessageResponse,
 } from '.././models';
 
@@ -34,7 +34,7 @@ import putApiCashregistersIdMutator from '../../axiosMutator';
 import deleteApiCashregistersIdMutator from '../../axiosMutator';
 
 export const getApiCashregisters = (params?: GetApiCashregistersParams, signal?: AbortSignal) => {
-  return getApiCashregistersMutator<StoreResponse[]>({
+  return getApiCashregistersMutator<CashRegisterResponse[]>({
     url: `/api/cashregisters`,
     method: 'GET',
     params,
@@ -152,7 +152,7 @@ export const postApiCashregisters = (
   cashRegisterRequest: CashRegisterRequest,
   signal?: AbortSignal
 ) => {
-  return postApiCashregistersMutator<StoreResponseMessageResponse>({
+  return postApiCashregistersMutator<CashRegisterResponseMessageResponse>({
     url: `/api/cashregisters`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -220,7 +220,7 @@ export const usePostApiCashregisters = <TError = void, TContext = unknown>(optio
   return useMutation(mutationOptions);
 };
 export const getApiCashregistersId = (id: number, signal?: AbortSignal) => {
-  return getApiCashregistersIdMutator<StoreResponse>({
+  return getApiCashregistersIdMutator<CashRegisterResponse>({
     url: `/api/cashregisters/${id}`,
     method: 'GET',
     signal,
@@ -334,7 +334,7 @@ export function useGetApiCashregistersId<
 }
 
 export const putApiCashregistersId = (id: number, cashRegisterRequest: CashRegisterRequest) => {
-  return putApiCashregistersIdMutator<StoreResponseMessageResponse>({
+  return putApiCashregistersIdMutator<CashRegisterResponseMessageResponse>({
     url: `/api/cashregisters/${id}`,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

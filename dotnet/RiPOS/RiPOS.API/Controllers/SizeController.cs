@@ -19,7 +19,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<ICollection<StoreResponse>>> GetSizes([FromQuery] bool includeInactives = false)
+        public async Task<ActionResult<ICollection<SizeResponse>>> GetSizes([FromQuery] bool includeInactives = false)
         {
             var sizes = await sizeService.GetAllAsync(includeInactives);
             return Ok(sizes);
@@ -31,7 +31,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<StoreResponse>> GetSizeById([FromRoute] int id)
+        public async Task<ActionResult<SizeResponse>> GetSizeById([FromRoute] int id)
         {
             var size = await sizeService.GetByIdAsync(id);
 
@@ -55,7 +55,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> AddSize([FromBody] SizeRequest request)
+        public async Task<ActionResult<MessageResponse<SizeResponse>>> AddSize([FromBody] SizeRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await sizeService.AddAsync(request, userId);
@@ -76,7 +76,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateSize([FromRoute] int id, [FromBody] SizeRequest request)
+        public async Task<ActionResult<MessageResponse<SizeResponse>>> UpdateSize([FromRoute] int id, [FromBody] SizeRequest request)
         {
             if (!await sizeService.ExistsByIdAsync(id))
             {

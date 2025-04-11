@@ -20,7 +20,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<ICollection<StoreResponse>>> GetCashRegisters([FromQuery] bool includeInactives = false)
+        public async Task<ActionResult<ICollection<CashRegisterResponse>>> GetCashRegisters([FromQuery] bool includeInactives = false)
         {
             var storeId = ControllerContext.HttpContext.GetHeaderStoreId();
             var cashRegisters = await cashRegisterService.GetAllAsync(storeId, includeInactives);
@@ -33,7 +33,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<StoreResponse>> GetCashRegisterById([FromRoute] int id)
+        public async Task<ActionResult<CashRegisterResponse>> GetCashRegisterById([FromRoute] int id)
         {
             var storeId = ControllerContext.HttpContext.GetHeaderStoreId();
             var cashRegister = await cashRegisterService.GetByIdAsync(id, storeId);
@@ -58,7 +58,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> AddCashRegister([FromBody] CashRegisterRequest request)
+        public async Task<ActionResult<MessageResponse<CashRegisterResponse>>> AddCashRegister([FromBody] CashRegisterRequest request)
         {
             var userSession = ControllerContext.HttpContext.GetUserSession();
             var responseMessage = await cashRegisterService.AddAsync(request, userSession);
@@ -79,7 +79,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateCashRegister([FromRoute] int id, [FromBody] CashRegisterRequest request)
+        public async Task<ActionResult<MessageResponse<CashRegisterResponse>>> UpdateCashRegister([FromRoute] int id, [FromBody] CashRegisterRequest request)
         {
             var userSession = ControllerContext.HttpContext.GetUserSession();
             if (!await cashRegisterService.ExistsByIdAsync(id, userSession.StoreId))

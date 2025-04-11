@@ -19,7 +19,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<ICollection<StoreResponse>>> GetBrands([FromQuery] bool includeInactives = false)
+        public async Task<ActionResult<ICollection<BrandResponse>>> GetBrands([FromQuery] bool includeInactives = false)
         {
             var brands = await brandService.GetAllAsync(includeInactives);
             return Ok(brands);
@@ -31,7 +31,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<StoreResponse>> GetBrandById([FromRoute] int id)
+        public async Task<ActionResult<BrandResponse>> GetBrandById([FromRoute] int id)
         {
             var brand = await brandService.GetByIdAsync(id);
 
@@ -55,7 +55,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> AddBrand([FromBody] BrandRequest request)
+        public async Task<ActionResult<MessageResponse<BrandResponse>>> AddBrand([FromBody] BrandRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await brandService.AddAsync(request, userId);
@@ -76,7 +76,7 @@ namespace RiPOS.API.Controllers
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateBrand([FromRoute] int id, [FromBody] BrandRequest request)
+        public async Task<ActionResult<MessageResponse<BrandResponse>>> UpdateBrand([FromRoute] int id, [FromBody] BrandRequest request)
         {
             if (!await brandService.ExistsByIdAsync(id))
             {

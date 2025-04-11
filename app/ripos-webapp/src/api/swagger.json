@@ -174,7 +174,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/BrandResponse"
                   }
                 }
               },
@@ -182,7 +182,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/BrandResponse"
                   }
                 }
               },
@@ -190,7 +190,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/BrandResponse"
                   }
                 }
               }
@@ -233,17 +233,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/BrandResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/BrandResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/BrandResponseMessageResponse"
                 }
               }
             }
@@ -282,17 +282,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/BrandResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/BrandResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/BrandResponse"
                 }
               }
             }
@@ -348,17 +348,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/BrandResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/BrandResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/BrandResponseMessageResponse"
                 }
               }
             }
@@ -448,7 +448,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/CashRegisterResponse"
                   }
                 }
               },
@@ -456,7 +456,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/CashRegisterResponse"
                   }
                 }
               },
@@ -464,7 +464,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/CashRegisterResponse"
                   }
                 }
               }
@@ -507,17 +507,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CashRegisterResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CashRegisterResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CashRegisterResponseMessageResponse"
                 }
               }
             }
@@ -556,17 +556,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/CashRegisterResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/CashRegisterResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/CashRegisterResponse"
                 }
               }
             }
@@ -622,17 +622,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CashRegisterResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CashRegisterResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CashRegisterResponseMessageResponse"
                 }
               }
             }
@@ -722,7 +722,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/CategoryResponse"
                   }
                 }
               },
@@ -730,7 +730,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/CategoryResponse"
                   }
                 }
               },
@@ -738,7 +738,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/CategoryResponse"
                   }
                 }
               }
@@ -781,17 +781,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CategoryResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CategoryResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CategoryResponseMessageResponse"
                 }
               }
             }
@@ -830,17 +830,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/CategoryResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/CategoryResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/CategoryResponse"
                 }
               }
             }
@@ -896,17 +896,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CategoryResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CategoryResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CategoryResponseMessageResponse"
                 }
               }
             }
@@ -996,7 +996,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/ColorResponse"
                   }
                 }
               },
@@ -1004,7 +1004,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/ColorResponse"
                   }
                 }
               },
@@ -1012,7 +1012,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/ColorResponse"
                   }
                 }
               }
@@ -1055,17 +1055,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/ColorResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/ColorResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/ColorResponseMessageResponse"
                 }
               }
             }
@@ -1104,17 +1104,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/ColorResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/ColorResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/ColorResponse"
                 }
               }
             }
@@ -1170,17 +1170,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/ColorResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/ColorResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/ColorResponseMessageResponse"
                 }
               }
             }
@@ -1270,7 +1270,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/CustomerResponse"
                   }
                 }
               },
@@ -1278,7 +1278,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/CustomerResponse"
                   }
                 }
               },
@@ -1286,7 +1286,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/CustomerResponse"
                   }
                 }
               }
@@ -1329,17 +1329,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CustomerResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CustomerResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CustomerResponseMessageResponse"
                 }
               }
             }
@@ -1378,17 +1378,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/CustomerResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/CustomerResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/CustomerResponse"
                 }
               }
             }
@@ -1444,17 +1444,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CustomerResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CustomerResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/CustomerResponseMessageResponse"
                 }
               }
             }
@@ -1550,7 +1550,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/GenderResponse"
                   }
                 }
               },
@@ -1558,7 +1558,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/GenderResponse"
                   }
                 }
               },
@@ -1566,7 +1566,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/GenderResponse"
                   }
                 }
               }
@@ -1603,17 +1603,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/GenderResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/GenderResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/GenderResponseMessageResponse"
                 }
               }
             }
@@ -1652,17 +1652,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/GenderResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/GenderResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/GenderResponse"
                 }
               }
             }
@@ -1718,17 +1718,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/GenderResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/GenderResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/GenderResponseMessageResponse"
                 }
               }
             }
@@ -1862,7 +1862,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/SizeResponse"
                   }
                 }
               },
@@ -1870,7 +1870,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/SizeResponse"
                   }
                 }
               },
@@ -1878,7 +1878,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/SizeResponse"
                   }
                 }
               }
@@ -1921,17 +1921,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/SizeResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/SizeResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/SizeResponseMessageResponse"
                 }
               }
             }
@@ -1970,17 +1970,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/SizeResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/SizeResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/SizeResponse"
                 }
               }
             }
@@ -2036,17 +2036,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/SizeResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/SizeResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/SizeResponseMessageResponse"
                 }
               }
             }
@@ -2566,7 +2566,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/VendorResponse"
                   }
                 }
               },
@@ -2574,7 +2574,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/VendorResponse"
                   }
                 }
               },
@@ -2582,7 +2582,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/StoreResponse"
+                    "$ref": "#/components/schemas/VendorResponse"
                   }
                 }
               }
@@ -2625,17 +2625,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/VendorResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/VendorResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/VendorResponseMessageResponse"
                 }
               }
             }
@@ -2674,17 +2674,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/VendorResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/VendorResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponse"
+                  "$ref": "#/components/schemas/VendorResponse"
                 }
               }
             }
@@ -2740,17 +2740,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/VendorResponseMessageResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/VendorResponseMessageResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StoreResponseMessageResponse"
+                  "$ref": "#/components/schemas/VendorResponseMessageResponse"
                 }
               }
             }
@@ -2852,6 +2852,39 @@
         },
         "additionalProperties": false
       },
+      "BrandResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BrandResponseMessageResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/BrandResponse"
+          }
+        },
+        "additionalProperties": false
+      },
       "CashRegisterRequest": {
         "required": [
           "name"
@@ -2866,6 +2899,43 @@
         },
         "additionalProperties": false
       },
+      "CashRegisterResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "storeId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CashRegisterResponseMessageResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/CashRegisterResponse"
+          }
+        },
+        "additionalProperties": false
+      },
       "CategoryRequest": {
         "required": [
           "name"
@@ -2876,6 +2946,39 @@
             "maxLength": 50,
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategoryResponseMessageResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/CategoryResponse"
           }
         },
         "additionalProperties": false
@@ -2896,6 +2999,43 @@
             "maxLength": 10,
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ColorResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "rgbHex": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ColorResponseMessageResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/ColorResponse"
           }
         },
         "additionalProperties": false
@@ -2982,6 +3122,78 @@
         },
         "additionalProperties": false
       },
+      "CustomerResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "secondSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "mobilePhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "zipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "rfc": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryState": {
+            "$ref": "#/components/schemas/CountryStateResponse"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerResponseMessageResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/CustomerResponse"
+          }
+        },
+        "additionalProperties": false
+      },
       "GenderRequest": {
         "required": [
           "name"
@@ -2992,6 +3204,39 @@
             "maxLength": 50,
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GenderResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GenderResponseMessageResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/GenderResponse"
           }
         },
         "additionalProperties": false
@@ -3068,6 +3313,43 @@
             "maxLength": 10,
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SizeResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "shortName": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SizeResponseMessageResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/SizeResponse"
           }
         },
         "additionalProperties": false
@@ -3266,6 +3548,74 @@
           "countryStateId": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VendorResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "secondSurname": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "mobilePhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "zipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryState": {
+            "$ref": "#/components/schemas/CountryStateResponse"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VendorResponseMessageResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/VendorResponse"
           }
         },
         "additionalProperties": false
