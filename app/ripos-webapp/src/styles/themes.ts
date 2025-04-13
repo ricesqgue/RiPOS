@@ -61,6 +61,11 @@ const darkTheme: ThemeConfig = {
       itemSelectedBg: 'var(--rp-primary-a0)',
       itemSelectedColor: '#FFF',
     },
+    Table: {
+      headerBg: 'var(--rp-surface-tonal-a10)',
+      rowHoverBg: 'var(--rp-surface-a20)',
+      bodySortBg: 'var(--rp-surface-a10)',
+    },
   },
   cssVar: true,
 };

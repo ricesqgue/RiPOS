@@ -7,6 +7,7 @@ import { useThemeStore } from '@stores/themeStore';
 import { useEffect } from 'react';
 import { QueryClientProvider } from '@tanstack/react-query';
 import queryClient from '@api/queryClient';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const App = () => {
   const { darkMode } = useThemeStore();
@@ -21,6 +22,7 @@ const App = () => {
       <ConfigProvider theme={darkMode ? darkTheme : lightTheme} locale={esEs}>
         <RouterProvider router={router} />
       </ConfigProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };

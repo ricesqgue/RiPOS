@@ -73,7 +73,7 @@ namespace RiPOS.Core.Services
 
             if (brand != null)
             {
-                var exists = await brandRepository.ExistsAsync(b => b.Id != brand.Id && b.Name.ToUpper() == brand.Name.ToUpper()
+                var exists = await brandRepository.ExistsAsync(b => b.Id != brand.Id && b.Name.ToUpper() == request.Name.ToUpper()
                     && b.IsActive);
 
                 if (exists)

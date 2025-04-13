@@ -59,3 +59,13 @@ body {
     color 0.3s ease-in-out;
   margin: 0;
 }
+
+// set sort icon next to title
+.custom-ant-table {
+  .ant-table-column-sorters {
+    justify-content: flex-start;
+    .ant-table-column-title {
+      flex: none;
+    }
+  }
+}

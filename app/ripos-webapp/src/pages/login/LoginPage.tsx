@@ -27,8 +27,8 @@ const LoginPage = () => {
     login({ data: loginRequest })
       .then((response) => {
         const { accessToken, availableStores } = response.data;
-        useAuthStore.getState().setAccessToken(accessToken);
-        useAuthStore.getState().setAvailableStores(availableStores);
+        useAuthStore.getState().setAccessToken(accessToken!);
+        useAuthStore.getState().setAvailableStores(availableStores!);
         navigate('/login/store', { replace: true });
       })
       .catch((error) => {
