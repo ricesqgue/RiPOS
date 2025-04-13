@@ -59,6 +59,7 @@ const menuItems: AppMenuItem[] = [
     key: '5-1',
     label: 'Géneros',
     icon: faVenusMars,
+    navigateTo: '/generos',
   },
   {
     key: '5-2',
