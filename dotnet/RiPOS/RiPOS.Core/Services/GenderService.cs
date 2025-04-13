@@ -75,7 +75,7 @@ namespace RiPOS.Core.Services
             if (gender != null)
             {
                 var exists = await genderRepository
-                    .ExistsAsync(g => g.Id != gender.Id && g.Name.ToUpper() == gender.Name.ToUpper() && g.IsActive);
+                    .ExistsAsync(g => g.Id != gender.Id && g.Name.ToUpper() == request.Name.ToUpper() && g.IsActive);
 
                 if (exists)
                 {
