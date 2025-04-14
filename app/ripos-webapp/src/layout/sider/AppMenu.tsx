@@ -82,6 +82,7 @@ const menuItems: AppMenuItem[] = [
     key: '7',
     label: 'Categorías',
     icon: faList,
+    navigateTo: '/categorias',
   },
   {
     key: '8',

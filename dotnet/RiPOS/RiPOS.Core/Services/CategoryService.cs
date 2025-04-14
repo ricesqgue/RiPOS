@@ -77,7 +77,7 @@ namespace RiPOS.Core.Services
             if (category != null)
             {
                 var exists = await categoryRepository
-                    .ExistsAsync(c => c.Id != category.Id && c.Name.ToUpper() == category.Name.ToUpper() && c.IsActive);
+                    .ExistsAsync(c => c.Id != category.Id && c.Name.ToUpper() == request.Name.ToUpper() && c.IsActive);
 
                 if (exists)
                 {
