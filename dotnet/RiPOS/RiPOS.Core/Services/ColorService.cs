@@ -84,7 +84,7 @@ namespace RiPOS.Core.Services
             if (color != null)
             {
                 var exists = await colorRepository
-                    .FindAsync(c => c.Id != color.Id && (c.Name.ToUpper() == color.Name.ToUpper() || c.RgbHex.ToUpper() == color.RgbHex.ToUpper())
+                    .FindAsync(c => c.Id != color.Id && (c.Name.ToUpper() == request.Name.ToUpper() || c.RgbHex.ToUpper() == request.RgbHex.ToUpper())
                                                      && c.IsActive);
 
                 if (exists != null)

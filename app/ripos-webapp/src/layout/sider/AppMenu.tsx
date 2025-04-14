@@ -65,6 +65,7 @@ const menuItems: AppMenuItem[] = [
     key: '5-2',
     label: 'Colores',
     icon: faPalette,
+    navigateTo: '/colores',
   },
   {
     key: '5-3',
