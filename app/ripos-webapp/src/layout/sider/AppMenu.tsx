@@ -76,6 +76,7 @@ const menuItems: AppMenuItem[] = [
     key: '6',
     label: 'Cajas Registradoras',
     icon: faCashRegister,
+    navigateTo: '/cajas-registradoras',
   },
   {
     key: '7',

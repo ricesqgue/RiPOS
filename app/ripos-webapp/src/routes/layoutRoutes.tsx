@@ -1,3 +1,4 @@
+import CashRegistersPage from '@pages/cashRegisters/CashRegistersPage';
 import GendersPage from '@pages/genders/GendersPage';
 import SizesPage from '@pages/sizes/SizesPage';
 import { ItemType } from 'antd/es/breadcrumb/Breadcrumb';
@@ -21,14 +22,19 @@ export const layoutRoutes: RouteConfig[] = [
     breadcrumb: [{ title: 'Inicio' }],
   },
   {
-    path: '/marcas',
-    element: <BrandsPage />,
-    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Marcas' }],
+    path: '/cajas-registradoras',
+    element: <CashRegistersPage />,
+    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Cajas registradoras' }],
   },
   {
     path: '/generos',
     element: <GendersPage />,
     breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Géneros' }],
+  },
+  {
+    path: '/marcas',
+    element: <BrandsPage />,
+    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Marcas' }],
   },
   {
     path: '/tallas',

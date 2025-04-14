@@ -78,7 +78,7 @@ namespace RiPOS.Core.Services
 
             if (cashRegister != null)
             {
-                var exists = await cashRegisterRepository.ExistsAsync(c => c.Id != cashRegister.Id && c.Name.ToUpper() == cashRegister.Name.ToUpper()
+                var exists = await cashRegisterRepository.ExistsAsync(c => c.Id != cashRegister.Id && c.Name.ToUpper() == request.Name.ToUpper()
                     && c.StoreId == userSession.StoreId && c.IsActive);
 
                 if (exists)
