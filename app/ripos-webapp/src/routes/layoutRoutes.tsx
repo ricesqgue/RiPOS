@@ -1,4 +1,5 @@
 import GendersPage from '@pages/genders/GendersPage';
+import SizesPage from '@pages/sizes/SizesPage';
 import { ItemType } from 'antd/es/breadcrumb/Breadcrumb';
 import { lazy, ReactNode } from 'react';
 import { Link } from 'react-router';
@@ -28,5 +29,10 @@ export const layoutRoutes: RouteConfig[] = [
     path: '/generos',
     element: <GendersPage />,
     breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Géneros' }],
+  },
+  {
+    path: '/tallas',
+    element: <SizesPage />,
+    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Tallas' }],
   },
 ];

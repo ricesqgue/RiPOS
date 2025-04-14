@@ -84,8 +84,8 @@ namespace RiPOS.Core.Services
             {
                 var exists = await sizeRepository
                     .FindAsync(s =>
-                        s.Id != size.Id && (s.ShortName == size.ShortName.ToUpper() ||
-                                            s.Name.ToUpper() == size.Name.ToUpper())
+                        s.Id != size.Id && (s.ShortName == request.ShortName.ToUpper() ||
+                                            s.Name.ToUpper() == request.Name.ToUpper())
                                         && s.IsActive);
 
                 if (exists != null)

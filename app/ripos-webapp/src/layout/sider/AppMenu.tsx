@@ -70,6 +70,7 @@ const menuItems: AppMenuItem[] = [
     key: '5-3',
     label: 'Tallas',
     icon: faRulerCombined,
+    navigateTo: '/tallas',
   },
   {
     key: '6',
