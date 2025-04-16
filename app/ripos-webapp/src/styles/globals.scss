@@ -60,6 +60,18 @@ body {
   margin: 0;
 }
 
+.visibleDisabledForm {
+  .ant-input-disabled {
+    color: var(--ant-color-text);
+  }
+
+  .ant-select-disabled {
+    .ant-select-selector {
+      color: var(--ant-color-text) !important;
+    }
+  }
+}
+
 // set sort icon next to title
 .custom-ant-table {
   .ant-table-column-sorters {

@@ -1,6 +1,7 @@
 import CashRegistersPage from '@pages/cashRegisters/CashRegistersPage';
 import CategoriesPage from '@pages/categories/CategoriesPage';
 import ColorsPage from '@pages/colors/ColorsPage';
+import CustomersPage from '@pages/customers/CustomersPage';
 import GendersPage from '@pages/genders/GendersPage';
 import SizesPage from '@pages/sizes/SizesPage';
 import { ItemType } from 'antd/es/breadcrumb/Breadcrumb';
@@ -37,6 +38,11 @@ export const layoutRoutes: RouteConfig[] = [
     path: '/colores',
     element: <ColorsPage />,
     breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Colores' }],
+  },
+  {
+    path: '/clientes',
+    element: <CustomersPage />,
+    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Clientes' }],
   },
   {
     path: '/generos',

@@ -49,6 +49,7 @@ const menuItems: AppMenuItem[] = [
     key: '3',
     label: 'Clientes',
     icon: faUserGroup,
+    navigateTo: '/clientes',
   },
   {
     key: '4',
