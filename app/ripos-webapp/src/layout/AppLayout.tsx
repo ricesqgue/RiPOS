@@ -37,7 +37,7 @@ const AppLayout = () => {
       </Sider>
       <Layout>
         <Header className={styles.header}>
-          <UserInfo collapsed={collapsed} />
+          <UserInfo />
           <Divider type="vertical" />
           <StoreInfo />
           <Divider type="vertical" />

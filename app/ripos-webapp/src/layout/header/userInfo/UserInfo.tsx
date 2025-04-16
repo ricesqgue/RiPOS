@@ -1,13 +1,18 @@
 import { useAuthStore } from '@stores/authStore';
-import { Avatar, Flex } from 'antd';
+import { Avatar, Flex, Grid } from 'antd';
 import styles from './userInfo.module.scss';
+import { useEffect, useState } from 'react';
 
-interface UserInfoProps {
-  collapsed: boolean;
-}
+const { useBreakpoint } = Grid;
 
-const UserInfo = (props: UserInfoProps) => {
+const UserInfo = () => {
   const { userInfo } = useAuthStore();
+  const [collapsed, setCollapsed] = useState(false);
+  const screens = useBreakpoint();
+
+  useEffect(() => {
+    setCollapsed(!screens.md);
+  }, [screens.md]);
 
   if (!userInfo) {
     return <></>;
@@ -21,7 +26,7 @@ const UserInfo = (props: UserInfoProps) => {
       <Avatar className={styles.avatar}>
         <span title={fullName}>{initials}</span>
       </Avatar>
-      {!props.collapsed && <div>{fullName}</div>}
+      {!collapsed && <div>{fullName}</div>}
     </Flex>
   );
 };
