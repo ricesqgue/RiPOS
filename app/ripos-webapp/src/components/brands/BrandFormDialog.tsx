@@ -111,7 +111,7 @@ const BrandFormDialog = (props: BrandFormDialogProps) => {
   };
 
   const modalTitle = useMemo(
-    () => `${props.mode === 'add' ? 'Agregar' : 'Editar'} cliente`,
+    () => `${props.mode === 'add' ? 'Agregar' : 'Editar'} marca`,
     [props.mode]
   );
 
