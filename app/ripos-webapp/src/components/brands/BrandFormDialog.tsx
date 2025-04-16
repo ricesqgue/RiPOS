@@ -2,7 +2,7 @@ import { usePostApiBrands, usePutApiBrandsId } from '@api/generated/brand/brand'
 import { BrandRequest, BrandResponse, BrandResponseMessageResponse } from '@api/generated/models';
 import { useQueryClient } from '@tanstack/react-query';
 import { Form, Input, message, Modal } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import isEqual from 'lodash/isEqual';
 import { AxiosError } from 'axios';
 
@@ -23,7 +23,6 @@ const mapBrandToFormFields = (brand: BrandResponse): FormFields => ({
 
 const BrandFormDialog = (props: BrandFormDialogProps) => {
   const [form] = Form.useForm<FormFields>();
-  const [isFormValid, setIsFormValid] = useState(false);
   const initialValuesRef = useRef<FormFields | null>(null);
   const queryClient = useQueryClient();
   const { mutateAsync: addBrand, isPending: isPendingAdd } = usePostApiBrands();
@@ -44,9 +43,14 @@ const BrandFormDialog = (props: BrandFormDialogProps) => {
   }, [form, props.open, props.editBrand, props.mode]);
 
   const handleSubmitForm = (values: FormFields) => {
+    const normalizedValues: FormFields = {
+      ...values,
+      name: values.name.trim(),
+    };
+
     if (props.mode === 'add') {
       const addBrandRequest: BrandRequest = {
-        name: values.name!,
+        name: normalizedValues.name!,
       };
 
       addBrand({ data: addBrandRequest })
@@ -65,8 +69,17 @@ const BrandFormDialog = (props: BrandFormDialogProps) => {
           });
         });
     } else if (props.mode === 'edit') {
+      const modified = !isEqual(normalizedValues, initialValuesRef.current);
+      if (!modified) {
+        messageApi.open({
+          type: 'info',
+          content: 'No hay cambios que guardar',
+        });
+        return;
+      }
+
       const updateBrandRequest: BrandRequest = {
-        name: form.getFieldValue('name'),
+        name: normalizedValues.name,
       };
 
       updateBrand({ id: props.editBrand!.id!, data: updateBrandRequest })
@@ -95,40 +108,24 @@ const BrandFormDialog = (props: BrandFormDialogProps) => {
   const handleOnClose = () => {
     props.onClose();
     form.resetFields();
-    setIsFormValid(false);
   };
 
-  const handleOnFieldsChange = () => {
-    const hasErrors = form.getFieldsError().some((field) => field.errors.length > 0);
-
-    if (hasErrors) {
-      setIsFormValid(false);
-      return;
-    }
-
-    if (props.mode === 'edit') {
-      const currentValues = form.getFieldsValue();
-      const normalizedValues: FormFields = { name: currentValues.name.trim() };
-      const modified = !isEqual(normalizedValues, initialValuesRef.current);
-      setIsFormValid(modified);
-      return;
-    }
-
-    setIsFormValid(true);
-  };
+  const modalTitle = useMemo(
+    () => `${props.mode === 'add' ? 'Agregar' : 'Editar'} cliente`,
+    [props.mode]
+  );
 
   return (
     <>
       {contextHolder}
       <Modal
         open={props.open}
-        title={`${props.mode === 'add' ? 'Agregar' : 'Editar'} marca`}
+        title={modalTitle}
         confirmLoading={isPendingAdd || isPendingUpdate}
         onCancel={handleOnClose}
         onClose={handleOnClose}
         maskClosable={false}
         onOk={form.submit}
-        okButtonProps={{ disabled: !isFormValid }}
         okText="Guardar"
       >
         <Form
@@ -138,10 +135,16 @@ const BrandFormDialog = (props: BrandFormDialogProps) => {
           autoComplete="off"
           size="middle"
           variant="filled"
-          onFieldsChange={handleOnFieldsChange}
         >
-          <Form.Item<FormFields> label="Nombre" name="name" rules={[{ required: true }]}>
-            <Input></Input>
+          <Form.Item<FormFields>
+            label="Nombre"
+            name="name"
+            rules={[
+              { required: true, message: 'Campo requerido' },
+              { max: 50, message: 'Máximo 50 caracteres' },
+            ]}
+          >
+            <Input maxLength={50}></Input>
           </Form.Item>
         </Form>
       </Modal>
