@@ -26,6 +26,7 @@ const VendorsPage = () => {
     query: {
       select: (response) => response.data,
       staleTime: 10 * 60 * 1000,
+      gcTime: 11 * 60 * 1000,
     },
   });
 

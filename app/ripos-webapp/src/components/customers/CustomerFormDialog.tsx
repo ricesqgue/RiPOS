@@ -71,7 +71,6 @@ const CustomerFormDialog = (props: CustomerFormDialogProps) => {
   const { data: countryStates } = useGetApiMiscCountryStates({
     query: {
       select: (response) => response.data,
-      staleTime: 10 * 60 * 1000,
     },
   });
 
