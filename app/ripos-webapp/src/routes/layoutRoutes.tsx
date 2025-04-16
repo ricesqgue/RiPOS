@@ -1,15 +1,16 @@
-import CashRegistersPage from '@pages/cashRegisters/CashRegistersPage';
-import CategoriesPage from '@pages/categories/CategoriesPage';
-import ColorsPage from '@pages/colors/ColorsPage';
-import CustomersPage from '@pages/customers/CustomersPage';
-import GendersPage from '@pages/genders/GendersPage';
-import SizesPage from '@pages/sizes/SizesPage';
 import { ItemType } from 'antd/es/breadcrumb/Breadcrumb';
 import { lazy, ReactNode } from 'react';
 import { Link } from 'react-router';
 
 const HomePage = lazy(() => import('@pages/home/HomePage'));
 const BrandsPage = lazy(() => import('@pages/brands/BrandsPage'));
+const CashRegistersPage = lazy(() => import('@pages/cashRegisters/CashRegistersPage'));
+const CategoriesPage = lazy(() => import('@pages/categories/CategoriesPage'));
+const ColorsPage = lazy(() => import('@pages/colors/ColorsPage'));
+const CustomersPage = lazy(() => import('@pages/customers/CustomersPage'));
+const GendersPage = lazy(() => import('@pages/genders/GendersPage'));
+const VendorsPage = lazy(() => import('@pages/vendors/VendorsPage'));
+const SizesPage = lazy(() => import('@pages/sizes/SizesPage'));
 
 interface RouteConfig {
   path: string;
@@ -53,6 +54,11 @@ export const layoutRoutes: RouteConfig[] = [
     path: '/marcas',
     element: <BrandsPage />,
     breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Marcas' }],
+  },
+  {
+    path: '/proveedores',
+    element: <VendorsPage />,
+    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Proveedores' }],
   },
   {
     path: '/tallas',

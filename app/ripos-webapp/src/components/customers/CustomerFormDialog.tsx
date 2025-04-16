@@ -315,7 +315,7 @@ const CustomerFormDialog = (props: CustomerFormDialogProps) => {
                     countryStates
                       ? countryStates.map<DefaultOptionType>((c) => ({
                           value: c.id!,
-                          label: c.shortName!,
+                          label: c.name!,
                         }))
                       : []
                   }

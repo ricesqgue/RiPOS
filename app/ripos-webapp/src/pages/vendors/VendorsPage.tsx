@@ -1,24 +1,24 @@
-import { useDeleteApiCustomersId, useGetApiCustomers } from '@api/generated/customer/customer';
-import CustomerFormDialog from '@components/customers/CustomerFormDialog';
+import { useDeleteApiVendorsId, useGetApiVendors } from '@api/generated/vendor/vendor';
+import VendorFormDialog from '@components/vendors/VendorsFormDialog';
 import { Button, Input, message, Modal, Space, Table } from 'antd';
 import { useMemo, useState } from 'react';
 import type { TableColumnsType } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faPenToSquare, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { CustomerResponse, StringMessageResponse } from '@api/generated/models';
+import { VendorResponse, StringMessageResponse } from '@api/generated/models';
 import { AxiosResponse } from 'axios';
 import { useQueryClient } from '@tanstack/react-query';
 import useTableFilters from '@hooks/useTableFilters';
-import { filterCustomers } from '@utils/filters/customersFilters';
+import { filterVendors } from '@utils/filters/vendorsFilters';
 import TableToolbar from '@components/shared/tableToolbar/TableToolbar';
 import { useGetApiMiscCountryStates } from '@api/generated/misc/misc';
 import Select, { DefaultOptionType } from 'antd/es/select';
 
-const CustomersPage = () => {
-  const [isCustomerFormDialogOpen, setIsCustomerDialogOpen] = useState(false);
+const VendorsPage = () => {
+  const [isVendorFormDialogOpen, setIsVendorDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<'add' | 'edit' | 'view'>();
-  const [selectedCustomer, setSelectedCustomer] = useState<CustomerResponse>();
-  const { mutateAsync: deleteCustomer } = useDeleteApiCustomersId();
+  const [selectedVendor, setSelectedVendor] = useState<VendorResponse>();
+  const { mutateAsync: deleteVendor } = useDeleteApiVendorsId();
   const [messageApi, contextHolder] = message.useMessage();
   const [modal, modalContextHolder] = Modal.useModal();
   const queryClient = useQueryClient();
@@ -32,15 +32,15 @@ const CustomersPage = () => {
   const { serverFilters, clientFilters, setServerFilters, setClientFilters, resetAllFilters } =
     useTableFilters({ includeInactives: false }, { searchName: '', countryStateIds: [] });
 
-  const { data: customers, isLoading } = useGetApiCustomers(serverFilters, {
+  const { data: vendors, isLoading } = useGetApiVendors(serverFilters, {
     query: {
       select: (response) => response.data,
     },
   });
 
   const filteredData = useMemo(
-    () => filterCustomers(customers || [], clientFilters),
-    [customers, clientFilters]
+    () => filterVendors(vendors || [], clientFilters),
+    [vendors, clientFilters]
   );
 
   const clientFilterComponents = [
@@ -48,8 +48,8 @@ const CustomersPage = () => {
       style={{ width: 250 }}
       allowClear
       addonBefore={<FontAwesomeIcon icon={faSearch} />}
-      key={'search-customers-input'}
-      placeholder="Buscar cliente"
+      key={'search-vendors-input'}
+      placeholder="Buscar proveedor"
       value={clientFilters.searchName}
       onChange={(v) => setClientFilters({ searchName: v.target.value })}
     />,
@@ -57,10 +57,10 @@ const CustomersPage = () => {
       style={{ minWidth: 200, maxWidth: 600 }}
       allowClear
       showSearch
+      placeholder="Filtrar por estado"
       optionFilterProp="label"
       mode="multiple"
-      placeholder="Filtrar por estado"
-      key={'state-customer-select'}
+      key={'state-vendors-select'}
       value={clientFilters.countryStateIds}
       onChange={(v) => setClientFilters({ countryStateIds: v })}
       options={
@@ -75,7 +75,7 @@ const CustomersPage = () => {
     ></Select>,
   ];
 
-  const columns = useMemo<TableColumnsType<CustomerResponse>>(
+  const columns = useMemo<TableColumnsType<VendorResponse>>(
     () => [
       {
         title: 'Nombre',
@@ -119,7 +119,7 @@ const CustomersPage = () => {
         dataIndex: '',
         key: 'actions',
         align: 'end',
-        render: (val: CustomerResponse) => (
+        render: (val: VendorResponse) => (
           <Space.Compact>
             <Button
               type="text"
@@ -153,37 +153,37 @@ const CustomersPage = () => {
     [serverFilters.includeInactives]
   );
 
-  const handleAddCustomerClick = () => {
+  const handleAddVendorClick = () => {
     setDialogMode('add');
-    setIsCustomerDialogOpen(true);
+    setIsVendorDialogOpen(true);
   };
 
-  const handleEditClick = (customer: CustomerResponse) => {
-    setSelectedCustomer(customer);
+  const handleEditClick = (vendor: VendorResponse) => {
+    setSelectedVendor(vendor);
     setDialogMode('edit');
-    setIsCustomerDialogOpen(true);
+    setIsVendorDialogOpen(true);
   };
 
-  const handleViewClick = (customer: CustomerResponse) => {
-    setSelectedCustomer(customer);
+  const handleViewClick = (vendor: VendorResponse) => {
+    setSelectedVendor(vendor);
     setDialogMode('view');
-    setIsCustomerDialogOpen(true);
+    setIsVendorDialogOpen(true);
   };
 
-  const handleDeleteClick = (customerId: number) => {
+  const handleDeleteClick = (vendorId: number) => {
     modal.confirm({
-      title: 'Desactivar cliente',
-      content: '¿Estás seguro de desactivar este cliente?',
+      title: 'Desactivar proveedor',
+      content: '¿Estás seguro de desactivar este proveedor?',
       closable: true,
       okType: 'danger',
       onOk() {
-        return deleteCustomer({ id: customerId })
+        return deleteVendor({ id: vendorId })
           .then((response) => {
             messageApi.open({
               type: 'success',
               content: response.data.message,
             });
-            queryClient.invalidateQueries({ queryKey: ['/api/customers'] });
+            queryClient.invalidateQueries({ queryKey: ['/api/vendors'] });
           })
           .catch((err: AxiosResponse<StringMessageResponse>) => {
             messageApi.open({
@@ -208,11 +208,11 @@ const CustomersPage = () => {
           },
           buttons: [
             { text: 'Reiniciar filtros', onClick: resetAllFilters },
-            { text: 'Agregar', onClick: handleAddCustomerClick },
+            { text: 'Agregar', onClick: handleAddVendorClick },
           ],
         }}
       />
-      <Table<CustomerResponse>
+      <Table<VendorResponse>
         columns={columns}
         loading={isLoading}
         dataSource={filteredData}
@@ -222,15 +222,15 @@ const CustomersPage = () => {
         className="custom-ant-table"
       ></Table>
       {dialogMode && (
-        <CustomerFormDialog
-          open={isCustomerFormDialogOpen}
+        <VendorFormDialog
+          open={isVendorFormDialogOpen}
           mode={dialogMode}
-          onClose={() => setIsCustomerDialogOpen(false)}
-          editCustomer={selectedCustomer}
-        ></CustomerFormDialog>
+          onClose={() => setIsVendorDialogOpen(false)}
+          editVendor={selectedVendor}
+        ></VendorFormDialog>
       )}
     </>
   );
 };
 
-export default CustomersPage;
+export default VendorsPage;

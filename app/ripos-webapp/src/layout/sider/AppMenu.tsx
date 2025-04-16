@@ -55,6 +55,7 @@ const menuItems: AppMenuItem[] = [
     key: '4',
     label: 'Proveedores',
     icon: faUserTag,
+    navigateTo: '/proveedores',
   },
   {
     key: '5-1',
