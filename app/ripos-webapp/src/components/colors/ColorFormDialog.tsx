@@ -2,7 +2,7 @@ import { usePostApiColors, usePutApiColorsId } from '@api/generated/color/color'
 import { ColorRequest, ColorResponse, ColorResponseMessageResponse } from '@api/generated/models';
 import { useQueryClient } from '@tanstack/react-query';
 import { ColorPicker, Form, Input, message, Modal } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import isEqual from 'lodash/isEqual';
 import { AxiosError } from 'axios';
 import { Color } from 'antd/es/color-picker';
@@ -26,7 +26,6 @@ const mapColorToFormFields = (color: ColorResponse): FormFields => ({
 
 const ColorFormDialog = (props: ColorFormDialogProps) => {
   const [form] = Form.useForm<FormFields>();
-  const [isFormValid, setIsFormValid] = useState(false);
   const initialValuesRef = useRef<FormFields | null>(null);
   const queryClient = useQueryClient();
   const { mutateAsync: addColor, isPending: isPendingAdd } = usePostApiColors();
@@ -47,10 +46,17 @@ const ColorFormDialog = (props: ColorFormDialogProps) => {
   }, [form, props.open, props.editColor, props.mode]);
 
   const handleSubmitForm = (values: FormFields) => {
+    const normalizedValues: FormFields = {
+      ...values,
+      name: values.name.trim(),
+      rgbHex:
+        typeof values.rgbHex === 'string' ? values.rgbHex.trim() : values.rgbHex.toHexString(),
+    };
+
     if (props.mode === 'add') {
       const addColorRequest: ColorRequest = {
-        name: values.name!,
-        rgbHex: typeof values.rgbHex! === 'string' ? values.rgbHex : values.rgbHex.toHexString(),
+        name: normalizedValues.name,
+        rgbHex: normalizedValues.rgbHex as string,
       };
 
       addColor({ data: addColorRequest })
@@ -69,11 +75,17 @@ const ColorFormDialog = (props: ColorFormDialogProps) => {
           });
         });
     } else if (props.mode === 'edit') {
-      const rgbHexFormValue = form.getFieldValue('rgbHex');
+      const modified = !isEqual(normalizedValues, initialValuesRef.current);
+      if (!modified) {
+        messageApi.open({
+          type: 'info',
+          content: 'No hay cambios que guardar',
+        });
+        return;
+      }
       const updateColorRequest: ColorRequest = {
-        name: form.getFieldValue('name'),
-        rgbHex:
-          typeof rgbHexFormValue === 'string' ? rgbHexFormValue : rgbHexFormValue.toHexString(),
+        name: normalizedValues.name,
+        rgbHex: normalizedValues.rgbHex as string,
       };
 
       updateColor({ id: props.editColor!.id!, data: updateColorRequest })
@@ -102,33 +114,6 @@ const ColorFormDialog = (props: ColorFormDialogProps) => {
   const handleOnClose = () => {
     props.onClose();
     form.resetFields();
-    setIsFormValid(false);
-  };
-
-  const handleOnFieldsChange = () => {
-    const hasErrors = form.getFieldsError().some((field) => field.errors.length > 0);
-    const currentRgbHex = form.getFieldValue('rgbHex');
-
-    if (hasErrors || currentRgbHex === undefined) {
-      setIsFormValid(false);
-      return;
-    }
-
-    if (props.mode === 'edit') {
-      const currentValues = form.getFieldsValue();
-      const normalizedValues: FormFields = {
-        name: currentValues.name.trim(),
-        rgbHex:
-          typeof currentValues.rgbHex === 'string'
-            ? currentValues.rgbHex.trim()
-            : currentValues.rgbHex.toHexString(),
-      };
-      const modified = !isEqual(normalizedValues, initialValuesRef.current);
-      setIsFormValid(modified);
-      return;
-    }
-
-    setIsFormValid(true);
   };
 
   return (
@@ -142,7 +127,6 @@ const ColorFormDialog = (props: ColorFormDialogProps) => {
         onClose={handleOnClose}
         maskClosable={false}
         onOk={form.submit}
-        okButtonProps={{ disabled: !isFormValid }}
         okText="Guardar"
       >
         <Form
@@ -152,12 +136,22 @@ const ColorFormDialog = (props: ColorFormDialogProps) => {
           autoComplete="off"
           size="middle"
           variant="filled"
-          onFieldsChange={handleOnFieldsChange}
         >
-          <Form.Item<FormFields> label="Nombre" name="name" rules={[{ required: true }]}>
-            <Input></Input>
+          <Form.Item<FormFields>
+            label="Nombre"
+            name="name"
+            rules={[
+              { required: true, message: 'Campo requerido' },
+              { max: 50, message: 'Máximo 50 caracteres' },
+            ]}
+          >
+            <Input maxLength={50}></Input>
           </Form.Item>
-          <Form.Item<FormFields> label="Código RGB" name="rgbHex" rules={[{ required: true }]}>
+          <Form.Item<FormFields>
+            label="Código RGB"
+            name="rgbHex"
+            rules={[{ required: true, message: 'Campo requerido' }]}
+          >
             <ColorPicker
               disabledAlpha
               disabledFormat

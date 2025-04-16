@@ -2,7 +2,7 @@ import { usePostApiSizes, usePutApiSizesId } from '@api/generated/size/size';
 import { SizeRequest, SizeResponse, SizeResponseMessageResponse } from '@api/generated/models';
 import { useQueryClient } from '@tanstack/react-query';
 import { Form, Input, message, Modal } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import isEqual from 'lodash/isEqual';
 import { AxiosError } from 'axios';
 
@@ -25,7 +25,6 @@ const mapSizeToFormFields = (size: SizeResponse): FormFields => ({
 
 const SizeFormDialog = (props: SizeFormDialogProps) => {
   const [form] = Form.useForm<FormFields>();
-  const [isFormValid, setIsFormValid] = useState(false);
   const initialValuesRef = useRef<FormFields | null>(null);
   const queryClient = useQueryClient();
   const { mutateAsync: addSize, isPending: isPendingAdd } = usePostApiSizes();
@@ -46,10 +45,16 @@ const SizeFormDialog = (props: SizeFormDialogProps) => {
   }, [form, props.open, props.editSize, props.mode]);
 
   const handleSubmitForm = (values: FormFields) => {
+    const normalizedValues: FormFields = {
+      ...values,
+      name: values.name.trim(),
+      shortName: values.shortName.trim(),
+    };
+
     if (props.mode === 'add') {
       const addSizeRequest: SizeRequest = {
-        name: values.name!,
-        shortName: values.shortName!,
+        name: normalizedValues.name,
+        shortName: normalizedValues.shortName,
       };
 
       addSize({ data: addSizeRequest })
@@ -68,9 +73,18 @@ const SizeFormDialog = (props: SizeFormDialogProps) => {
           });
         });
     } else if (props.mode === 'edit') {
+      const modified = !isEqual(normalizedValues, initialValuesRef.current);
+      if (!modified) {
+        messageApi.open({
+          type: 'info',
+          content: 'No hay cambios que guardar',
+        });
+        return;
+      }
+
       const updateSizeRequest: SizeRequest = {
-        name: form.getFieldValue('name'),
-        shortName: form.getFieldValue('shortName'),
+        name: normalizedValues.name,
+        shortName: normalizedValues.shortName,
       };
 
       updateSize({ id: props.editSize!.id!, data: updateSizeRequest })
@@ -99,29 +113,6 @@ const SizeFormDialog = (props: SizeFormDialogProps) => {
   const handleOnClose = () => {
     props.onClose();
     form.resetFields();
-    setIsFormValid(false);
-  };
-
-  const handleOnFieldsChange = () => {
-    const hasErrors = form.getFieldsError().some((field) => field.errors.length > 0);
-
-    if (hasErrors) {
-      setIsFormValid(false);
-      return;
-    }
-
-    if (props.mode === 'edit') {
-      const currentValues = form.getFieldsValue();
-      const normalizedValues: FormFields = {
-        name: currentValues.name.trim(),
-        shortName: currentValues.shortName.trim(),
-      };
-      const modified = !isEqual(normalizedValues, initialValuesRef.current);
-      setIsFormValid(modified);
-      return;
-    }
-
-    setIsFormValid(true);
   };
 
   return (
@@ -135,7 +126,6 @@ const SizeFormDialog = (props: SizeFormDialogProps) => {
         onClose={handleOnClose}
         maskClosable={false}
         onOk={form.submit}
-        okButtonProps={{ disabled: !isFormValid }}
         okText="Guardar"
       >
         <Form
@@ -145,13 +135,26 @@ const SizeFormDialog = (props: SizeFormDialogProps) => {
           autoComplete="off"
           size="middle"
           variant="filled"
-          onFieldsChange={handleOnFieldsChange}
         >
-          <Form.Item<FormFields> label="Nombre" name="name" rules={[{ required: true }]}>
-            <Input></Input>
+          <Form.Item<FormFields>
+            label="Nombre"
+            name="name"
+            rules={[
+              { required: true, message: 'Campo requerido' },
+              { max: 50, message: 'Máximo 50 caracteres' },
+            ]}
+          >
+            <Input maxLength={50}></Input>
           </Form.Item>
-          <Form.Item<FormFields> label="Nombre corto" name="shortName" rules={[{ required: true }]}>
-            <Input></Input>
+          <Form.Item<FormFields>
+            label="Nombre corto"
+            name="shortName"
+            rules={[
+              { required: true, message: 'Campo requerido' },
+              { max: 10, message: 'Máximo 10 caracteres' },
+            ]}
+          >
+            <Input maxLength={10}></Input>
           </Form.Item>
         </Form>
       </Modal>

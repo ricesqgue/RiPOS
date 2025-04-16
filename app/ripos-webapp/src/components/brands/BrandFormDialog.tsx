@@ -50,7 +50,7 @@ const BrandFormDialog = (props: BrandFormDialogProps) => {
 
     if (props.mode === 'add') {
       const addBrandRequest: BrandRequest = {
-        name: normalizedValues.name!,
+        name: normalizedValues.name,
       };
 
       addBrand({ data: addBrandRequest })

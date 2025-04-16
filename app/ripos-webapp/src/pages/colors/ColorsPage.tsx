@@ -133,7 +133,7 @@ const ColorsPage = () => {
   const handleDeleteClick = (colorId: number) => {
     modal.confirm({
       title: 'Desactivar color',
-      content: '¿Estás seguro de desactivar esta color?',
+      content: '¿Estás seguro de desactivar este color?',
       closable: true,
       okType: 'danger',
       onOk() {

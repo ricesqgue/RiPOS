@@ -111,8 +111,8 @@ const CategoriesPage = () => {
 
   const handleDeleteClick = (categoryId: number) => {
     modal.confirm({
-      title: 'Desactivar marca',
-      content: '¿Estás seguro de desactivar esta marca?',
+      title: 'Desactivar categoría',
+      content: '¿Estás seguro de desactivar esta categoría?',
       closable: true,
       okType: 'danger',
       onOk() {

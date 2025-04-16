@@ -54,7 +54,7 @@ const GenderFormDialog = (props: GenderFormDialogProps) => {
 
     if (props.mode === 'add') {
       const addGenderRequest: GenderRequest = {
-        name: normalizedValues.name!,
+        name: normalizedValues.name,
       };
 
       addGender({ data: addGenderRequest })

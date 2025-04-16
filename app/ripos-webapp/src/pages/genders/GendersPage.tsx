@@ -112,7 +112,7 @@ const GendersPage = () => {
   const handleDeleteClick = (genderId: number) => {
     modal.confirm({
       title: 'Desactivar género',
-      content: '¿Estás seguro de desactivar esta género?',
+      content: '¿Estás seguro de desactivar este género?',
       closable: true,
       okType: 'danger',
       onOk() {

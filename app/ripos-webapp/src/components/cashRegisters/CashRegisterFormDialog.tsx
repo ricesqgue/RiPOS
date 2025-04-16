@@ -9,7 +9,7 @@ import {
 } from '@api/generated/models';
 import { useQueryClient } from '@tanstack/react-query';
 import { Form, Input, message, Modal } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import isEqual from 'lodash/isEqual';
 import { AxiosError } from 'axios';
 
@@ -30,7 +30,6 @@ const mapCashRegisterToFormFields = (cashRegister: CashRegisterResponse): FormFi
 
 const CashRegisterFormDialog = (props: CashRegisterFormDialogProps) => {
   const [form] = Form.useForm<FormFields>();
-  const [isFormValid, setIsFormValid] = useState(false);
   const initialValuesRef = useRef<FormFields | null>(null);
   const queryClient = useQueryClient();
   const { mutateAsync: addCashRegister, isPending: isPendingAdd } = usePostApiCashregisters();
@@ -52,9 +51,14 @@ const CashRegisterFormDialog = (props: CashRegisterFormDialogProps) => {
   }, [form, props.open, props.editCashRegister, props.mode]);
 
   const handleSubmitForm = (values: FormFields) => {
+    const normalizedValues: FormFields = {
+      ...values,
+      name: values.name.trim(),
+    };
+
     if (props.mode === 'add') {
       const addCashRegisterRequest: CashRegisterRequest = {
-        name: values.name!,
+        name: normalizedValues.name,
       };
 
       addCashRegister({ data: addCashRegisterRequest })
@@ -73,8 +77,17 @@ const CashRegisterFormDialog = (props: CashRegisterFormDialogProps) => {
           });
         });
     } else if (props.mode === 'edit') {
+      const modified = !isEqual(normalizedValues, initialValuesRef.current);
+      if (!modified) {
+        messageApi.open({
+          type: 'info',
+          content: 'No hay cambios que guardar',
+        });
+        return;
+      }
+
       const updateCashRegisterRequest: CashRegisterRequest = {
-        name: form.getFieldValue('name'),
+        name: normalizedValues.name,
       };
 
       updateCashRegister({ id: props.editCashRegister!.id!, data: updateCashRegisterRequest })
@@ -103,26 +116,6 @@ const CashRegisterFormDialog = (props: CashRegisterFormDialogProps) => {
   const handleOnClose = () => {
     props.onClose();
     form.resetFields();
-    setIsFormValid(false);
-  };
-
-  const handleOnFieldsChange = () => {
-    const hasErrors = form.getFieldsError().some((field) => field.errors.length > 0);
-
-    if (hasErrors) {
-      setIsFormValid(false);
-      return;
-    }
-
-    if (props.mode === 'edit') {
-      const currentValues = form.getFieldsValue();
-      const normalizedValues: FormFields = { name: currentValues.name.trim() };
-      const modified = !isEqual(normalizedValues, initialValuesRef.current);
-      setIsFormValid(modified);
-      return;
-    }
-
-    setIsFormValid(true);
   };
 
   return (
@@ -136,7 +129,6 @@ const CashRegisterFormDialog = (props: CashRegisterFormDialogProps) => {
         onClose={handleOnClose}
         maskClosable={false}
         onOk={form.submit}
-        okButtonProps={{ disabled: !isFormValid }}
         okText="Guardar"
       >
         <Form
@@ -146,10 +138,16 @@ const CashRegisterFormDialog = (props: CashRegisterFormDialogProps) => {
           autoComplete="off"
           size="middle"
           variant="filled"
-          onFieldsChange={handleOnFieldsChange}
         >
-          <Form.Item<FormFields> label="Nombre" name="name" rules={[{ required: true }]}>
-            <Input></Input>
+          <Form.Item<FormFields>
+            label="Nombre"
+            name="name"
+            rules={[
+              { required: true, message: 'Campo requerido' },
+              { max: 50, message: 'Máximo 50 caracteres' },
+            ]}
+          >
+            <Input maxLength={50}></Input>
           </Form.Item>
         </Form>
       </Modal>
