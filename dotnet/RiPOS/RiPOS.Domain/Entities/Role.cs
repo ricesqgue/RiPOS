@@ -11,14 +11,17 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(10)]
+        [Column(TypeName = "varchar(10)")]
         public required string Code { get; set; }
 
         [Required]
         [MaxLength(50)]
+        [Column(TypeName = "varchar(50)")]
         public required string Name { get; set; }
 
         [Required]
         [MaxLength(100)]
+        [Column(TypeName = "varchar(100)")]
         public required string Description { get; set; }
     }
 }

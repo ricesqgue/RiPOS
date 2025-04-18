@@ -7,9 +7,13 @@ namespace RiPOS.Repository.Repositories
 {
     public class MiscRepository(RiPosDbContext dbContext) : IMiscRepository
     {
-        public async Task<ICollection<CountryState>> GetAllCountryStatesAsync()
+        // public async Task<ICollection<CountryState>> GetAllCountryStatesAsync()
+        // {
+        //     return await dbContext.CountryStates.AsNoTracking().ToListAsync();
+        // }
+        public Task<ICollection<CountryState>> GetAllCountryStatesAsync()
         {
-            return await dbContext.CountryStates.AsNoTracking().ToListAsync();
+            throw new NotImplementedException();
         }
     }
 }

@@ -11,10 +11,12 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(50)]
+        [Column(TypeName = "varchar(50)")]
         public required string Name { get; set; }
 
         [Required]
         [MaxLength(10)]
+        [Column(TypeName = "varchar(10)")]
         public required string RgbHex { get; set; }
 
         [Required] 

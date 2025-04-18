@@ -10,12 +10,15 @@ public class RefreshToken : IEntity
     
     [Required]
     [MaxLength(100)]
+    [Column(TypeName = "varchar(100)")]
     public required string Token { get; set; }
     
     [Required]
+    [Column(TypeName = "timestamptz")]
     public DateTime Expires { get; set; }
     
     [Required]
+    [Column(TypeName = "timestamptz")]
     public DateTime Created { get; set; }
     
     [Required]

@@ -1,6 +1,7 @@
 ﻿using RiPOS.Domain.Interfaces;
 using RiPOS.Domain.Shared;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RiPOS.Domain.Entities
 {
@@ -10,9 +11,11 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(50)]
+        [Column(TypeName = "varchar(50)")]
         public required string Name { get; set; }
 
         [MaxLength(300)]
+        [Column(TypeName = "varchar(300)")]
         public string? LogoPath { get; set; }
 
         [Required] 

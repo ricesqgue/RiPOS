@@ -5,6 +5,7 @@ namespace RiPOS.Domain.Shared
 {
     public class TrackEntityChanges
     {
+        [Column(TypeName = "timestamptz")]
         public DateTime CreationDateTime { get; set; }
 
         public int? CreationByUserId { get; set; }
@@ -12,6 +13,7 @@ namespace RiPOS.Domain.Shared
         [ForeignKey(nameof(CreationByUserId))]
         public User? CreationByUser { get; set; }
 
+        [Column(TypeName = "timestamptz")]
         public DateTime? LastModificationDateTime { get; set; }
 
         public int? LastModificationByUserId { get; set; }

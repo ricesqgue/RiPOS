@@ -11,6 +11,7 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         [MaxLength(50)]
+        [Column(TypeName = "varchar(50)")]
         public required string Name { get; set; }
 
         [Required] 

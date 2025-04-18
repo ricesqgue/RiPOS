@@ -19,125 +19,115 @@ namespace RiPOS.Database.Configurations
 
         private static void ConfigureDefaultValues(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .Property(u => u.IsActive)
-                .HasDefaultValue(true);
+            modelBuilder.Entity<User>(u =>
+            {
+                u.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+                u.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                u.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
+                    .ValueGeneratedOnAddOrUpdate();
+            });
+
+            modelBuilder.Entity<Store>(s =>
+            {
+                s.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+                s.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                s.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
+                    .ValueGeneratedOnAddOrUpdate();
+            });
             
-            modelBuilder.Entity<User>()
-                .Property(u => u.CreationDateTime)
-                .HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<Brand>(b =>
+            {
+                b.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+                b.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                b.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
+                    .ValueGeneratedOnAddOrUpdate();
+            });
             
-            modelBuilder.Entity<User>()
-                .Property(u => u.LastModificationDateTime)
-                .HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<CashRegister>(c =>
+            {
+                c.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+                c.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                c.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
+                    .ValueGeneratedOnAddOrUpdate();
+            });
             
-            modelBuilder.Entity<Store>()
-                .Property(s => s.IsActive)
-                .HasDefaultValue(true);
+            modelBuilder.Entity<Size>(s =>
+            {
+                s.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+                s.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                s.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
+                    .ValueGeneratedOnAddOrUpdate();
+            });
             
-            modelBuilder.Entity<Store>()
-                .Property(s => s.CreationDateTime)
-                .HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<Gender>(g =>
+            {
+                g.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+                g.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                g.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
+                    .ValueGeneratedOnAddOrUpdate();
+            });
             
-            modelBuilder.Entity<Store>()
-                .Property(s => s.LastModificationDateTime)
-                .HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<Color>(c =>
+            {
+                c.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+                c.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                c.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
+                    .ValueGeneratedOnAddOrUpdate();
+            });
             
-            modelBuilder.Entity<Brand>()
-                .Property(b => b.IsActive)
-                .HasDefaultValue(true);
+            modelBuilder.Entity<Category>(c =>
+            {
+                c.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+                c.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                c.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
+                    .ValueGeneratedOnAddOrUpdate();
+            });
             
-            modelBuilder.Entity<Brand>()
-                .Property(b => b.CreationDateTime)
-                .HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<Customer>(c =>
+            {
+                c.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+                c.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                c.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
+                    .ValueGeneratedOnAddOrUpdate();
+            });
             
-            modelBuilder.Entity<Brand>()
-                .Property(b => b.LastModificationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<CashRegister>()
-                .Property(c => c.IsActive)
-                .HasDefaultValue(true);
-            
-            modelBuilder.Entity<CashRegister>()
-                .Property(c => c.CreationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<CashRegister>()
-                .Property(c => c.LastModificationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<Size>()
-                .Property(s => s.IsActive)
-                .HasDefaultValue(true);
-            
-            modelBuilder.Entity<Size>()
-                .Property(s => s.CreationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<Size>()
-                .Property(s => s.LastModificationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<Gender>()
-                .Property(g => g.IsActive)
-                .HasDefaultValue(true);
-            
-            modelBuilder.Entity<Gender>()
-                .Property(g => g.CreationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<Gender>()
-                .Property(g => g.LastModificationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<Color>()
-                .Property(c => c.IsActive)
-                .HasDefaultValue(true);
-            
-            modelBuilder.Entity<Color>()
-                .Property(c => c.CreationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<Color>()
-                .Property(c => c.LastModificationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<Category>()
-                .Property(c => c.IsActive)
-                .HasDefaultValue(true);
-            
-            modelBuilder.Entity<Category>()
-                .Property(c => c.CreationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<Category>()
-                .Property(c => c.LastModificationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<Customer>()
-                .Property(c => c.IsActive)
-                .HasDefaultValue(true);
-            
-            modelBuilder.Entity<Customer>()
-                .Property(c => c.CreationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<Customer>()
-                .Property(c => c.LastModificationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<Vendor>()
-                .Property(v => v.IsActive)
-                .HasDefaultValue(true);
-            
-            modelBuilder.Entity<Vendor>()
-                .Property(v => v.CreationDateTime)
-                .HasDefaultValueSql("GETDATE()");
-            
-            modelBuilder.Entity<Vendor>()
-                .Property(v => v.LastModificationDateTime)
-                .HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<Vendor>(v =>
+            {
+                v.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+                v.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                v.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
+                    .ValueGeneratedOnAddOrUpdate();
+            });
         }
     }
 }

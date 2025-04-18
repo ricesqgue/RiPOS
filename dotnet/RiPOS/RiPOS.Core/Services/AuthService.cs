@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.IdentityModel.Tokens.Jwt;
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RiPOS.Core.Interfaces;
@@ -7,7 +8,6 @@ using RiPOS.Repository.Interfaces;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 using RiPOS.Shared.Models.Settings;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
