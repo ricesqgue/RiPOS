@@ -9,12 +9,16 @@ using RiPOS.Shared.Utilities.Extensions;
 namespace RiPOS.API.Controllers
 {
     [Route("api/auth")]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public class AuthController(IAuthService authService) : ControllerBase
     {
         [HttpPost]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        
         public async Task<ActionResult<LoginResponse>> Login([FromBody] AuthRequest request)
         {
             var userResponse = await authService.AuthenticateAsync(request);
@@ -35,8 +39,8 @@ namespace RiPOS.API.Controllers
 
         [HttpPost("refreshToken")]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<LoginResponse>> RefreshToken([FromBody] RefreshTokenRequest request)
         {
             var refreshToken = Request.Cookies["refreshToken"];
@@ -63,7 +67,7 @@ namespace RiPOS.API.Controllers
         }
 
         [HttpPost("logout")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult Logout()
         {
             Response.Cookies.Delete("refreshToken");
@@ -72,8 +76,8 @@ namespace RiPOS.API.Controllers
 
         [HttpGet("userInfo")]
         [Authorize]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<UserResponse>> GetUserInfo()
         {
             var storeId = HttpContext.GetHeaderStoreId();

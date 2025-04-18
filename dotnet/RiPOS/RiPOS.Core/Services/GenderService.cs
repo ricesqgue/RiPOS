@@ -60,6 +60,7 @@ namespace RiPOS.Core.Services
             }
             else
             {
+                messageResponse.Success = false;
                 messageResponse.Message = "No se realizó ningún cambio";
             }
 
@@ -97,6 +98,7 @@ namespace RiPOS.Core.Services
                 }
                 else
                 {
+                    messageResponse.Success = false;
                     messageResponse.Message = "No se realizó ningún cambio";
                 }
             }
@@ -124,10 +126,11 @@ namespace RiPOS.Core.Services
                 if (messageResponse.Success)
                 {
                     messageResponse.Success = true;
-                    messageResponse.Message = $"Género eliminado correctamente";
+                    messageResponse.Data = $"Género eliminado correctamente";
                 }
                 else
                 {
+                    messageResponse.Success = false;
                     messageResponse.Message = "No se realizó ningún cambio";
                 }
             }

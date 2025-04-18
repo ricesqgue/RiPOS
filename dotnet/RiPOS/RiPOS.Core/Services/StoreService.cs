@@ -61,6 +61,7 @@ namespace RiPOS.Core.Services
             }
             else
             {
+                messageResponse.Success = false;
                 messageResponse.Message = "No se realizó ningún cambio";
             }
 
@@ -101,6 +102,7 @@ namespace RiPOS.Core.Services
                 }
                 else
                 {
+                    messageResponse.Success = false;
                     messageResponse.Message = "No se realizó ningún cambio";
                 }
             }
@@ -129,10 +131,11 @@ namespace RiPOS.Core.Services
                 if (messageResponse.Success)
                 {
                     messageResponse.Success = true;
-                    messageResponse.Message = $"Tienda eliminada correctamente";
+                    messageResponse.Data = $"Tienda eliminada correctamente";
                 }
                 else
                 {
+                    messageResponse.Success = false;
                     messageResponse.Message = "No se realizó ningún cambio";
                 }
             }

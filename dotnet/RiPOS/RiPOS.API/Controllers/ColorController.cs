@@ -12,13 +12,15 @@ namespace RiPOS.API.Controllers
 {
     [Route("api/colors")]
     [Authorize]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public class ColorController(IColorService colorService) : ControllerBase
     {
         [HttpGet]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(ICollection<ColorResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ICollection<ColorResponse>>> GetColors([FromQuery] bool includeInactives = false)
         {
             var colors = await colorService.GetAllAsync(includeInactives);
@@ -27,22 +29,15 @@ namespace RiPOS.API.Controllers
 
         [HttpGet("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(ColorResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ColorResponse>> GetColorById([FromRoute] int id)
         {
             var color = await colorService.GetByIdAsync(id);
 
             if (color == null)
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Color no encontrado"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Color no encontrado"));
             }
 
             return Ok(color);
@@ -51,70 +46,55 @@ namespace RiPOS.API.Controllers
         [HttpPost]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<ColorResponse>>> AddColor([FromBody] ColorRequest request)
+        [ProducesResponseType(typeof(ColorResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ColorResponse>> AddColor([FromBody] ColorRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await colorService.AddAsync(request, userId);
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
 
         [HttpPut("{id}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<ColorResponse>>> UpdateColor([FromRoute] int id, [FromBody] ColorRequest request)
+        [ProducesResponseType(typeof(ColorResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ColorResponse>> UpdateColor([FromRoute] int id, [FromBody] ColorRequest request)
         {
             if (!await colorService.ExistsByIdAsync(id))
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Color no encontrado"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Color no encontrado"));
             }
             var userId = HttpContext.GetUserId();
             var responseMessage = await colorService.UpdateAsync(id, request, userId);
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
 
         [HttpDelete("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<string>>> DeactivateColor([FromRoute] int id)
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<SimpleResponse>> DeactivateColor([FromRoute] int id)
         {
             if (!await colorService.ExistsByIdAsync(id))
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Color no encontrado"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Color no encontrado"));
             }
 
             var userId = HttpContext.GetUserId();
@@ -122,10 +102,10 @@ namespace RiPOS.API.Controllers
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
     }
 }

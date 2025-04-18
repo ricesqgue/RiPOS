@@ -12,13 +12,14 @@ namespace RiPOS.API.Controllers
 {
     [Route("api/brands")]
     [Authorize]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public class BrandController(IBrandService brandService) : ControllerBase
     {
         [HttpGet]
-        [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(ICollection<BrandResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ICollection<BrandResponse>>> GetBrands([FromQuery] bool includeInactives = false)
         {
             var brands = await brandService.GetAllAsync(includeInactives);
@@ -27,10 +28,8 @@ namespace RiPOS.API.Controllers
 
         [HttpGet("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(BrandResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<BrandResponse>> GetBrandById([FromRoute] int id)
         {
             var brand = await brandService.GetByIdAsync(id);
@@ -51,40 +50,32 @@ namespace RiPOS.API.Controllers
         [HttpPost]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<BrandResponse>>> AddBrand([FromBody] BrandRequest request)
+        [ProducesResponseType(typeof(BrandResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<BrandResponse>> AddBrand([FromBody] BrandRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await brandService.AddAsync(request, userId);
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
 
         [HttpPut("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<BrandResponse>>> UpdateBrand([FromRoute] int id, [FromBody] BrandRequest request)
+        [ProducesResponseType(typeof(BrandResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<BrandResponse>> UpdateBrand([FromRoute] int id, [FromBody] BrandRequest request)
         {
             if (!await brandService.ExistsByIdAsync(id))
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Marca no encontrada"
-                };
+                var response = new SimpleResponse("Marca no encontrada");
                 return NotFound(response);
             }
             
@@ -93,29 +84,23 @@ namespace RiPOS.API.Controllers
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
 
         [HttpDelete("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<string>>> DeactivateBrand([FromRoute] int id)
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<SimpleResponse>> DeactivateBrand([FromRoute] int id)
         {
             if (!await brandService.ExistsByIdAsync(id))
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Marca no encontrada"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Marca no encontrada"));
             }
 
             var userId = HttpContext.GetUserId();
@@ -123,10 +108,10 @@ namespace RiPOS.API.Controllers
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
     }
 }

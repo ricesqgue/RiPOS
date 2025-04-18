@@ -12,13 +12,15 @@ namespace RiPOS.API.Controllers
 {
     [Route("api/customers")]
     [Authorize]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public class CustomerController(ICustomerService customerService) : ControllerBase
     {
         [HttpGet]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(ICollection<CustomerResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ICollection<CustomerResponse>>> GetCustomers([FromQuery] bool includeInactives = false)
         {
             var customers = await customerService.GetAllAsync(includeInactives);
@@ -27,22 +29,15 @@ namespace RiPOS.API.Controllers
 
         [HttpGet("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CustomerResponse>> GetCustomerById([FromRoute] int id)
         {
             var customer = await customerService.GetByIdAsync(id);
 
             if (customer == null)
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Cliente no encontrado"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Cliente no encontrado"));
             }
 
             return Ok(customer);
@@ -51,70 +46,55 @@ namespace RiPOS.API.Controllers
         [HttpPost]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<CustomerResponse>>> AddCustomer([FromBody] CustomerRequest request)
+        [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<CustomerResponse>> AddCustomer([FromBody] CustomerRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await customerService.AddAsync(request, userId);
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
 
         [HttpPut("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(CustomerResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<MessageResponse<CustomerResponse>>> UpdateCustomer([FromRoute] int id, [FromBody] CustomerRequest request)
         {
             if (!await customerService.ExistsByIdAsync(id))
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Cliente no encontrado"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Cliente no encontrado"));
             }
             var userId = HttpContext.GetUserId();
             var responseMessage = await customerService.UpdateAsync(id, request, userId);
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
 
         [HttpDelete("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<string>>> DeactivateCustomer([FromRoute] int id)
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ActionResult<SimpleResponse>>> DeactivateCustomer([FromRoute] int id)
         {
             if (!await customerService.ExistsByIdAsync(id))
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Cliente no encontrado"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Cliente no encontrado"));
             }
 
             var userId = HttpContext.GetUserId();
@@ -122,10 +102,10 @@ namespace RiPOS.API.Controllers
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
     }
 }

@@ -12,13 +12,15 @@ namespace RiPOS.API.Controllers
 {
     [Route("api/genders")]
     [Authorize]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public class GenderController(IGenderService genderService) : ControllerBase
     {
         [HttpGet]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(ICollection<GenderResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ICollection<GenderResponse>>> GetGenders([FromQuery] bool includeInactives = false)
         {
             var genders = await genderService.GetAllAsync(includeInactives);
@@ -27,22 +29,15 @@ namespace RiPOS.API.Controllers
 
         [HttpGet("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(GenderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<GenderResponse>> GetGenderById([FromRoute] int id)
         {
             var gender = await genderService.GetByIdAsync(id);
 
             if (gender == null)
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Género no encontrado"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Género no encontrado"));
             }
 
             return Ok(gender);
@@ -51,41 +46,32 @@ namespace RiPOS.API.Controllers
         [HttpPost]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<GenderResponse>>> AddGender([FromBody] GenderRequest request)
+        [ProducesResponseType(typeof(GenderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GenderResponse>> AddGender([FromBody] GenderRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await genderService.AddAsync(request, userId);
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
 
         [HttpPut("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<GenderResponse>>> UpdateGender([FromRoute] int id, [FromBody] GenderRequest request)
+        [ProducesResponseType(typeof(GenderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<GenderResponse>> UpdateGender([FromRoute] int id, [FromBody] GenderRequest request)
         {
             if (!await genderService.ExistsByIdAsync(id))
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Género no encontrado"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Género no encontrado"));
             }
             
             var userId = HttpContext.GetUserId();
@@ -93,29 +79,23 @@ namespace RiPOS.API.Controllers
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
 
         [HttpDelete("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<MessageResponse<string>>> DeactivateGender([FromRoute] int id)
         {
             if (!await genderService.ExistsByIdAsync(id))
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Género no encontrado"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Género no encontrado"));
             }
 
             var userId = HttpContext.GetUserId();
@@ -123,10 +103,10 @@ namespace RiPOS.API.Controllers
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
     }
 }

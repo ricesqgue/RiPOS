@@ -12,13 +12,15 @@ namespace RiPOS.API.Controllers
 {
     [Route("api/stores")]
     [Authorize]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public class StoreController(IStoreService storeService) : ControllerBase
     {
         [HttpGet]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(ICollection<StoreResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ICollection<StoreResponse>>> GetStores()
         {
             var stores = await storeService.GetAllAsync();
@@ -27,22 +29,15 @@ namespace RiPOS.API.Controllers
 
         [HttpGet("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(StoreResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<StoreResponse>> GetStoreById([FromRoute] int id)
         {
             var store = await storeService.GetByIdAsync(id);
 
             if (store == null)
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Tienda no encontrada"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Tienda no encontrada"));
             }
 
             return Ok(store);
@@ -51,41 +46,32 @@ namespace RiPOS.API.Controllers
         [HttpPost]
         [RoleAuthorize([RoleEnum.SuperAdmin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> AddStore([FromBody] StoreRequest request)
+        [ProducesResponseType(typeof(StoreResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<StoreResponse>> AddStore([FromBody] StoreRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await storeService.AddAsync(request, userId);
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
 
         [HttpPut("{id:int}")]
         [RoleAuthorize([RoleEnum.SuperAdmin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateStore([FromRoute] int id, [FromBody] StoreRequest request)
+        [ProducesResponseType(typeof(StoreResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<StoreResponse>> UpdateStore([FromRoute] int id, [FromBody] StoreRequest request)
         {
             if (!await storeService.ExistsByIdAsync(id))
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Tienda no encontrada"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Tienda no encontrada"));
             }
 
             var userId = HttpContext.GetUserId();
@@ -93,29 +79,23 @@ namespace RiPOS.API.Controllers
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
 
         [HttpDelete("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<string>>> DeactivateStore([FromRoute] int id)
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<SimpleResponse>> DeactivateStore([FromRoute] int id)
         {
             if (!await storeService.ExistsByIdAsync(id))
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Tienda no encontrada"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Tienda no encontrada"));
             }
 
             var userId = HttpContext.GetUserId();
@@ -123,10 +103,10 @@ namespace RiPOS.API.Controllers
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
     }
 }

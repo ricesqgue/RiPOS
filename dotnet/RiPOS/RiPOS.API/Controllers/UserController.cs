@@ -10,13 +10,15 @@ namespace RiPOS.API.Controllers
 {
     [Route("api")]
     [Authorize]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public class UserController(IUserService userService) : ControllerBase
     {
         [HttpGet("users")]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(ICollection<UserResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ICollection<UserResponse>>> GetUsers([FromQuery] bool includeInactives = false)
         {
             var users = await userService.GetAllAsync(includeInactives);
@@ -25,9 +27,7 @@ namespace RiPOS.API.Controllers
         
         [HttpGet("store/users")]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(ICollection<UserResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ICollection<UserResponse>>> GetStoreUsers([FromQuery] bool includeInactives = false)
         {
             var storeId = HttpContext.GetHeaderStoreId();
@@ -37,23 +37,16 @@ namespace RiPOS.API.Controllers
 
         [HttpGet("store/users/{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<ICollection<UserResponse>>> GetUserByIdInStore([FromRoute] int id)
+        [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<UserResponse>> GetUserByIdInStore([FromRoute] int id)
         {
             var storeId = HttpContext.GetHeaderStoreId();
             var user = await userService.GetByIdInStoreAsync(id, storeId);
 
             if (user == null)
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Usuario no encontrado"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Usuario no encontrado"));
             }
 
             return Ok(user);

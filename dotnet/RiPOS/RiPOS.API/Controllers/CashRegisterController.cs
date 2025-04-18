@@ -12,14 +12,16 @@ namespace RiPOS.API.Controllers
 {
     [Route("api/cashregisters")]
     [Authorize]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public class CashRegisterController(ICashRegisterService cashRegisterService) : ControllerBase
     {
         
         [HttpGet]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(ICollection<CashRegisterResponse>), StatusCodes.Status200OK)]
         public async Task<ActionResult<ICollection<CashRegisterResponse>>> GetCashRegisters([FromQuery] bool includeInactives = false)
         {
             var storeId = ControllerContext.HttpContext.GetHeaderStoreId();
@@ -29,10 +31,8 @@ namespace RiPOS.API.Controllers
 
         [HttpGet("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(CashRegisterResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CashRegisterResponse>> GetCashRegisterById([FromRoute] int id)
         {
             var storeId = ControllerContext.HttpContext.GetHeaderStoreId();
@@ -40,12 +40,7 @@ namespace RiPOS.API.Controllers
 
             if (cashRegister == null)
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Caja no encontrada"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Caja no encontrada"));
             }
 
             return Ok(cashRegister);
@@ -54,82 +49,67 @@ namespace RiPOS.API.Controllers
         [HttpPost]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        public async Task<ActionResult<MessageResponse<CashRegisterResponse>>> AddCashRegister([FromBody] CashRegisterRequest request)
+        [ProducesResponseType(typeof(CashRegisterResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<CashRegisterResponse>> AddCashRegister([FromBody] CashRegisterRequest request)
         {
             var userSession = ControllerContext.HttpContext.GetUserSession();
             var responseMessage = await cashRegisterService.AddAsync(request, userSession);
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
 
         [HttpPut("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<CashRegisterResponse>>> UpdateCashRegister([FromRoute] int id, [FromBody] CashRegisterRequest request)
+        [ProducesResponseType(typeof(CashRegisterResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<CashRegisterResponse>> UpdateCashRegister([FromRoute] int id, [FromBody] CashRegisterRequest request)
         {
             var userSession = ControllerContext.HttpContext.GetUserSession();
             if (!await cashRegisterService.ExistsByIdAsync(id, userSession.StoreId))
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Caja no encontrada"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Caja no encontrada"));
             }
 
             var responseMessage = await cashRegisterService.UpdateAsync(id, request, userSession);
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(responseMessage.Data);
         }
 
         [HttpDelete("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(403)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult<MessageResponse<string>>> DeactivateCashRegister([FromRoute] int id)
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<SimpleResponse>> DeactivateCashRegister([FromRoute] int id)
         {
             var userSession = ControllerContext.HttpContext.GetUserSession();
             if (!await cashRegisterService.ExistsByIdAsync(id, userSession.StoreId))
             {
-                var response = new MessageResponse<string>()
-                {
-                    Success = false,
-                    Message = "Caja no encontrada"
-                };
-                return NotFound(response);
+                return NotFound(new SimpleResponse("Caja no encontrada"));
             }
 
             var responseMessage = await cashRegisterService.DeactivateAsync(id, userSession.UserId);
 
             if (!responseMessage.Success)
             {
-                return BadRequest(responseMessage);
+                return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage);
+            return Ok(new SimpleResponse(responseMessage.Data));
         }
     }
 }

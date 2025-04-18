@@ -63,6 +63,7 @@ namespace RiPOS.Core.Services
             }
             else
             {
+                messageResponse.Success = false;
                 messageResponse.Message = "No se realizó ningún cambio";
             }
 
@@ -99,6 +100,7 @@ namespace RiPOS.Core.Services
                 }
                 else
                 {
+                    messageResponse.Success = false;
                     messageResponse.Message = "No se realizó ningún cambio";
                 }
             }
@@ -127,10 +129,11 @@ namespace RiPOS.Core.Services
                 if (messageResponse.Success)
                 {
                     messageResponse.Success = true;
-                    messageResponse.Message = $"Categoría eliminada correctamente";
+                    messageResponse.Data = $"Categoría eliminada correctamente";
                 }
                 else
                 {
+                    messageResponse.Success = false;
                     messageResponse.Message = "No se realizó ningún cambio";
                 }
             }

@@ -72,6 +72,7 @@ namespace RiPOS.Core.Services
             }
             else
             {
+                messageResponse.Success = false;
                 messageResponse.Message = "No se realizó ningún cambio";
             }
 
@@ -130,6 +131,7 @@ namespace RiPOS.Core.Services
                 }
                 else
                 {
+                    messageResponse.Success = false;
                     messageResponse.Message = "No se realizó ningún cambio";
                 }
             }
@@ -158,10 +160,11 @@ namespace RiPOS.Core.Services
                 if (messageResponse.Success)
                 {
                     messageResponse.Success = true;
-                    messageResponse.Message = $"Cliente eliminado correctamente";
+                    messageResponse.Data = $"Cliente eliminado correctamente";
                 }
                 else
                 {
+                    messageResponse.Success = false;
                     messageResponse.Message = "No se realizó ningún cambio";
                 }
             }

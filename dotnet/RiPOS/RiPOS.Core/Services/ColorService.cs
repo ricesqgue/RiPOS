@@ -48,7 +48,7 @@ namespace RiPOS.Core.Services
             if (exists != null)
             {
                 messageResponse.Success = false;
-                if (exists.Name.ToUpper() == request.Name.Trim().ToUpper())
+                if (string.Equals(exists.Name, request.Name.Trim(), StringComparison.CurrentCultureIgnoreCase))
                 {
                     messageResponse.Message = $"Ya existe un color con el nombre \"{color.Name}\"";
                 }
@@ -69,6 +69,7 @@ namespace RiPOS.Core.Services
             }
             else
             {
+                messageResponse.Success = false;
                 messageResponse.Message = "No se realizó ningún cambio";
             }
 
@@ -90,7 +91,7 @@ namespace RiPOS.Core.Services
                 if (exists != null)
                 {
                     messageResponse.Success = false;
-                    if (exists.Name.ToUpper() == request.Name.Trim().ToUpper())
+                    if (string.Equals(exists.Name, request.Name.Trim(), StringComparison.CurrentCultureIgnoreCase))
                     {
                         messageResponse.Message = $"Ya existe un color con el nombre \"{color.Name}\"";
                     }
@@ -116,6 +117,7 @@ namespace RiPOS.Core.Services
                 }
                 else
                 {
+                    messageResponse.Success = false;
                     messageResponse.Message = "No se realizó ningún cambio";
                 }    
             }
@@ -144,10 +146,11 @@ namespace RiPOS.Core.Services
                 if (messageResponse.Success)
                 {
                     messageResponse.Success = true;
-                    messageResponse.Message = $"Color eliminado correctamente";
+                    messageResponse.Data = $"Color eliminado correctamente";
                 }
                 else
                 {
+                    messageResponse.Success = false;
                     messageResponse.Message = "No se realizó ningún cambio";
                 }    
             }

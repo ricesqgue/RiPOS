@@ -13,16 +13,16 @@ namespace RiPOS.Core.Services
         public async Task<ICollection<VendorResponse>> GetAllAsync(bool includeInactives = false)
         {
             var vendors = await vendorRepository.GetAllAsync(v => v.IsActive || includeInactives,
-                includeProps: v => v.Include(x => x.CountryState));
+                includeProps: v => v.Include(x => x.CountryState!));
 
-            var vendorsReponse = mapper.Map<ICollection<VendorResponse>>(vendors);
-            return vendorsReponse;
+            var vendorsResponse = mapper.Map<ICollection<VendorResponse>>(vendors);
+            return vendorsResponse;
         }
 
         public async Task<VendorResponse?> GetByIdAsync(int id)
         {
             var vendor = await vendorRepository.FindAsync(v => v.Id == id,
-                includeProps: c => c.Include(x => x.CountryState));
+                includeProps: v => v.Include(x => x.CountryState!));
 
             var vendorResponse = mapper.Map<VendorResponse>(vendor);
             return vendorResponse;
@@ -64,6 +64,7 @@ namespace RiPOS.Core.Services
             }
             else
             {
+                messageResponse.Success = false;
                 messageResponse.Message = "No se realizó ningún cambio";
             }
 
@@ -112,6 +113,7 @@ namespace RiPOS.Core.Services
                 }
                 else
                 {
+                    messageResponse.Success = false;
                     messageResponse.Message = "No se realizó ningún cambio";
                 }
             }
@@ -141,10 +143,11 @@ namespace RiPOS.Core.Services
                 if (messageResponse.Success)
                 {
                     messageResponse.Success = true;
-                    messageResponse.Message = $"Proveedor eliminado correctamente";
+                    messageResponse.Data = $"Proveedor eliminado correctamente";
                 }
                 else
                 {
+                    messageResponse.Success = false;
                     messageResponse.Message = "No se realizó ningún cambio";
                 }
             }
