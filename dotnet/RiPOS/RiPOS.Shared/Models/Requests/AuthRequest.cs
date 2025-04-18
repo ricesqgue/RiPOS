@@ -5,9 +5,9 @@ namespace RiPOS.Shared.Models.Requests
     public class AuthRequest
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "El nombre de usuario es requerido")]
-        public required string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "La contraseña es requerida")]
-        public required string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 }

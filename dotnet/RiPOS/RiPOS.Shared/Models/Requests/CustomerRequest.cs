@@ -7,11 +7,11 @@ namespace RiPOS.Shared.Models.Requests
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "El nombre del cliente es requerido")]
         [MaxLength(50, ErrorMessage = "El nombre debe ser de máximo de {1} caracteres")]
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "El apellido del cliente es requerido")]
         [MaxLength(50, ErrorMessage = "El apellido debe ser de máximo de {1} caracteres")]
-        public required string Surname { get; set; }
+        public string Surname { get; set; } = string.Empty;
 
         [MaxLength(50, ErrorMessage = "El apellido debe ser de máximo de {1} caracteres")]
         public string? SecondSurname { get; set; }

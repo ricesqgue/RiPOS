@@ -9,11 +9,11 @@ namespace RiPOS.Shared.Models.Requests
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "El nombre es requerido")]
         [MaxLength(50, ErrorMessage = "El nombre debe ser de máximo de {1} caracteres")]
-        public required string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "El apellido es requerido")]
         [MaxLength(50, ErrorMessage = "El apellido debe ser de máximo de {1} caracteres")]
-        public required string Surname { get; set; }
+        public string Surname { get; set; } = string.Empty;
 
         [MaxLength(50, ErrorMessage = "El apellido debe ser de máximo de {1} caracteres")]
         public string? SecondSurname { get; set; }
@@ -33,7 +33,6 @@ namespace RiPOS.Shared.Models.Requests
         public string? MobilePhone { get; set; }
 
         [RolesInEnum]
-        [Required]
-        public required List<int> RoleIds { get; set; }
+        public List<int> RoleIds { get; set; } = new List<int>();
     }
 }

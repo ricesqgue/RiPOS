@@ -4,6 +4,6 @@ namespace RiPOS.Shared.Models.Requests;
 
 public class RefreshTokenRequest
 {
-    [Required]
-    public required string AccessToken { get; set; }
+    [Required(AllowEmptyStrings = false, ErrorMessage = "El access token es requerido")]
+    public string AccessToken { get; set; } = string.Empty;
 }
