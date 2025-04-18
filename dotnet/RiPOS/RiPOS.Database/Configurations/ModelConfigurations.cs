@@ -24,10 +24,9 @@ namespace RiPOS.Database.Configurations
                 u.Property(x => x.IsActive)
                     .HasDefaultValue(true);
                 u.Property(x => x.CreationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 u.Property(x => x.LastModificationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
-                    .ValueGeneratedOnAddOrUpdate();
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
 
             modelBuilder.Entity<Store>(s =>
@@ -35,10 +34,9 @@ namespace RiPOS.Database.Configurations
                 s.Property(x => x.IsActive)
                     .HasDefaultValue(true);
                 s.Property(x => x.CreationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 s.Property(x => x.LastModificationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
-                    .ValueGeneratedOnAddOrUpdate();
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
             
             modelBuilder.Entity<Brand>(b =>
@@ -46,10 +44,9 @@ namespace RiPOS.Database.Configurations
                 b.Property(x => x.IsActive)
                     .HasDefaultValue(true);
                 b.Property(x => x.CreationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 b.Property(x => x.LastModificationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
-                    .ValueGeneratedOnAddOrUpdate();
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
             
             modelBuilder.Entity<CashRegister>(c =>
@@ -57,10 +54,9 @@ namespace RiPOS.Database.Configurations
                 c.Property(x => x.IsActive)
                     .HasDefaultValue(true);
                 c.Property(x => x.CreationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 c.Property(x => x.LastModificationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
-                    .ValueGeneratedOnAddOrUpdate();
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
             
             modelBuilder.Entity<Size>(s =>
@@ -68,10 +64,9 @@ namespace RiPOS.Database.Configurations
                 s.Property(x => x.IsActive)
                     .HasDefaultValue(true);
                 s.Property(x => x.CreationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 s.Property(x => x.LastModificationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
-                    .ValueGeneratedOnAddOrUpdate();
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
             
             modelBuilder.Entity<Gender>(g =>
@@ -79,10 +74,9 @@ namespace RiPOS.Database.Configurations
                 g.Property(x => x.IsActive)
                     .HasDefaultValue(true);
                 g.Property(x => x.CreationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 g.Property(x => x.LastModificationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
-                    .ValueGeneratedOnAddOrUpdate();
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
             
             modelBuilder.Entity<Color>(c =>
@@ -90,10 +84,9 @@ namespace RiPOS.Database.Configurations
                 c.Property(x => x.IsActive)
                     .HasDefaultValue(true);
                 c.Property(x => x.CreationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 c.Property(x => x.LastModificationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
-                    .ValueGeneratedOnAddOrUpdate();
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
             
             modelBuilder.Entity<Category>(c =>
@@ -101,10 +94,9 @@ namespace RiPOS.Database.Configurations
                 c.Property(x => x.IsActive)
                     .HasDefaultValue(true);
                 c.Property(x => x.CreationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 c.Property(x => x.LastModificationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
-                    .ValueGeneratedOnAddOrUpdate();
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
             
             modelBuilder.Entity<Customer>(c =>
@@ -112,10 +104,9 @@ namespace RiPOS.Database.Configurations
                 c.Property(x => x.IsActive)
                     .HasDefaultValue(true);
                 c.Property(x => x.CreationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 c.Property(x => x.LastModificationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
-                    .ValueGeneratedOnAddOrUpdate();
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
             
             modelBuilder.Entity<Vendor>(v =>
@@ -123,10 +114,9 @@ namespace RiPOS.Database.Configurations
                 v.Property(x => x.IsActive)
                     .HasDefaultValue(true);
                 v.Property(x => x.CreationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 v.Property(x => x.LastModificationDateTime)
-                    .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)")
-                    .ValueGeneratedOnAddOrUpdate();
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
         }
     }

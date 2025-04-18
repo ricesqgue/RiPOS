@@ -27,7 +27,7 @@ public class AuthServiceTests
         {
             Issuer = "testIssuer",
             Audience = "testAudience",
-            Key = "testKey123!@#123!@#",
+            Key = "testKey123!@#123!@#testKey123!@#123!@#",
             AccessTokenExpirationMinutes = 5,
             RefreshTokenExpirationHours = 24
         };
@@ -60,7 +60,7 @@ public class AuthServiceTests
     {
         var request = new AuthRequest { Username = "validUser", Password = "password" };
         var user = new User { Name = "User1", Surname = "User1", Username = "validUser", PasswordHash = "dh3TVAEOnBb9wUqqiz+Izb3SSUSKVemPrPTOUEMQ0xg6lDdY", IsActive = true };
-        var userResponse = new UserWithStoresResponse { Name = "User1",  Surname = "User1", Username = "validUser" };
+        var userResponse = new UserWithStoresResponse { Name = "User1",  Surname = "User1", Username = "validUser", Stores = new List<StoreResponse>()};
 
         _userRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<Func<IQueryable<User>,IIncludableQueryable<User, object>>>()))
             .ReturnsAsync(user);
@@ -105,7 +105,7 @@ public class AuthServiceTests
     [Fact]
     public async Task BuildTokens_ReturnsValidTokenResponse()
     {
-        var user = new UserWithStoresResponse { Username = "validUser", Name = "User1", Surname = "User1" };
+        var user = new UserWithStoresResponse { Username = "validUser", Name = "User1", Surname = "User1", Stores = new List<StoreResponse>()};
         var result = await _authService.BuildAndStoreTokensAsync(user);
 
         Assert.NotNull(result.AccessToken);

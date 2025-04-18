@@ -36,7 +36,7 @@ namespace RiPOS.Database.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -47,9 +47,9 @@ namespace RiPOS.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("LogoPath")
                         .HasMaxLength(300)
@@ -83,7 +83,7 @@ namespace RiPOS.Database.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -94,9 +94,9 @@ namespace RiPOS.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -131,7 +131,7 @@ namespace RiPOS.Database.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -142,9 +142,9 @@ namespace RiPOS.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -174,7 +174,7 @@ namespace RiPOS.Database.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -185,9 +185,9 @@ namespace RiPOS.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -253,7 +253,7 @@ namespace RiPOS.Database.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Email")
                         .HasMaxLength(100)
@@ -268,9 +268,9 @@ namespace RiPOS.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("MobilePhone")
                         .HasMaxLength(20)
@@ -327,7 +327,7 @@ namespace RiPOS.Database.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -338,9 +338,9 @@ namespace RiPOS.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -424,7 +424,7 @@ namespace RiPOS.Database.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -435,9 +435,9 @@ namespace RiPOS.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -476,7 +476,7 @@ namespace RiPOS.Database.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -487,9 +487,9 @@ namespace RiPOS.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("LogoPath")
                         .HasMaxLength(300)
@@ -531,7 +531,7 @@ namespace RiPOS.Database.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Email")
                         .HasMaxLength(100)
@@ -546,9 +546,9 @@ namespace RiPOS.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("MobilePhone")
                         .HasMaxLength(25)
@@ -640,7 +640,7 @@ namespace RiPOS.Database.Migrations
                     b.Property<DateTime>("CreationDateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("Email")
                         .HasMaxLength(100)
@@ -655,9 +655,9 @@ namespace RiPOS.Database.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("TIMEZONE('utc', CURRENT_TIMESTAMP)");
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<string>("MobilePhone")
                         .HasMaxLength(20)

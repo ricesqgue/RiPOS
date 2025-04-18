@@ -69,8 +69,8 @@ namespace RiPOS.Core.Services
         {
             var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
             
-            var accessTokenExpiresDateTime = DateTime.Now.AddMinutes(jwtSettings!.AccessTokenExpirationMinutes);
-            var refreshTokenExpiresDateTime = DateTime.Now.AddHours(jwtSettings.RefreshTokenExpirationHours);
+            var accessTokenExpiresDateTime = DateTime.UtcNow.AddMinutes(jwtSettings!.AccessTokenExpirationMinutes);
+            var refreshTokenExpiresDateTime = DateTime.UtcNow.AddHours(jwtSettings.RefreshTokenExpirationHours);
             
             var accessToken = GenerateAccessToken(user, accessTokenExpiresDateTime, jwtSettings);
             var refreshToken = GenerateRefreshToken();

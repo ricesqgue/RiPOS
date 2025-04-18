@@ -21,9 +21,9 @@ namespace RiPOS.Database.Migrations
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     ShortName = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
-                    CreationDateTime = table.Column<DateTime>(type: "timestamptz", nullable: false, defaultValueSql: "TIMEZONE('utc', CURRENT_TIMESTAMP)"),
+                    CreationDateTime = table.Column<DateTime>(type: "timestamptz", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     CreationByUserId = table.Column<int>(type: "integer", nullable: true),
-                    LastModificationDateTime = table.Column<DateTime>(type: "timestamptz", nullable: true, defaultValueSql: "TIMEZONE('utc', CURRENT_TIMESTAMP)"),
+                    LastModificationDateTime = table.Column<DateTime>(type: "timestamptz", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
                     LastModificationByUserId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>

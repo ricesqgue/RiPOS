@@ -20,129 +20,91 @@ namespace RiPOS.Repository.Repositories
             _dbSet = _context.Set<TEntity>();
         }
 
-        // public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter)
-        // {
-        //     return await _dbSet.AsNoTracking().AnyAsync(filter);
-        // }
-        //
-        // public async Task<ICollection<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null, Expression<Func<TEntity, object>>? orderBy = null, bool orderDesc = false, int pageNumber = 0, int pageSize = 0)
-        // {
-        //     var query = GenerateQuery(filter, includeProps, orderBy, orderDesc, pageNumber, pageSize);
-        //
-        //     return await query.ToListAsync();
-        // }
-        //
-        // public async Task<int> CountAsync(Expression<Func<TEntity, bool>> filter)
-        // {
-        //     var query = GenerateQuery(filter);
-        //
-        //     return await query.CountAsync();
-        // }
-        //
-        // public async Task<TEntity?> GetByIdAsync(int id)
-        // {
-        //     return await _dbSet.AsNoTracking().SingleOrDefaultAsync(e => e.Id == id);
-        // }
-        //
-        // public async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null)
-        // {
-        //     IQueryable<TEntity> query = _dbSet.AsNoTracking();
-        //
-        //     if (includeProps != null)
-        //     {
-        //         query = includeProps(query);
-        //     }
-        //
-        //     return await query.SingleOrDefaultAsync(filter);
-        // }
-        //
-        // public async Task<bool> AddAsync(TEntity entity)
-        // {
-        //     var currentDate = DateTime.Now;
-        //     entity.CreationDateTime = currentDate;
-        //     entity.LastModificationDateTime = currentDate;
-        //     await _dbSet.AddAsync(entity);
-        //     return await _context.SaveChangesAsync() > 0;
-        // }
-        //
-        // public async Task<bool> UpdateAsync(TEntity entity, params Expression<Func<TEntity, object>>[] propsToIgnore)
-        // {
-        //     _dbSet.Attach(entity);
-        //     _context.Entry(entity).State = EntityState.Modified;
-        //
-        //     entity.LastModificationDateTime = DateTime.Now;
-        //     _context.Entry(entity).Property(e => e.CreationDateTime).IsModified = false;
-        //     _context.Entry(entity).Property(e => e.CreationByUserId).IsModified = false;
-        //
-        //     foreach (var prop in propsToIgnore)
-        //     {
-        //         _context.Entry(entity).Property(prop).IsModified = false;
-        //     }
-        //
-        //     return await _context.SaveChangesAsync() > 0;
-        // }
-        //
-        // private IQueryable<TEntity> GenerateQuery(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null, Expression<Func<TEntity, object>>? orderBy = null, bool orderDesc = false, int pageNumber = 0, int pageSize = 0)
-        // {
-        //     IQueryable<TEntity> query = _dbSet.AsNoTracking();
-        //
-        //
-        //     if (includeProps != null)
-        //     {
-        //         query = includeProps(query);
-        //     }
-        //
-        //     if (filter != null)
-        //     {
-        //         query = query.Where(filter);
-        //     }
-        //
-        //     if (orderBy != null)
-        //     {
-        //         query = orderDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
-        //     }
-        //
-        //     if (pageSize > 0 && pageNumber > 0)
-        //     {
-        //         query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-        //     }
-        //
-        //     return query;
-        // }
-        public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter)
+        public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter)
         {
-            throw new NotImplementedException();
+            return await _dbSet.AsNoTracking().AnyAsync(filter);
         }
-
-        public Task<ICollection<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null, Expression<Func<TEntity, object>>? orderBy = null,
-            bool orderDesc = false, int pageNumber = 0, int pageSize = 0)
+        
+        public async Task<ICollection<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null, Expression<Func<TEntity, object>>? orderBy = null, bool orderDesc = false, int pageNumber = 0, int pageSize = 0)
         {
-            throw new NotImplementedException();
+            var query = GenerateQuery(filter, includeProps, orderBy, orderDesc, pageNumber, pageSize);
+        
+            return await query.ToListAsync();
         }
-
-        public Task<int> CountAsync(Expression<Func<TEntity, bool>> filter)
+        
+        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> filter)
         {
-            throw new NotImplementedException();
+            var query = GenerateQuery(filter);
+        
+            return await query.CountAsync();
         }
-
-        public Task<TEntity?> GetByIdAsync(int id)
+        
+        public async Task<TEntity?> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _dbSet.AsNoTracking().SingleOrDefaultAsync(e => e.Id == id);
         }
-
-        public Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null)
+        
+        public async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null)
         {
-            throw new NotImplementedException();
+            IQueryable<TEntity> query = _dbSet.AsNoTracking();
+        
+            if (includeProps != null)
+            {
+                query = includeProps(query);
+            }
+        
+            return await query.SingleOrDefaultAsync(filter);
         }
-
-        public Task<bool> AddAsync(TEntity entity)
+        
+        public async Task<bool> AddAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            await _dbSet.AddAsync(entity);
+            return await _context.SaveChangesAsync() > 0;
         }
-
-        public Task<bool> UpdateAsync(TEntity entity, params Expression<Func<TEntity, object>>[] propsToIgnore)
+        
+        public async Task<bool> UpdateAsync(TEntity entity, params Expression<Func<TEntity, object>>[] propsToIgnore)
         {
-            throw new NotImplementedException();
+            _dbSet.Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+        
+            entity.LastModificationDateTime = DateTime.UtcNow;
+            _context.Entry(entity).Property(e => e.CreationDateTime).IsModified = false;
+            _context.Entry(entity).Property(e => e.CreationByUserId).IsModified = false;
+        
+            foreach (var prop in propsToIgnore)
+            {
+                _context.Entry(entity).Property(prop).IsModified = false;
+            }
+        
+            return await _context.SaveChangesAsync() > 0;
+        }
+        
+        private IQueryable<TEntity> GenerateQuery(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null, Expression<Func<TEntity, object>>? orderBy = null, bool orderDesc = false, int pageNumber = 0, int pageSize = 0)
+        {
+            IQueryable<TEntity> query = _dbSet.AsNoTracking();
+        
+        
+            if (includeProps != null)
+            {
+                query = includeProps(query);
+            }
+        
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+        
+            if (orderBy != null)
+            {
+                query = orderDesc ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
+            }
+        
+            if (pageSize > 0 && pageNumber > 0)
+            {
+                query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            }
+        
+            return query;
         }
     }
 }

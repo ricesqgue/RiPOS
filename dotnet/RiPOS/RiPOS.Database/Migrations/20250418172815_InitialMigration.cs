@@ -43,9 +43,9 @@ namespace RiPOS.Database.Migrations
                     MobilePhone = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: true),
                     ProfileImagePath = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
-                    CreationDateTime = table.Column<DateTime>(type: "timestamptz", nullable: false, defaultValueSql: "TIMEZONE('utc', CURRENT_TIMESTAMP)"),
+                    CreationDateTime = table.Column<DateTime>(type: "timestamptz", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     CreationByUserId = table.Column<int>(type: "integer", nullable: true),
-                    LastModificationDateTime = table.Column<DateTime>(type: "timestamptz", nullable: true, defaultValueSql: "TIMEZONE('utc', CURRENT_TIMESTAMP)"),
+                    LastModificationDateTime = table.Column<DateTime>(type: "timestamptz", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
                     LastModificationByUserId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -75,9 +75,9 @@ namespace RiPOS.Database.Migrations
                     MobilePhone = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: true),
                     LogoPath = table.Column<string>(type: "varchar(300)", maxLength: 300, nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
-                    CreationDateTime = table.Column<DateTime>(type: "timestamptz", nullable: false, defaultValueSql: "TIMEZONE('utc', CURRENT_TIMESTAMP)"),
+                    CreationDateTime = table.Column<DateTime>(type: "timestamptz", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     CreationByUserId = table.Column<int>(type: "integer", nullable: true),
-                    LastModificationDateTime = table.Column<DateTime>(type: "timestamptz", nullable: true, defaultValueSql: "TIMEZONE('utc', CURRENT_TIMESTAMP)"),
+                    LastModificationDateTime = table.Column<DateTime>(type: "timestamptz", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
                     LastModificationByUserId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>

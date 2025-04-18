@@ -16,7 +16,7 @@ public class UserRepository(RiPosDbContext dbContext) : GenericRepository<User>(
             .AsNoTracking()
             .Include(ur => ur.Role)
             .Where(ur => ur.UserId == userId && ur.StoreId == storeId)
-            .Select(ur => ur.Role)
+            .Select(ur => ur.Role!)
             .ToListAsync();
             
         return userRoles;
