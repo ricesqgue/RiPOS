@@ -2,15 +2,15 @@ import { ItemType } from 'antd/es/breadcrumb/Breadcrumb';
 import { lazy, ReactNode } from 'react';
 import { Link } from 'react-router';
 
-const HomePage = lazy(() => import('@pages/home/HomePage'));
-const BrandsPage = lazy(() => import('@pages/brands/BrandsPage'));
-const CashRegistersPage = lazy(() => import('@pages/cashRegisters/CashRegistersPage'));
-const CategoriesPage = lazy(() => import('@pages/categories/CategoriesPage'));
-const ColorsPage = lazy(() => import('@pages/colors/ColorsPage'));
+const POSPage = lazy(() => import('@pages/pos/POSPage'));
+const BrandsPage = lazy(() => import('@pages/products/brands/BrandsPage'));
+const CashRegistersPage = lazy(() => import('@pages/store/cashRegisters/CashRegistersPage'));
+const CategoriesPage = lazy(() => import('@pages/products/categories/CategoriesPage'));
+const ColorsPage = lazy(() => import('@pages/products/colors/ColorsPage'));
 const CustomersPage = lazy(() => import('@pages/customers/CustomersPage'));
-const GendersPage = lazy(() => import('@pages/genders/GendersPage'));
+const GendersPage = lazy(() => import('@pages/products/genders/GendersPage'));
 const VendorsPage = lazy(() => import('@pages/vendors/VendorsPage'));
-const SizesPage = lazy(() => import('@pages/sizes/SizesPage'));
+const SizesPage = lazy(() => import('@pages/products/sizes/SizesPage'));
 
 interface RouteConfig {
   path: string;
@@ -22,23 +22,38 @@ interface RouteConfig {
 export const layoutRoutes: RouteConfig[] = [
   {
     path: '/',
-    element: <HomePage />,
-    breadcrumb: [{ title: 'Inicio' }],
+    element: <POSPage />,
+    breadcrumb: [{ title: 'Punto de venta' }],
   },
   {
-    path: '/cajas-registradoras',
-    element: <CashRegistersPage />,
-    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Cajas registradoras' }],
-  },
-  {
-    path: '/categorias',
+    path: '/productos/categorias',
     element: <CategoriesPage />,
-    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Categorías' }],
+    breadcrumb: [{ title: 'Productos' }, { title: 'Categorías' }],
   },
   {
-    path: '/colores',
+    path: '/productos/colores',
     element: <ColorsPage />,
-    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Colores' }],
+    breadcrumb: [{ title: 'Productos' }, { title: 'Colores' }],
+  },
+  {
+    path: '/productos/generos',
+    element: <GendersPage />,
+    breadcrumb: [{ title: 'Productos' }, { title: 'Géneros' }],
+  },
+  {
+    path: '/productos/marcas',
+    element: <BrandsPage />,
+    breadcrumb: [{ title: 'Productos' }, { title: 'Marcas' }],
+  },
+  {
+    path: '/productos/tallas',
+    element: <SizesPage />,
+    breadcrumb: [{ title: 'Productos' }, { title: 'Tallas' }],
+  },
+  {
+    path: '/tienda/cajas-registradoras',
+    element: <CashRegistersPage />,
+    breadcrumb: [{ title: 'Tienda' }, { title: 'Cajas registradoras' }],
   },
   {
     path: '/clientes',
@@ -46,23 +61,8 @@ export const layoutRoutes: RouteConfig[] = [
     breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Clientes' }],
   },
   {
-    path: '/generos',
-    element: <GendersPage />,
-    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Géneros' }],
-  },
-  {
-    path: '/marcas',
-    element: <BrandsPage />,
-    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Marcas' }],
-  },
-  {
     path: '/proveedores',
     element: <VendorsPage />,
     breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Proveedores' }],
-  },
-  {
-    path: '/tallas',
-    element: <SizesPage />,
-    breadcrumb: [{ title: <Link to={'/'}>Inicio</Link> }, { title: 'Tallas' }],
   },
 ];

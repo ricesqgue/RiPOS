@@ -1,10 +1,11 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
+  faBarcode,
   faCashRegister,
-  faHome,
   faList,
   faPalette,
   faRulerCombined,
+  faShirt,
   faStore,
   faTags,
   faUserGroup,
@@ -34,68 +35,79 @@ interface AppMenuProps {
 
 const menuItems: AppMenuItem[] = [
   {
-    key: '1',
-    label: 'Inicio',
-    icon: faHome,
+    key: 'pos',
+    label: 'Punto de venta',
+    icon: faBarcode,
     navigateTo: '/',
   },
   {
-    key: '2',
-    label: 'Marcas',
-    icon: faTags,
-    navigateTo: '/marcas',
+    key: 'products',
+    label: 'Productos',
+    icon: faShirt,
+    subItems: [
+      {
+        key: 'products-categories',
+        label: 'Categorías',
+        icon: faList,
+        navigateTo: '/productos/categorias',
+      },
+      {
+        key: 'products-colors',
+        label: 'Colores',
+        icon: faPalette,
+        navigateTo: '/productos/colores',
+      },
+      {
+        key: 'products-genders',
+        label: 'Géneros',
+        icon: faVenusMars,
+        navigateTo: '/productos/generos',
+      },
+      {
+        key: 'products-brands',
+        label: 'Marcas',
+        icon: faTags,
+        navigateTo: '/productos/marcas',
+      },
+      {
+        key: 'products-sizes',
+        label: 'Tallas',
+        icon: faRulerCombined,
+        navigateTo: '/productos/tallas',
+      },
+    ],
   },
+
   {
-    key: '3',
+    key: 'customers',
     label: 'Clientes',
     icon: faUserGroup,
     navigateTo: '/clientes',
   },
   {
-    key: '4',
+    key: 'vendors',
     label: 'Proveedores',
     icon: faUserTag,
     navigateTo: '/proveedores',
   },
+
   {
-    key: '5-1',
-    label: 'Géneros',
-    icon: faVenusMars,
-    navigateTo: '/generos',
-  },
-  {
-    key: '5-2',
-    label: 'Colores',
-    icon: faPalette,
-    navigateTo: '/colores',
-  },
-  {
-    key: '5-3',
-    label: 'Tallas',
-    icon: faRulerCombined,
-    navigateTo: '/tallas',
-  },
-  {
-    key: '6',
-    label: 'Cajas Registradoras',
-    icon: faCashRegister,
-    navigateTo: '/cajas-registradoras',
-  },
-  {
-    key: '7',
-    label: 'Categorías',
-    icon: faList,
-    navigateTo: '/categorias',
-  },
-  {
-    key: '8',
-    label: 'Sucursales',
+    key: 'store',
+    label: 'Tienda',
     icon: faStore,
-  },
-  {
-    key: '9',
-    label: 'Usuarios',
-    icon: faUsers,
+    subItems: [
+      {
+        key: 'cashRegisters',
+        label: 'Cajas',
+        icon: faCashRegister,
+        navigateTo: '/tienda/cajas-registradoras',
+      },
+      {
+        key: 'users',
+        label: 'Usuarios',
+        icon: faUsers,
+      },
+    ],
   },
 ];
 
