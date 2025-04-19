@@ -163,13 +163,19 @@ const VendorFormDialog = (props: VendorFormDialogProps) => {
       case 'add':
       case 'edit':
         return [
-          <Button onClick={handleOnClose}>Cancelar</Button>,
-          <Button htmlType="submit" type="primary" onClick={form.submit}>
+          <Button key="cancel-btn" onClick={handleOnClose}>
+            Cancelar
+          </Button>,
+          <Button key="submit-btn" htmlType="submit" type="primary" onClick={form.submit}>
             Guardar
           </Button>,
         ];
       case 'view':
-        return [<Button onClick={handleOnClose}>Cerrar</Button>];
+        return [
+          <Button key="close-btn" onClick={handleOnClose}>
+            Cerrar
+          </Button>,
+        ];
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.mode]);

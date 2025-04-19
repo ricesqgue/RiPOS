@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import type { TableColumnsType } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { ColorResponse, StringMessageResponse } from '@api/generated/models';
+import { ColorResponse, SimpleResponse } from '@api/generated/models';
 import { AxiosResponse } from 'axios';
 import { useQueryClient } from '@tanstack/react-query';
 import useTableFilters from '@hooks/useTableFilters';
@@ -145,7 +145,7 @@ const ColorsPage = () => {
             });
             queryClient.invalidateQueries({ queryKey: ['/api/colors'] });
           })
-          .catch((err: AxiosResponse<StringMessageResponse>) => {
+          .catch((err: AxiosResponse<SimpleResponse>) => {
             messageApi.open({
               type: 'error',
               content: err.data.message,

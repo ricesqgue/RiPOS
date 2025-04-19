@@ -10,33 +10,44 @@ import pluginQuery from '@tanstack/eslint-plugin-query';
 
 export default tseslint.config(
   { ignores: ['dist'] },
+
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      parser: tseslint.parser,
     },
   },
+
   {
+    files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
     settings: {
-      files: ['**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}'],
       react: {
         version: 'detect',
       },
-      ...pluginReact.configs.flat.recommended, // This is not a plugin object, but a shareable config object
     },
   },
+
+  pluginReact.configs.flat.recommended,
   pluginReact.configs.flat['jsx-runtime'],
   pluginReactRefresh.configs.recommended,
   pluginReactHooks.configs['recommended-latest'],
   ...pluginQuery.configs['flat/recommended'],
   pluginPrettierRecommended,
   {
+    plugins: {
+      '@typescript-eslint': tseslint.plugin,
+    },
     rules: {
+      // React Refresh
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+
+      // Prettier
       'prettier/prettier': 'error',
     },
   },
+
   prettierConfig
 );

@@ -18,8 +18,8 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute />}>
           <Route path="/login/store" element={<SelectStorePage />} />
           <Route element={<AppLayout />}>
-            {layoutRoutes.map((route) => (
-              <Route path={route.path} element={route.element}></Route>
+            {layoutRoutes.map((route, i) => (
+              <Route key={`route-${i}`} path={route.path} element={route.element}></Route>
             ))}
           </Route>
         </Route>

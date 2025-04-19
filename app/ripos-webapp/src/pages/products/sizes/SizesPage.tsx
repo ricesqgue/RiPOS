@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import type { TableColumnsType } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { SizeResponse, StringMessageResponse } from '@api/generated/models';
+import { SizeResponse, SimpleResponse } from '@api/generated/models';
 import { AxiosResponse } from 'axios';
 import { useQueryClient } from '@tanstack/react-query';
 import useTableFilters from '@hooks/useTableFilters';
@@ -132,7 +132,7 @@ const SizesPage = () => {
             });
             queryClient.invalidateQueries({ queryKey: ['/api/sizes'] });
           })
-          .catch((err: AxiosResponse<StringMessageResponse>) => {
+          .catch((err: AxiosResponse<SimpleResponse>) => {
             messageApi.open({
               type: 'error',
               content: err.data.message,
