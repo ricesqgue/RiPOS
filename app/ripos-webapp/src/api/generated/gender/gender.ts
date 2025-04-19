@@ -24,7 +24,7 @@ import type {
   GenderResponse,
   GenderResponseMessageResponse,
   GetApiGendersParams,
-  StringMessageResponse,
+  SimpleResponse,
 } from '.././models';
 
 import getApiGendersMutator from '../../axiosMutator';
@@ -134,7 +134,10 @@ export const postApiGenders = (genderRequest: GenderRequest, signal?: AbortSigna
   });
 };
 
-export const getPostApiGendersMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPostApiGendersMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiGenders>>,
     TError,
@@ -168,9 +171,9 @@ export const getPostApiGendersMutationOptions = <TError = void, TContext = unkno
 
 export type PostApiGendersMutationResult = NonNullable<Awaited<ReturnType<typeof postApiGenders>>>;
 export type PostApiGendersMutationBody = GenderRequest;
-export type PostApiGendersMutationError = void;
+export type PostApiGendersMutationError = SimpleResponse | void;
 
-export const usePostApiGenders = <TError = void, TContext = unknown>(options?: {
+export const usePostApiGenders = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiGenders>>,
     TError,
@@ -201,7 +204,7 @@ export const getGetApiGendersIdQueryKey = (id: number) => {
 
 export const getGetApiGendersIdQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiGendersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -223,11 +226,11 @@ export const getGetApiGendersIdQueryOptions = <
 };
 
 export type GetApiGendersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiGendersId>>>;
-export type GetApiGendersIdQueryError = void;
+export type GetApiGendersIdQueryError = void | SimpleResponse;
 
 export function useGetApiGendersId<
   TData = Awaited<ReturnType<typeof getApiGendersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options: {
@@ -244,7 +247,7 @@ export function useGetApiGendersId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiGendersId<
   TData = Awaited<ReturnType<typeof getApiGendersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -261,7 +264,7 @@ export function useGetApiGendersId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiGendersId<
   TData = Awaited<ReturnType<typeof getApiGendersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -271,7 +274,7 @@ export function useGetApiGendersId<
 
 export function useGetApiGendersId<
   TData = Awaited<ReturnType<typeof getApiGendersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -298,7 +301,10 @@ export const putApiGendersId = (id: number, genderRequest: GenderRequest) => {
   });
 };
 
-export const getPutApiGendersIdMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPutApiGendersIdMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiGendersId>>,
     TError,
@@ -334,9 +340,9 @@ export type PutApiGendersIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof putApiGendersId>>
 >;
 export type PutApiGendersIdMutationBody = GenderRequest;
-export type PutApiGendersIdMutationError = void;
+export type PutApiGendersIdMutationError = SimpleResponse | void;
 
-export const usePutApiGendersId = <TError = void, TContext = unknown>(options?: {
+export const usePutApiGendersId = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiGendersId>>,
     TError,
@@ -354,13 +360,13 @@ export const usePutApiGendersId = <TError = void, TContext = unknown>(options?: 
   return useMutation(mutationOptions);
 };
 export const deleteApiGendersId = (id: number) => {
-  return deleteApiGendersIdMutator<StringMessageResponse>({
-    url: `/api/genders/${id}`,
-    method: 'DELETE',
-  });
+  return deleteApiGendersIdMutator<SimpleResponse>({ url: `/api/genders/${id}`, method: 'DELETE' });
 };
 
-export const getDeleteApiGendersIdMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getDeleteApiGendersIdMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiGendersId>>,
     TError,
@@ -396,9 +402,12 @@ export type DeleteApiGendersIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteApiGendersId>>
 >;
 
-export type DeleteApiGendersIdMutationError = void;
+export type DeleteApiGendersIdMutationError = SimpleResponse | void;
 
-export const useDeleteApiGendersId = <TError = void, TContext = unknown>(options?: {
+export const useDeleteApiGendersId = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiGendersId>>,
     TError,

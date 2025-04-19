@@ -1,5 +1,5 @@
 import { usePostApiSizes, usePutApiSizesId } from '@api/generated/size/size';
-import { SizeRequest, SizeResponse, SizeResponseMessageResponse } from '@api/generated/models';
+import { SizeRequest, SizeResponse, SimpleResponse } from '@api/generated/models';
 import { useQueryClient } from '@tanstack/react-query';
 import { Form, Input, message, Modal } from 'antd';
 import { useEffect, useRef } from 'react';
@@ -66,7 +66,7 @@ const SizeFormDialog = (props: SizeFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<SizeResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           messageApi.error({
             type: 'error',
             content: err.response?.data.message ?? 'Error al guardar los cambios',
@@ -96,7 +96,7 @@ const SizeFormDialog = (props: SizeFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<SizeResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           console.log(err);
           messageApi.error({
             type: 'error',

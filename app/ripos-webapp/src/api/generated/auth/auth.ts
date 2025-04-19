@@ -19,7 +19,13 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import type { AuthRequest, LoginResponse, RefreshTokenRequest, UserResponse } from '.././models';
+import type {
+  AuthRequest,
+  LoginResponse,
+  RefreshTokenRequest,
+  SimpleResponse,
+  UserResponse,
+} from '.././models';
 
 import postApiAuthMutator from '../../axiosMutator';
 import postApiAuthRefreshTokenMutator from '../../axiosMutator';
@@ -36,7 +42,10 @@ export const postApiAuth = (authRequest: AuthRequest, signal?: AbortSignal) => {
   });
 };
 
-export const getPostApiAuthMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPostApiAuthMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiAuth>>,
     TError,
@@ -70,9 +79,9 @@ export const getPostApiAuthMutationOptions = <TError = void, TContext = unknown>
 
 export type PostApiAuthMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuth>>>;
 export type PostApiAuthMutationBody = AuthRequest;
-export type PostApiAuthMutationError = void;
+export type PostApiAuthMutationError = SimpleResponse | void;
 
-export const usePostApiAuth = <TError = void, TContext = unknown>(options?: {
+export const usePostApiAuth = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiAuth>>,
     TError,
@@ -103,7 +112,7 @@ export const postApiAuthRefreshToken = (
 };
 
 export const getPostApiAuthRefreshTokenMutationOptions = <
-  TError = void,
+  TError = SimpleResponse | void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -141,9 +150,12 @@ export type PostApiAuthRefreshTokenMutationResult = NonNullable<
   Awaited<ReturnType<typeof postApiAuthRefreshToken>>
 >;
 export type PostApiAuthRefreshTokenMutationBody = RefreshTokenRequest;
-export type PostApiAuthRefreshTokenMutationError = void;
+export type PostApiAuthRefreshTokenMutationError = SimpleResponse | void;
 
-export const usePostApiAuthRefreshToken = <TError = void, TContext = unknown>(options?: {
+export const usePostApiAuthRefreshToken = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiAuthRefreshToken>>,
     TError,
@@ -164,10 +176,7 @@ export const postApiAuthLogout = (signal?: AbortSignal) => {
   return postApiAuthLogoutMutator<void>({ url: `/api/auth/logout`, method: 'POST', signal });
 };
 
-export const getPostApiAuthLogoutMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
+export const getPostApiAuthLogoutMutationOptions = <TError = void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiAuthLogout>>,
     TError,
@@ -193,9 +202,9 @@ export type PostApiAuthLogoutMutationResult = NonNullable<
   Awaited<ReturnType<typeof postApiAuthLogout>>
 >;
 
-export type PostApiAuthLogoutMutationError = unknown;
+export type PostApiAuthLogoutMutationError = void;
 
-export const usePostApiAuthLogout = <TError = unknown, TContext = unknown>(options?: {
+export const usePostApiAuthLogout = <TError = void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiAuthLogout>>,
     TError,

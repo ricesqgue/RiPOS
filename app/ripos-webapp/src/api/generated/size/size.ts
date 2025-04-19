@@ -21,10 +21,10 @@ import type {
 
 import type {
   GetApiSizesParams,
+  SimpleResponse,
   SizeRequest,
   SizeResponse,
   SizeResponseMessageResponse,
-  StringMessageResponse,
 } from '.././models';
 
 import getApiSizesMutator from '../../axiosMutator';
@@ -129,7 +129,10 @@ export const postApiSizes = (sizeRequest: SizeRequest, signal?: AbortSignal) => 
   });
 };
 
-export const getPostApiSizesMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPostApiSizesMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiSizes>>,
     TError,
@@ -163,9 +166,9 @@ export const getPostApiSizesMutationOptions = <TError = void, TContext = unknown
 
 export type PostApiSizesMutationResult = NonNullable<Awaited<ReturnType<typeof postApiSizes>>>;
 export type PostApiSizesMutationBody = SizeRequest;
-export type PostApiSizesMutationError = void;
+export type PostApiSizesMutationError = SimpleResponse | void;
 
-export const usePostApiSizes = <TError = void, TContext = unknown>(options?: {
+export const usePostApiSizes = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiSizes>>,
     TError,
@@ -192,7 +195,7 @@ export const getGetApiSizesIdQueryKey = (id: number) => {
 
 export const getGetApiSizesIdQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiSizesId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -214,9 +217,12 @@ export const getGetApiSizesIdQueryOptions = <
 };
 
 export type GetApiSizesIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiSizesId>>>;
-export type GetApiSizesIdQueryError = void;
+export type GetApiSizesIdQueryError = void | SimpleResponse;
 
-export function useGetApiSizesId<TData = Awaited<ReturnType<typeof getApiSizesId>>, TError = void>(
+export function useGetApiSizesId<
+  TData = Awaited<ReturnType<typeof getApiSizesId>>,
+  TError = void | SimpleResponse,
+>(
   id: number,
   options: {
     query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSizesId>>, TError, TData>> &
@@ -230,7 +236,10 @@ export function useGetApiSizesId<TData = Awaited<ReturnType<typeof getApiSizesId
       >;
   }
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetApiSizesId<TData = Awaited<ReturnType<typeof getApiSizesId>>, TError = void>(
+export function useGetApiSizesId<
+  TData = Awaited<ReturnType<typeof getApiSizesId>>,
+  TError = void | SimpleResponse,
+>(
   id: number,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSizesId>>, TError, TData>> &
@@ -244,14 +253,20 @@ export function useGetApiSizesId<TData = Awaited<ReturnType<typeof getApiSizesId
       >;
   }
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetApiSizesId<TData = Awaited<ReturnType<typeof getApiSizesId>>, TError = void>(
+export function useGetApiSizesId<
+  TData = Awaited<ReturnType<typeof getApiSizesId>>,
+  TError = void | SimpleResponse,
+>(
   id: number,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSizesId>>, TError, TData>>;
   }
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export function useGetApiSizesId<TData = Awaited<ReturnType<typeof getApiSizesId>>, TError = void>(
+export function useGetApiSizesId<
+  TData = Awaited<ReturnType<typeof getApiSizesId>>,
+  TError = void | SimpleResponse,
+>(
   id: number,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiSizesId>>, TError, TData>>;
@@ -277,7 +292,10 @@ export const putApiSizesId = (id: number, sizeRequest: SizeRequest) => {
   });
 };
 
-export const getPutApiSizesIdMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPutApiSizesIdMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiSizesId>>,
     TError,
@@ -311,9 +329,9 @@ export const getPutApiSizesIdMutationOptions = <TError = void, TContext = unknow
 
 export type PutApiSizesIdMutationResult = NonNullable<Awaited<ReturnType<typeof putApiSizesId>>>;
 export type PutApiSizesIdMutationBody = SizeRequest;
-export type PutApiSizesIdMutationError = void;
+export type PutApiSizesIdMutationError = SimpleResponse | void;
 
-export const usePutApiSizesId = <TError = void, TContext = unknown>(options?: {
+export const usePutApiSizesId = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiSizesId>>,
     TError,
@@ -331,13 +349,13 @@ export const usePutApiSizesId = <TError = void, TContext = unknown>(options?: {
   return useMutation(mutationOptions);
 };
 export const deleteApiSizesId = (id: number) => {
-  return deleteApiSizesIdMutator<StringMessageResponse>({
-    url: `/api/sizes/${id}`,
-    method: 'DELETE',
-  });
+  return deleteApiSizesIdMutator<SimpleResponse>({ url: `/api/sizes/${id}`, method: 'DELETE' });
 };
 
-export const getDeleteApiSizesIdMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getDeleteApiSizesIdMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiSizesId>>,
     TError,
@@ -373,9 +391,9 @@ export type DeleteApiSizesIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteApiSizesId>>
 >;
 
-export type DeleteApiSizesIdMutationError = void;
+export type DeleteApiSizesIdMutationError = SimpleResponse | void;
 
-export const useDeleteApiSizesId = <TError = void, TContext = unknown>(options?: {
+export const useDeleteApiSizesId = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiSizesId>>,
     TError,

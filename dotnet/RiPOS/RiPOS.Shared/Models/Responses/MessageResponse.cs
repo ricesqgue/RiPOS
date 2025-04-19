@@ -1,6 +1,6 @@
 ﻿namespace RiPOS.Shared.Models.Responses
 {
-    public class MessageResponse<T>
+    public class MessageResponse<T> 
     {
         public bool Success { get; set; }
 

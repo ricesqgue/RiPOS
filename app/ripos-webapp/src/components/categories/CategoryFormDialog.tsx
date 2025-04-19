@@ -1,9 +1,5 @@
 import { usePostApiCategories, usePutApiCategoriesId } from '@api/generated/category/category';
-import {
-  CategoryRequest,
-  CategoryResponse,
-  CategoryResponseMessageResponse,
-} from '@api/generated/models';
+import { CategoryRequest, CategoryResponse, SimpleResponse } from '@api/generated/models';
 import { useQueryClient } from '@tanstack/react-query';
 import { Form, Input, message, Modal } from 'antd';
 import { useEffect, useRef } from 'react';
@@ -66,7 +62,7 @@ const CategoryFormDialog = (props: CategoryFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<CategoryResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           messageApi.error({
             type: 'error',
             content: err.response?.data.message ?? 'Error al guardar los cambios',
@@ -95,7 +91,7 @@ const CategoryFormDialog = (props: CategoryFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<CategoryResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           console.log(err);
           messageApi.error({
             type: 'error',

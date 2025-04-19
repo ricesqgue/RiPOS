@@ -2,11 +2,7 @@ import {
   usePostApiCashregisters,
   usePutApiCashregistersId,
 } from '@api/generated/cash-register/cash-register';
-import {
-  CashRegisterRequest,
-  CashRegisterResponse,
-  CashRegisterResponseMessageResponse,
-} from '@api/generated/models';
+import { CashRegisterRequest, CashRegisterResponse, SimpleResponse } from '@api/generated/models';
 import { useQueryClient } from '@tanstack/react-query';
 import { Form, Input, message, Modal } from 'antd';
 import { useEffect, useRef } from 'react';
@@ -70,7 +66,7 @@ const CashRegisterFormDialog = (props: CashRegisterFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<CashRegisterResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           messageApi.error({
             type: 'error',
             content: err.response?.data.message ?? 'Error al guardar los cambios',
@@ -99,7 +95,7 @@ const CashRegisterFormDialog = (props: CashRegisterFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<CashRegisterResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           console.log(err);
           messageApi.error({
             type: 'error',

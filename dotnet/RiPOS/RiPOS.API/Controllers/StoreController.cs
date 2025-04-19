@@ -46,9 +46,9 @@ namespace RiPOS.API.Controllers
         [HttpPost]
         [RoleAuthorize([RoleEnum.SuperAdmin])]
         [ModelValidation]
-        [ProducesResponseType(typeof(StoreResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResponse<StoreResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<StoreResponse>> AddStore([FromBody] StoreRequest request)
+        public async Task<ActionResult<MessageResponse<StoreResponse>>> AddStore([FromBody] StoreRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await storeService.AddAsync(request, userId);
@@ -58,16 +58,16 @@ namespace RiPOS.API.Controllers
                 return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage.Data);
+            return Ok(responseMessage);
         }
 
         [HttpPut("{id:int}")]
         [RoleAuthorize([RoleEnum.SuperAdmin])]
         [ModelValidation]
-        [ProducesResponseType(typeof(StoreResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResponse<StoreResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<StoreResponse>> UpdateStore([FromRoute] int id, [FromBody] StoreRequest request)
+        public async Task<ActionResult<MessageResponse<StoreResponse>>> UpdateStore([FromRoute] int id, [FromBody] StoreRequest request)
         {
             if (!await storeService.ExistsByIdAsync(id))
             {
@@ -82,7 +82,7 @@ namespace RiPOS.API.Controllers
                 return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage.Data);
+            return Ok(responseMessage);
         }
 
         [HttpDelete("{id:int}")]

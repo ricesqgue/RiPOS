@@ -5,10 +5,7 @@
  * OpenAPI spec version: v1
  */
 
-export interface StringMessageResponse {
-  success?: boolean;
+export interface SimpleResponse {
   /** @nullable */
   message?: string | null;
-  /** @nullable */
-  data?: string | null;
 }

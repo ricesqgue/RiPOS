@@ -1,5 +1,5 @@
 import { usePostApiColors, usePutApiColorsId } from '@api/generated/color/color';
-import { ColorRequest, ColorResponse, ColorResponseMessageResponse } from '@api/generated/models';
+import { ColorRequest, ColorResponse, SimpleResponse } from '@api/generated/models';
 import { useQueryClient } from '@tanstack/react-query';
 import { ColorPicker, Form, Input, message, Modal } from 'antd';
 import { useEffect, useRef } from 'react';
@@ -68,7 +68,7 @@ const ColorFormDialog = (props: ColorFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<ColorResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           messageApi.error({
             type: 'error',
             content: err.response?.data.message ?? 'Error al guardar los cambios',
@@ -97,7 +97,7 @@ const ColorFormDialog = (props: ColorFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<ColorResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           console.log(err);
           messageApi.error({
             type: 'error',

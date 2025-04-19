@@ -46,9 +46,9 @@ namespace RiPOS.API.Controllers
         [HttpPost]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(typeof(GenderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResponse<GenderResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GenderResponse>> AddGender([FromBody] GenderRequest request)
+        public async Task<ActionResult<MessageResponse<GenderResponse>>> AddGender([FromBody] GenderRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await genderService.AddAsync(request, userId);
@@ -58,16 +58,16 @@ namespace RiPOS.API.Controllers
                 return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage.Data);
+            return Ok(responseMessage);
         }
 
         [HttpPut("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(typeof(GenderResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResponse<GenderResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<GenderResponse>> UpdateGender([FromRoute] int id, [FromBody] GenderRequest request)
+        public async Task<ActionResult<MessageResponse<GenderResponse>>> UpdateGender([FromRoute] int id, [FromBody] GenderRequest request)
         {
             if (!await genderService.ExistsByIdAsync(id))
             {
@@ -82,7 +82,7 @@ namespace RiPOS.API.Controllers
                 return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage.Data);
+            return Ok(responseMessage);
         }
 
         [HttpDelete("{id:int}")]

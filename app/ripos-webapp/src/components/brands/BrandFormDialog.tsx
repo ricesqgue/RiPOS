@@ -1,5 +1,5 @@
 import { usePostApiBrands, usePutApiBrandsId } from '@api/generated/brand/brand';
-import { BrandRequest, BrandResponse, BrandResponseMessageResponse } from '@api/generated/models';
+import { BrandRequest, BrandResponse, SimpleResponse } from '@api/generated/models';
 import { useQueryClient } from '@tanstack/react-query';
 import { Form, Input, message, Modal } from 'antd';
 import { useEffect, useMemo, useRef } from 'react';
@@ -62,7 +62,7 @@ const BrandFormDialog = (props: BrandFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<BrandResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           messageApi.error({
             type: 'error',
             content: err.response?.data.message ?? 'Error al guardar los cambios',
@@ -91,7 +91,7 @@ const BrandFormDialog = (props: BrandFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<BrandResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           console.log(err);
           messageApi.error({
             type: 'error',

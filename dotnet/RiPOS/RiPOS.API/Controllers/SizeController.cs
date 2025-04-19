@@ -46,9 +46,9 @@ namespace RiPOS.API.Controllers
         [HttpPost]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(typeof(SizeResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResponse<SizeResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<SizeResponse>> AddSize([FromBody] SizeRequest request)
+        public async Task<ActionResult<MessageResponse<SizeResponse>>> AddSize([FromBody] SizeRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await sizeService.AddAsync(request, userId);
@@ -58,16 +58,16 @@ namespace RiPOS.API.Controllers
                 return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage.Data);
+            return Ok(responseMessage);
         }
 
         [HttpPut("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(typeof(SizeResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResponse<SizeResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<SizeResponse>> UpdateSize([FromRoute] int id, [FromBody] SizeRequest request)
+        public async Task<ActionResult<MessageResponse<SizeResponse>>> UpdateSize([FromRoute] int id, [FromBody] SizeRequest request)
         {
             if (!await sizeService.ExistsByIdAsync(id))
             {
@@ -82,7 +82,7 @@ namespace RiPOS.API.Controllers
                 return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage.Data);
+            return Ok(responseMessage);
         }
 
         [HttpDelete("{id:int}")]

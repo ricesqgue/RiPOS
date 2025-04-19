@@ -1,9 +1,5 @@
 import { usePostApiCustomers, usePutApiCustomersId } from '@api/generated/customer/customer';
-import {
-  CustomerRequest,
-  CustomerResponse,
-  CustomerResponseMessageResponse,
-} from '@api/generated/models';
+import { CustomerRequest, CustomerResponse, SimpleResponse } from '@api/generated/models';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button, Col, Form, Input, message, Modal, Row, Select } from 'antd';
 import { useEffect, useMemo, useRef } from 'react';
@@ -114,7 +110,7 @@ const CustomerFormDialog = (props: CustomerFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<CustomerResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           messageApi.error({
             type: 'error',
             content: err.response?.data.message ?? 'Error al guardar los cambios',
@@ -141,7 +137,7 @@ const CustomerFormDialog = (props: CustomerFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<CustomerResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           console.log(err);
           messageApi.error({
             type: 'error',

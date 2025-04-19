@@ -21,7 +21,7 @@ import type {
 
 import type {
   GetApiVendorsParams,
-  StringMessageResponse,
+  SimpleResponse,
   VendorRequest,
   VendorResponse,
   VendorResponseMessageResponse,
@@ -134,7 +134,10 @@ export const postApiVendors = (vendorRequest: VendorRequest, signal?: AbortSigna
   });
 };
 
-export const getPostApiVendorsMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPostApiVendorsMutationOptions = <
+  TError = VendorResponseMessageResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiVendors>>,
     TError,
@@ -168,9 +171,12 @@ export const getPostApiVendorsMutationOptions = <TError = void, TContext = unkno
 
 export type PostApiVendorsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiVendors>>>;
 export type PostApiVendorsMutationBody = VendorRequest;
-export type PostApiVendorsMutationError = void;
+export type PostApiVendorsMutationError = VendorResponseMessageResponse | void;
 
-export const usePostApiVendors = <TError = void, TContext = unknown>(options?: {
+export const usePostApiVendors = <
+  TError = VendorResponseMessageResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiVendors>>,
     TError,
@@ -201,7 +207,7 @@ export const getGetApiVendorsIdQueryKey = (id: number) => {
 
 export const getGetApiVendorsIdQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiVendorsId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -223,11 +229,11 @@ export const getGetApiVendorsIdQueryOptions = <
 };
 
 export type GetApiVendorsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiVendorsId>>>;
-export type GetApiVendorsIdQueryError = void;
+export type GetApiVendorsIdQueryError = void | SimpleResponse;
 
 export function useGetApiVendorsId<
   TData = Awaited<ReturnType<typeof getApiVendorsId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options: {
@@ -244,7 +250,7 @@ export function useGetApiVendorsId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiVendorsId<
   TData = Awaited<ReturnType<typeof getApiVendorsId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -261,7 +267,7 @@ export function useGetApiVendorsId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiVendorsId<
   TData = Awaited<ReturnType<typeof getApiVendorsId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -271,7 +277,7 @@ export function useGetApiVendorsId<
 
 export function useGetApiVendorsId<
   TData = Awaited<ReturnType<typeof getApiVendorsId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -298,7 +304,10 @@ export const putApiVendorsId = (id: number, vendorRequest: VendorRequest) => {
   });
 };
 
-export const getPutApiVendorsIdMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPutApiVendorsIdMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiVendorsId>>,
     TError,
@@ -334,9 +343,9 @@ export type PutApiVendorsIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof putApiVendorsId>>
 >;
 export type PutApiVendorsIdMutationBody = VendorRequest;
-export type PutApiVendorsIdMutationError = void;
+export type PutApiVendorsIdMutationError = SimpleResponse | void;
 
-export const usePutApiVendorsId = <TError = void, TContext = unknown>(options?: {
+export const usePutApiVendorsId = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiVendorsId>>,
     TError,
@@ -354,13 +363,13 @@ export const usePutApiVendorsId = <TError = void, TContext = unknown>(options?: 
   return useMutation(mutationOptions);
 };
 export const deleteApiVendorsId = (id: number) => {
-  return deleteApiVendorsIdMutator<StringMessageResponse>({
-    url: `/api/vendors/${id}`,
-    method: 'DELETE',
-  });
+  return deleteApiVendorsIdMutator<SimpleResponse>({ url: `/api/vendors/${id}`, method: 'DELETE' });
 };
 
-export const getDeleteApiVendorsIdMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getDeleteApiVendorsIdMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiVendorsId>>,
     TError,
@@ -396,9 +405,12 @@ export type DeleteApiVendorsIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteApiVendorsId>>
 >;
 
-export type DeleteApiVendorsIdMutationError = void;
+export type DeleteApiVendorsIdMutationError = SimpleResponse | void;
 
-export const useDeleteApiVendorsId = <TError = void, TContext = unknown>(options?: {
+export const useDeleteApiVendorsId = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiVendorsId>>,
     TError,

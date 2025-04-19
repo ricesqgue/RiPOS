@@ -1,9 +1,5 @@
 import { usePostApiGenders, usePutApiGendersId } from '@api/generated/gender/gender';
-import {
-  GenderRequest,
-  GenderResponse,
-  GenderResponseMessageResponse,
-} from '@api/generated/models';
+import { GenderRequest, GenderResponse, SimpleResponse } from '@api/generated/models';
 import { useQueryClient } from '@tanstack/react-query';
 import { Form, Input, message, Modal } from 'antd';
 import { useEffect, useMemo, useRef } from 'react';
@@ -66,7 +62,7 @@ const GenderFormDialog = (props: GenderFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<GenderResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           messageApi.error({
             type: 'error',
             content: err.response?.data.message ?? 'Error al guardar los cambios',
@@ -95,7 +91,7 @@ const GenderFormDialog = (props: GenderFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<GenderResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           console.log(err);
           messageApi.error({
             type: 'error',

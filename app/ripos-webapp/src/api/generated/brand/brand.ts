@@ -24,7 +24,7 @@ import type {
   BrandResponse,
   BrandResponseMessageResponse,
   GetApiBrandsParams,
-  StringMessageResponse,
+  SimpleResponse,
 } from '.././models';
 
 import getApiBrandsMutator from '../../axiosMutator';
@@ -134,7 +134,10 @@ export const postApiBrands = (brandRequest: BrandRequest, signal?: AbortSignal) 
   });
 };
 
-export const getPostApiBrandsMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPostApiBrandsMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiBrands>>,
     TError,
@@ -168,9 +171,9 @@ export const getPostApiBrandsMutationOptions = <TError = void, TContext = unknow
 
 export type PostApiBrandsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiBrands>>>;
 export type PostApiBrandsMutationBody = BrandRequest;
-export type PostApiBrandsMutationError = void;
+export type PostApiBrandsMutationError = SimpleResponse | void;
 
-export const usePostApiBrands = <TError = void, TContext = unknown>(options?: {
+export const usePostApiBrands = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiBrands>>,
     TError,
@@ -294,7 +297,10 @@ export const putApiBrandsId = (id: number, brandRequest: BrandRequest) => {
   });
 };
 
-export const getPutApiBrandsIdMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPutApiBrandsIdMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiBrandsId>>,
     TError,
@@ -328,9 +334,9 @@ export const getPutApiBrandsIdMutationOptions = <TError = void, TContext = unkno
 
 export type PutApiBrandsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putApiBrandsId>>>;
 export type PutApiBrandsIdMutationBody = BrandRequest;
-export type PutApiBrandsIdMutationError = void;
+export type PutApiBrandsIdMutationError = SimpleResponse | void;
 
-export const usePutApiBrandsId = <TError = void, TContext = unknown>(options?: {
+export const usePutApiBrandsId = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiBrandsId>>,
     TError,
@@ -348,13 +354,13 @@ export const usePutApiBrandsId = <TError = void, TContext = unknown>(options?: {
   return useMutation(mutationOptions);
 };
 export const deleteApiBrandsId = (id: number) => {
-  return deleteApiBrandsIdMutator<StringMessageResponse>({
-    url: `/api/brands/${id}`,
-    method: 'DELETE',
-  });
+  return deleteApiBrandsIdMutator<SimpleResponse>({ url: `/api/brands/${id}`, method: 'DELETE' });
 };
 
-export const getDeleteApiBrandsIdMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getDeleteApiBrandsIdMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiBrandsId>>,
     TError,
@@ -390,9 +396,9 @@ export type DeleteApiBrandsIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteApiBrandsId>>
 >;
 
-export type DeleteApiBrandsIdMutationError = void;
+export type DeleteApiBrandsIdMutationError = SimpleResponse | void;
 
-export const useDeleteApiBrandsId = <TError = void, TContext = unknown>(options?: {
+export const useDeleteApiBrandsId = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiBrandsId>>,
     TError,

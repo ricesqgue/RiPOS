@@ -24,7 +24,7 @@ import type {
   CashRegisterResponse,
   CashRegisterResponseMessageResponse,
   GetApiCashregistersParams,
-  StringMessageResponse,
+  SimpleResponse,
 } from '.././models';
 
 import getApiCashregistersMutator from '../../axiosMutator';
@@ -162,7 +162,7 @@ export const postApiCashregisters = (
 };
 
 export const getPostApiCashregistersMutationOptions = <
-  TError = void,
+  TError = SimpleResponse | void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -200,9 +200,12 @@ export type PostApiCashregistersMutationResult = NonNullable<
   Awaited<ReturnType<typeof postApiCashregisters>>
 >;
 export type PostApiCashregistersMutationBody = CashRegisterRequest;
-export type PostApiCashregistersMutationError = void;
+export type PostApiCashregistersMutationError = SimpleResponse | void;
 
-export const usePostApiCashregisters = <TError = void, TContext = unknown>(options?: {
+export const usePostApiCashregisters = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiCashregisters>>,
     TError,
@@ -233,7 +236,7 @@ export const getGetApiCashregistersIdQueryKey = (id: number) => {
 
 export const getGetApiCashregistersIdQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiCashregistersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -259,11 +262,11 @@ export const getGetApiCashregistersIdQueryOptions = <
 export type GetApiCashregistersIdQueryResult = NonNullable<
   Awaited<ReturnType<typeof getApiCashregistersId>>
 >;
-export type GetApiCashregistersIdQueryError = void;
+export type GetApiCashregistersIdQueryError = void | SimpleResponse;
 
 export function useGetApiCashregistersId<
   TData = Awaited<ReturnType<typeof getApiCashregistersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options: {
@@ -282,7 +285,7 @@ export function useGetApiCashregistersId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiCashregistersId<
   TData = Awaited<ReturnType<typeof getApiCashregistersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -301,7 +304,7 @@ export function useGetApiCashregistersId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiCashregistersId<
   TData = Awaited<ReturnType<typeof getApiCashregistersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -313,7 +316,7 @@ export function useGetApiCashregistersId<
 
 export function useGetApiCashregistersId<
   TData = Awaited<ReturnType<typeof getApiCashregistersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -343,7 +346,7 @@ export const putApiCashregistersId = (id: number, cashRegisterRequest: CashRegis
 };
 
 export const getPutApiCashregistersIdMutationOptions = <
-  TError = void,
+  TError = SimpleResponse | void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -381,9 +384,12 @@ export type PutApiCashregistersIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof putApiCashregistersId>>
 >;
 export type PutApiCashregistersIdMutationBody = CashRegisterRequest;
-export type PutApiCashregistersIdMutationError = void;
+export type PutApiCashregistersIdMutationError = SimpleResponse | void;
 
-export const usePutApiCashregistersId = <TError = void, TContext = unknown>(options?: {
+export const usePutApiCashregistersId = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiCashregistersId>>,
     TError,
@@ -401,14 +407,14 @@ export const usePutApiCashregistersId = <TError = void, TContext = unknown>(opti
   return useMutation(mutationOptions);
 };
 export const deleteApiCashregistersId = (id: number) => {
-  return deleteApiCashregistersIdMutator<StringMessageResponse>({
+  return deleteApiCashregistersIdMutator<SimpleResponse>({
     url: `/api/cashregisters/${id}`,
     method: 'DELETE',
   });
 };
 
 export const getDeleteApiCashregistersIdMutationOptions = <
-  TError = void,
+  TError = SimpleResponse | void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -446,9 +452,12 @@ export type DeleteApiCashregistersIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteApiCashregistersId>>
 >;
 
-export type DeleteApiCashregistersIdMutationError = void;
+export type DeleteApiCashregistersIdMutationError = SimpleResponse | void;
 
-export const useDeleteApiCashregistersId = <TError = void, TContext = unknown>(options?: {
+export const useDeleteApiCashregistersId = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiCashregistersId>>,
     TError,

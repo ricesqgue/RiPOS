@@ -24,7 +24,7 @@ import type {
   CategoryResponse,
   CategoryResponseMessageResponse,
   GetApiCategoriesParams,
-  StringMessageResponse,
+  SimpleResponse,
 } from '.././models';
 
 import getApiCategoriesMutator from '../../axiosMutator';
@@ -146,7 +146,10 @@ export const postApiCategories = (categoryRequest: CategoryRequest, signal?: Abo
   });
 };
 
-export const getPostApiCategoriesMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPostApiCategoriesMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiCategories>>,
     TError,
@@ -182,9 +185,9 @@ export type PostApiCategoriesMutationResult = NonNullable<
   Awaited<ReturnType<typeof postApiCategories>>
 >;
 export type PostApiCategoriesMutationBody = CategoryRequest;
-export type PostApiCategoriesMutationError = void;
+export type PostApiCategoriesMutationError = SimpleResponse | void;
 
-export const usePostApiCategories = <TError = void, TContext = unknown>(options?: {
+export const usePostApiCategories = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiCategories>>,
     TError,
@@ -215,7 +218,7 @@ export const getGetApiCategoriesIdQueryKey = (id: number) => {
 
 export const getGetApiCategoriesIdQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiCategoriesId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -239,11 +242,11 @@ export const getGetApiCategoriesIdQueryOptions = <
 export type GetApiCategoriesIdQueryResult = NonNullable<
   Awaited<ReturnType<typeof getApiCategoriesId>>
 >;
-export type GetApiCategoriesIdQueryError = void;
+export type GetApiCategoriesIdQueryError = void | SimpleResponse;
 
 export function useGetApiCategoriesId<
   TData = Awaited<ReturnType<typeof getApiCategoriesId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options: {
@@ -260,7 +263,7 @@ export function useGetApiCategoriesId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiCategoriesId<
   TData = Awaited<ReturnType<typeof getApiCategoriesId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -279,7 +282,7 @@ export function useGetApiCategoriesId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiCategoriesId<
   TData = Awaited<ReturnType<typeof getApiCategoriesId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -289,7 +292,7 @@ export function useGetApiCategoriesId<
 
 export function useGetApiCategoriesId<
   TData = Awaited<ReturnType<typeof getApiCategoriesId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -316,7 +319,10 @@ export const putApiCategoriesId = (id: number, categoryRequest: CategoryRequest)
   });
 };
 
-export const getPutApiCategoriesIdMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPutApiCategoriesIdMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiCategoriesId>>,
     TError,
@@ -352,9 +358,12 @@ export type PutApiCategoriesIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof putApiCategoriesId>>
 >;
 export type PutApiCategoriesIdMutationBody = CategoryRequest;
-export type PutApiCategoriesIdMutationError = void;
+export type PutApiCategoriesIdMutationError = SimpleResponse | void;
 
-export const usePutApiCategoriesId = <TError = void, TContext = unknown>(options?: {
+export const usePutApiCategoriesId = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiCategoriesId>>,
     TError,
@@ -372,14 +381,14 @@ export const usePutApiCategoriesId = <TError = void, TContext = unknown>(options
   return useMutation(mutationOptions);
 };
 export const deleteApiCategoriesId = (id: number) => {
-  return deleteApiCategoriesIdMutator<StringMessageResponse>({
+  return deleteApiCategoriesIdMutator<SimpleResponse>({
     url: `/api/categories/${id}`,
     method: 'DELETE',
   });
 };
 
 export const getDeleteApiCategoriesIdMutationOptions = <
-  TError = void,
+  TError = SimpleResponse | void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -417,9 +426,12 @@ export type DeleteApiCategoriesIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteApiCategoriesId>>
 >;
 
-export type DeleteApiCategoriesIdMutationError = void;
+export type DeleteApiCategoriesIdMutationError = SimpleResponse | void;
 
-export const useDeleteApiCategoriesId = <TError = void, TContext = unknown>(options?: {
+export const useDeleteApiCategoriesId = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiCategoriesId>>,
     TError,

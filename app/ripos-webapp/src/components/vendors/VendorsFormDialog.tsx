@@ -1,9 +1,5 @@
 import { usePostApiVendors, usePutApiVendorsId } from '@api/generated/vendor/vendor';
-import {
-  VendorRequest,
-  VendorResponse,
-  VendorResponseMessageResponse,
-} from '@api/generated/models';
+import { VendorRequest, VendorResponse, SimpleResponse } from '@api/generated/models';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button, Col, Form, Input, message, Modal, Row, Select } from 'antd';
 import { useEffect, useMemo, useRef } from 'react';
@@ -110,7 +106,7 @@ const VendorFormDialog = (props: VendorFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<VendorResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           messageApi.error({
             type: 'error',
             content: err.response?.data.message ?? 'Error al guardar los cambios',
@@ -137,7 +133,7 @@ const VendorFormDialog = (props: VendorFormDialogProps) => {
             content: response.data.message,
           });
         })
-        .catch((err: AxiosError<VendorResponseMessageResponse>) => {
+        .catch((err: AxiosError<SimpleResponse>) => {
           console.log(err);
           messageApi.error({
             type: 'error',

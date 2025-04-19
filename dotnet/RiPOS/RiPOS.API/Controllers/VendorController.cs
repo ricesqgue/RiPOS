@@ -46,9 +46,9 @@ namespace RiPOS.API.Controllers
         [HttpPost]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(typeof(VendorResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<VendorResponse>> AddVendor([FromBody] VendorRequest request)
+        [ProducesResponseType(typeof(MessageResponse<VendorResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResponse<VendorResponse>), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<MessageResponse<VendorResponse>>> AddVendor([FromBody] VendorRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await vendorService.AddAsync(request, userId);
@@ -58,16 +58,16 @@ namespace RiPOS.API.Controllers
                 return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage.Data);
+            return Ok(responseMessage);
         }
 
         [HttpPut("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(typeof(VendorResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResponse<VendorResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<VendorResponse>> UpdateVendor([FromRoute] int id, [FromBody] VendorRequest request)
+        public async Task<ActionResult<MessageResponse<VendorResponse>>> UpdateVendor([FromRoute] int id, [FromBody] VendorRequest request)
         {
             if (!await vendorService.ExistsByIdAsync(id))
             {
@@ -82,7 +82,7 @@ namespace RiPOS.API.Controllers
                 return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage.Data);
+            return Ok(responseMessage);
         }
 
         [HttpDelete("{id:int}")]

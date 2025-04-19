@@ -16,7 +16,12 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import type { GetApiStoreUsersParams, GetApiUsersParams, UserResponse } from '.././models';
+import type {
+  GetApiStoreUsersParams,
+  GetApiUsersParams,
+  SimpleResponse,
+  UserResponse,
+} from '.././models';
 
 import getApiUsersMutator from '../../axiosMutator';
 import getApiStoreUsersMutator from '../../axiosMutator';
@@ -212,7 +217,7 @@ export function useGetApiStoreUsers<
 }
 
 export const getApiStoreUsersId = (id: number, signal?: AbortSignal) => {
-  return getApiStoreUsersIdMutator<UserResponse[]>({
+  return getApiStoreUsersIdMutator<UserResponse>({
     url: `/api/store/users/${id}`,
     method: 'GET',
     signal,
@@ -225,7 +230,7 @@ export const getGetApiStoreUsersIdQueryKey = (id: number) => {
 
 export const getGetApiStoreUsersIdQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiStoreUsersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -249,11 +254,11 @@ export const getGetApiStoreUsersIdQueryOptions = <
 export type GetApiStoreUsersIdQueryResult = NonNullable<
   Awaited<ReturnType<typeof getApiStoreUsersId>>
 >;
-export type GetApiStoreUsersIdQueryError = void;
+export type GetApiStoreUsersIdQueryError = void | SimpleResponse;
 
 export function useGetApiStoreUsersId<
   TData = Awaited<ReturnType<typeof getApiStoreUsersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options: {
@@ -270,7 +275,7 @@ export function useGetApiStoreUsersId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiStoreUsersId<
   TData = Awaited<ReturnType<typeof getApiStoreUsersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -289,7 +294,7 @@ export function useGetApiStoreUsersId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiStoreUsersId<
   TData = Awaited<ReturnType<typeof getApiStoreUsersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -299,7 +304,7 @@ export function useGetApiStoreUsersId<
 
 export function useGetApiStoreUsersId<
   TData = Awaited<ReturnType<typeof getApiStoreUsersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {

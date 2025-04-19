@@ -46,9 +46,9 @@ namespace RiPOS.API.Controllers
         [HttpPost]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(typeof(CategoryResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResponse<CategoryResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<CategoryResponse>> AddCategory([FromBody] CategoryRequest request)
+        public async Task<ActionResult<MessageResponse<CategoryResponse>>> AddCategory([FromBody] CategoryRequest request)
         {
             var userId = HttpContext.GetUserId();
             var responseMessage = await categoryService.AddAsync(request, userId);
@@ -58,16 +58,16 @@ namespace RiPOS.API.Controllers
                 return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage.Data);
+            return Ok(responseMessage);
         }
 
         [HttpPut("{id}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(typeof(CategoryResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResponse<CategoryResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CategoryResponse>> UpdateCategory([FromRoute] int id, [FromBody] CategoryRequest request)
+        public async Task<ActionResult<MessageResponse<CategoryResponse>>> UpdateCategory([FromRoute] int id, [FromBody] CategoryRequest request)
         {
             if (!await categoryService.ExistsByIdAsync(id))
             {
@@ -82,7 +82,7 @@ namespace RiPOS.API.Controllers
                 return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage.Data);
+            return Ok(responseMessage);
         }
 
         [HttpDelete("{id:int}")]

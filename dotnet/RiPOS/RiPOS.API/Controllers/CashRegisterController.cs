@@ -49,9 +49,9 @@ namespace RiPOS.API.Controllers
         [HttpPost]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(typeof(CashRegisterResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResponse<CashRegisterResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<CashRegisterResponse>> AddCashRegister([FromBody] CashRegisterRequest request)
+        public async Task<ActionResult<MessageResponse<CashRegisterResponse>>> AddCashRegister([FromBody] CashRegisterRequest request)
         {
             var userSession = ControllerContext.HttpContext.GetUserSession();
             var responseMessage = await cashRegisterService.AddAsync(request, userSession);
@@ -61,16 +61,16 @@ namespace RiPOS.API.Controllers
                 return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage.Data);
+            return Ok(responseMessage);
         }
 
         [HttpPut("{id:int}")]
         [RoleAuthorize([RoleEnum.Admin])]
         [ModelValidation]
-        [ProducesResponseType(typeof(CashRegisterResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MessageResponse<CashRegisterResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(SimpleResponse), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<CashRegisterResponse>> UpdateCashRegister([FromRoute] int id, [FromBody] CashRegisterRequest request)
+        public async Task<ActionResult<MessageResponse<CashRegisterResponse>>> UpdateCashRegister([FromRoute] int id, [FromBody] CashRegisterRequest request)
         {
             var userSession = ControllerContext.HttpContext.GetUserSession();
             if (!await cashRegisterService.ExistsByIdAsync(id, userSession.StoreId))
@@ -85,7 +85,7 @@ namespace RiPOS.API.Controllers
                 return BadRequest(new SimpleResponse(responseMessage.Message));
             }
 
-            return Ok(responseMessage.Data);
+            return Ok(responseMessage);
         }
 
         [HttpDelete("{id:int}")]

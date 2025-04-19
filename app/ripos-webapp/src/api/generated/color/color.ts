@@ -24,7 +24,7 @@ import type {
   ColorResponse,
   ColorResponseMessageResponse,
   GetApiColorsParams,
-  StringMessageResponse,
+  SimpleResponse,
 } from '.././models';
 
 import getApiColorsMutator from '../../axiosMutator';
@@ -134,7 +134,10 @@ export const postApiColors = (colorRequest: ColorRequest, signal?: AbortSignal) 
   });
 };
 
-export const getPostApiColorsMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPostApiColorsMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiColors>>,
     TError,
@@ -168,9 +171,9 @@ export const getPostApiColorsMutationOptions = <TError = void, TContext = unknow
 
 export type PostApiColorsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiColors>>>;
 export type PostApiColorsMutationBody = ColorRequest;
-export type PostApiColorsMutationError = void;
+export type PostApiColorsMutationError = SimpleResponse | void;
 
-export const usePostApiColors = <TError = void, TContext = unknown>(options?: {
+export const usePostApiColors = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiColors>>,
     TError,
@@ -197,7 +200,7 @@ export const getGetApiColorsIdQueryKey = (id: number) => {
 
 export const getGetApiColorsIdQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiColorsId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -219,11 +222,11 @@ export const getGetApiColorsIdQueryOptions = <
 };
 
 export type GetApiColorsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiColorsId>>>;
-export type GetApiColorsIdQueryError = void;
+export type GetApiColorsIdQueryError = void | SimpleResponse;
 
 export function useGetApiColorsId<
   TData = Awaited<ReturnType<typeof getApiColorsId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options: {
@@ -240,7 +243,7 @@ export function useGetApiColorsId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiColorsId<
   TData = Awaited<ReturnType<typeof getApiColorsId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -257,7 +260,7 @@ export function useGetApiColorsId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiColorsId<
   TData = Awaited<ReturnType<typeof getApiColorsId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -267,7 +270,7 @@ export function useGetApiColorsId<
 
 export function useGetApiColorsId<
   TData = Awaited<ReturnType<typeof getApiColorsId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -294,7 +297,10 @@ export const putApiColorsId = (id: number, colorRequest: ColorRequest) => {
   });
 };
 
-export const getPutApiColorsIdMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPutApiColorsIdMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiColorsId>>,
     TError,
@@ -328,9 +334,9 @@ export const getPutApiColorsIdMutationOptions = <TError = void, TContext = unkno
 
 export type PutApiColorsIdMutationResult = NonNullable<Awaited<ReturnType<typeof putApiColorsId>>>;
 export type PutApiColorsIdMutationBody = ColorRequest;
-export type PutApiColorsIdMutationError = void;
+export type PutApiColorsIdMutationError = SimpleResponse | void;
 
-export const usePutApiColorsId = <TError = void, TContext = unknown>(options?: {
+export const usePutApiColorsId = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiColorsId>>,
     TError,
@@ -348,13 +354,13 @@ export const usePutApiColorsId = <TError = void, TContext = unknown>(options?: {
   return useMutation(mutationOptions);
 };
 export const deleteApiColorsId = (id: number) => {
-  return deleteApiColorsIdMutator<StringMessageResponse>({
-    url: `/api/colors/${id}`,
-    method: 'DELETE',
-  });
+  return deleteApiColorsIdMutator<SimpleResponse>({ url: `/api/colors/${id}`, method: 'DELETE' });
 };
 
-export const getDeleteApiColorsIdMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getDeleteApiColorsIdMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiColorsId>>,
     TError,
@@ -390,9 +396,9 @@ export type DeleteApiColorsIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteApiColorsId>>
 >;
 
-export type DeleteApiColorsIdMutationError = void;
+export type DeleteApiColorsIdMutationError = SimpleResponse | void;
 
-export const useDeleteApiColorsId = <TError = void, TContext = unknown>(options?: {
+export const useDeleteApiColorsId = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiColorsId>>,
     TError,

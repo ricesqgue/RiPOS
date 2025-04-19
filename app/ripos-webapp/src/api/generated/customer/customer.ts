@@ -24,7 +24,7 @@ import type {
   CustomerResponse,
   CustomerResponseMessageResponse,
   GetApiCustomersParams,
-  StringMessageResponse,
+  SimpleResponse,
 } from '.././models';
 
 import getApiCustomersMutator from '../../axiosMutator';
@@ -146,7 +146,10 @@ export const postApiCustomers = (customerRequest: CustomerRequest, signal?: Abor
   });
 };
 
-export const getPostApiCustomersMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPostApiCustomersMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiCustomers>>,
     TError,
@@ -182,9 +185,9 @@ export type PostApiCustomersMutationResult = NonNullable<
   Awaited<ReturnType<typeof postApiCustomers>>
 >;
 export type PostApiCustomersMutationBody = CustomerRequest;
-export type PostApiCustomersMutationError = void;
+export type PostApiCustomersMutationError = SimpleResponse | void;
 
-export const usePostApiCustomers = <TError = void, TContext = unknown>(options?: {
+export const usePostApiCustomers = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof postApiCustomers>>,
     TError,
@@ -215,7 +218,7 @@ export const getGetApiCustomersIdQueryKey = (id: number) => {
 
 export const getGetApiCustomersIdQueryOptions = <
   TData = Awaited<ReturnType<typeof getApiCustomersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -239,11 +242,11 @@ export const getGetApiCustomersIdQueryOptions = <
 export type GetApiCustomersIdQueryResult = NonNullable<
   Awaited<ReturnType<typeof getApiCustomersId>>
 >;
-export type GetApiCustomersIdQueryError = void;
+export type GetApiCustomersIdQueryError = void | SimpleResponse;
 
 export function useGetApiCustomersId<
   TData = Awaited<ReturnType<typeof getApiCustomersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options: {
@@ -260,7 +263,7 @@ export function useGetApiCustomersId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiCustomersId<
   TData = Awaited<ReturnType<typeof getApiCustomersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -277,7 +280,7 @@ export function useGetApiCustomersId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetApiCustomersId<
   TData = Awaited<ReturnType<typeof getApiCustomersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -287,7 +290,7 @@ export function useGetApiCustomersId<
 
 export function useGetApiCustomersId<
   TData = Awaited<ReturnType<typeof getApiCustomersId>>,
-  TError = void,
+  TError = void | SimpleResponse,
 >(
   id: number,
   options?: {
@@ -314,7 +317,10 @@ export const putApiCustomersId = (id: number, customerRequest: CustomerRequest) 
   });
 };
 
-export const getPutApiCustomersIdMutationOptions = <TError = void, TContext = unknown>(options?: {
+export const getPutApiCustomersIdMutationOptions = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiCustomersId>>,
     TError,
@@ -350,9 +356,9 @@ export type PutApiCustomersIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof putApiCustomersId>>
 >;
 export type PutApiCustomersIdMutationBody = CustomerRequest;
-export type PutApiCustomersIdMutationError = void;
+export type PutApiCustomersIdMutationError = SimpleResponse | void;
 
-export const usePutApiCustomersId = <TError = void, TContext = unknown>(options?: {
+export const usePutApiCustomersId = <TError = SimpleResponse | void, TContext = unknown>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof putApiCustomersId>>,
     TError,
@@ -370,14 +376,14 @@ export const usePutApiCustomersId = <TError = void, TContext = unknown>(options?
   return useMutation(mutationOptions);
 };
 export const deleteApiCustomersId = (id: number) => {
-  return deleteApiCustomersIdMutator<StringMessageResponse>({
+  return deleteApiCustomersIdMutator<SimpleResponse>({
     url: `/api/customers/${id}`,
     method: 'DELETE',
   });
 };
 
 export const getDeleteApiCustomersIdMutationOptions = <
-  TError = void,
+  TError = SimpleResponse | void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -415,9 +421,12 @@ export type DeleteApiCustomersIdMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteApiCustomersId>>
 >;
 
-export type DeleteApiCustomersIdMutationError = void;
+export type DeleteApiCustomersIdMutationError = SimpleResponse | void;
 
-export const useDeleteApiCustomersId = <TError = void, TContext = unknown>(options?: {
+export const useDeleteApiCustomersId = <
+  TError = SimpleResponse | void,
+  TContext = unknown,
+>(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof deleteApiCustomersId>>,
     TError,
