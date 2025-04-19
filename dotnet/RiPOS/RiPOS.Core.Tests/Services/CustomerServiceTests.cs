@@ -179,7 +179,7 @@ public class CustomerServiceTests
         var result = await _customerService.DeactivateAsync(1, 1);
 
         Assert.True(result.Success);
-        Assert.Equal("Cliente eliminado correctamente", result.Message);
+        Assert.Equal("Cliente eliminado correctamente", result.Data);
     }
 
     [Fact]

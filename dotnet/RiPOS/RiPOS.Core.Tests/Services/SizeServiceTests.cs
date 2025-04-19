@@ -180,7 +180,7 @@ public class SizeServiceTests
         var result = await _sizeService.DeactivateAsync(1, 1);
 
         Assert.True(result.Success);
-        Assert.Equal("Talla eliminada correctamente", result.Message);
+        Assert.Equal("Talla eliminada correctamente", result.Data);
     }
 
     [Fact]

@@ -192,7 +192,7 @@ public class CashRegisterServiceTests
         var result = await _cashRegisterService.DeactivateAsync(1, 1);
 
         Assert.True(result.Success);
-        Assert.Equal("Caja eliminada correctamente", result.Message);
+        Assert.Equal("Caja eliminada correctamente", result.Data);
     }
 
     [Fact]

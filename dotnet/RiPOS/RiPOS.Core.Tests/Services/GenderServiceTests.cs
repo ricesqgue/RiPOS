@@ -178,7 +178,7 @@ public class GenderServiceTests
         var result = await _genderService.DeactivateAsync(1, 1);
 
         Assert.True(result.Success);
-        Assert.Equal("Género eliminado correctamente", result.Message);
+        Assert.Equal("Género eliminado correctamente", result.Data);
     }
 
     [Fact]

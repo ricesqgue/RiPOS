@@ -183,7 +183,7 @@ public class BrandServiceTests
         var result = await _brandService.DeactivateAsync(1, 1);
 
         Assert.True(result.Success);
-        Assert.Equal("Marca eliminada correctamente", result.Message);
+        Assert.Equal("Marca eliminada correctamente", result.Data);
     }
 
     [Fact]

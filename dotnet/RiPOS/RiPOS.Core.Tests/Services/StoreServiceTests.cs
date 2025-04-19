@@ -161,7 +161,7 @@ public class StoreServiceTests
         var result = await _storeService.DeactivateAsync(1, 1);
 
         Assert.True(result.Success);
-        Assert.Equal("Tienda eliminada correctamente", result.Message);
+        Assert.Equal("Tienda eliminada correctamente", result.Data);
     }
 
     [Fact]

@@ -179,7 +179,7 @@ public class VendorServiceTests
         var result = await _vendorService.DeactivateAsync(1, 1);
 
         Assert.True(result.Success);
-        Assert.Equal("Proveedor eliminado correctamente", result.Message);
+        Assert.Equal("Proveedor eliminado correctamente", result.Data);
     }
 
     [Fact]

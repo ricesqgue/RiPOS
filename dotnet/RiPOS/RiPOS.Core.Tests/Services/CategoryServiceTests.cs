@@ -178,7 +178,7 @@ public class CategoryServiceTests
         var result = await _categoryService.DeactivateAsync(1, 1);
 
         Assert.True(result.Success);
-        Assert.Equal("Categoría eliminada correctamente", result.Message);
+        Assert.Equal("Categoría eliminada correctamente", result.Data);
     }
 
     [Fact]

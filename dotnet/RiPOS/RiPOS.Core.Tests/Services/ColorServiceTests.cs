@@ -179,7 +179,7 @@ public class ColorServiceTests
         var result = await _colorService.DeactivateAsync(1, 1);
 
         Assert.True(result.Success);
-        Assert.Equal("Color eliminado correctamente", result.Message);
+        Assert.Equal("Color eliminado correctamente", result.Data);
     }
 
     [Fact]
