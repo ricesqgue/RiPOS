@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RiPOS.Database;
@@ -11,9 +12,11 @@ using RiPOS.Database;
 namespace RiPOS.Database.Migrations
 {
     [DbContext(typeof(RiPosDbContext))]
-    partial class RiPosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250423004838_AddProductTables")]
+    partial class AddProductTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

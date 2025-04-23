@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RiPOS.Domain;
 using RiPOS.Domain.Entities;
 
 namespace RiPOS.Database.Configurations
@@ -8,13 +9,40 @@ namespace RiPOS.Database.Configurations
         internal static void ConfigureDbContext(ModelBuilder modelBuilder)
         {
             ConfigureDefaultValues(modelBuilder);
-            ConfigureUserStoreRoles(modelBuilder);
+            ConfigureRelationalTables(modelBuilder);
         }
         
-        private static void ConfigureUserStoreRoles(ModelBuilder modelBuilder)
+        private static void ConfigureRelationalTables(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserStoreRole>()
                 .HasKey(usr => new { usr.UserId, usr.StoreId, usr.RoleId });
+
+            modelBuilder.Entity<ProductCategory>(pc =>
+            {
+                pc.HasKey(x => new { x.ProductHeaderId, x.CategoryId });
+                
+                pc.HasOne(x => x.ProductHeader)
+                    .WithMany(x => x.ProductCategories)
+                    .HasForeignKey(x => x.ProductHeaderId);
+            });
+            
+            modelBuilder.Entity<ProductColor>(pc =>
+            {
+                pc.HasKey(x => new { x.ProductDetailsId, x.ColorId });
+                
+                pc.HasOne(x => x.ProductDetails)
+                    .WithMany(x => x.ProductColors)
+                    .HasForeignKey(x => x.ProductDetailsId);
+            });
+            
+            modelBuilder.Entity<ProductGender>(pg =>
+            {
+                pg.HasKey(x => new { x.ProductHeaderId, x.GenderId });
+                
+                pg.HasOne(x => x.ProductHeader)
+                    .WithMany(x => x.ProductGenders)
+                    .HasForeignKey(x => x.ProductHeaderId);
+            });
         }
 
         private static void ConfigureDefaultValues(ModelBuilder modelBuilder)
@@ -116,6 +144,26 @@ namespace RiPOS.Database.Configurations
                 v.Property(x => x.CreationDateTime)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 v.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+
+            modelBuilder.Entity<ProductHeader>(p =>
+            {
+                p.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+                p.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                p.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+            
+            modelBuilder.Entity<ProductDetails>(p =>
+            {
+                p.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+                p.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                p.Property(x => x.LastModificationDateTime)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
         }
