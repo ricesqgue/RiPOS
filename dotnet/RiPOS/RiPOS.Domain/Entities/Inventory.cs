@@ -3,14 +3,18 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RiPOS.Domain.Entities;
 
-public class ProductColor
+public class Inventory
 {
+    [Required]
+    public int StoreId { get; set; }
+    [ForeignKey(nameof(StoreId))]
+    public Store? Store { get; set; }
+    
+    [Required]
     public int ProductDetailId { get; set; }
     [ForeignKey(nameof(ProductDetailId))]
     public ProductDetail? ProductDetail { get; set; }
     
-    [Required]
-    public int ColorId { get; set; }
-    [ForeignKey(nameof(ColorId))]
-    public Color? Color { get; set; }
+    [Required] 
+    public int Quantity { get; set; } = 0;
 }

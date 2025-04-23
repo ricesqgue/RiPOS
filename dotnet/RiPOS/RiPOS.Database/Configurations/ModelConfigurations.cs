@@ -28,11 +28,11 @@ namespace RiPOS.Database.Configurations
             
             modelBuilder.Entity<ProductColor>(pc =>
             {
-                pc.HasKey(x => new { x.ProductDetailsId, x.ColorId });
+                pc.HasKey(x => new { x.ProductDetailId, x.ColorId });
                 
-                pc.HasOne(x => x.ProductDetails)
+                pc.HasOne(x => x.ProductDetail)
                     .WithMany(x => x.ProductColors)
-                    .HasForeignKey(x => x.ProductDetailsId);
+                    .HasForeignKey(x => x.ProductDetailId);
             });
             
             modelBuilder.Entity<ProductGender>(pg =>
@@ -42,6 +42,11 @@ namespace RiPOS.Database.Configurations
                 pg.HasOne(x => x.ProductHeader)
                     .WithMany(x => x.ProductGenders)
                     .HasForeignKey(x => x.ProductHeaderId);
+            });
+
+            modelBuilder.Entity<Inventory>(i =>
+            {
+                i.HasKey(x => new { x.ProductDetailId, x.StoreId });
             });
         }
 
@@ -157,13 +162,19 @@ namespace RiPOS.Database.Configurations
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
             
-            modelBuilder.Entity<ProductDetails>(p =>
+            modelBuilder.Entity<ProductDetail>(p =>
             {
                 p.Property(x => x.IsActive)
                     .HasDefaultValue(true);
                 p.Property(x => x.CreationDateTime)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
                 p.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+
+            modelBuilder.Entity<InventoryTransfer>(i =>
+            {
+                i.Property(x => x.TransferDateTime)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
         }

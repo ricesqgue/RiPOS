@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RiPOS.Database;
@@ -11,9 +12,11 @@ using RiPOS.Database;
 namespace RiPOS.Database.Migrations
 {
     [DbContext(typeof(RiPosDbContext))]
-    partial class RiPosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250423020823_AddProductTables")]
+    partial class AddProductTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -354,83 +357,6 @@ namespace RiPOS.Database.Migrations
                     b.HasIndex("LastModificationByUserId");
 
                     b.ToTable("Genders");
-                });
-
-            modelBuilder.Entity("RiPOS.Domain.Entities.Inventory", b =>
-                {
-                    b.Property<int>("ProductDetailId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("StoreId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ProductDetailId", "StoreId");
-
-                    b.HasIndex("StoreId");
-
-                    b.ToTable("Inventories");
-                });
-
-            modelBuilder.Entity("RiPOS.Domain.Entities.InventoryTransfer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FromStoreId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ToStoreId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("TransferDateTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FromStoreId");
-
-                    b.HasIndex("ToStoreId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("InventoryTransfers");
-                });
-
-            modelBuilder.Entity("RiPOS.Domain.Entities.InventoryTransferDetail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("InventoryTransferId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductDetailId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InventoryTransferId");
-
-                    b.HasIndex("ProductDetailId");
-
-                    b.ToTable("InventoryTransferDetails");
                 });
 
             modelBuilder.Entity("RiPOS.Domain.Entities.ProductCategory", b =>
@@ -1041,71 +967,6 @@ namespace RiPOS.Database.Migrations
                     b.Navigation("CreationByUser");
 
                     b.Navigation("LastModificationByUser");
-                });
-
-            modelBuilder.Entity("RiPOS.Domain.Entities.Inventory", b =>
-                {
-                    b.HasOne("RiPOS.Domain.Entities.ProductDetail", "ProductDetail")
-                        .WithMany()
-                        .HasForeignKey("ProductDetailId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RiPOS.Domain.Entities.Store", "Store")
-                        .WithMany()
-                        .HasForeignKey("StoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ProductDetail");
-
-                    b.Navigation("Store");
-                });
-
-            modelBuilder.Entity("RiPOS.Domain.Entities.InventoryTransfer", b =>
-                {
-                    b.HasOne("RiPOS.Domain.Entities.Store", "FromStore")
-                        .WithMany()
-                        .HasForeignKey("FromStoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RiPOS.Domain.Entities.Store", "ToStore")
-                        .WithMany()
-                        .HasForeignKey("ToStoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RiPOS.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FromStore");
-
-                    b.Navigation("ToStore");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("RiPOS.Domain.Entities.InventoryTransferDetail", b =>
-                {
-                    b.HasOne("RiPOS.Domain.Entities.InventoryTransfer", "InventoryTransfer")
-                        .WithMany()
-                        .HasForeignKey("InventoryTransferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RiPOS.Domain.Entities.ProductDetail", "ProductDetail")
-                        .WithMany()
-                        .HasForeignKey("ProductDetailId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("InventoryTransfer");
-
-                    b.Navigation("ProductDetail");
                 });
 
             modelBuilder.Entity("RiPOS.Domain.Entities.ProductCategory", b =>

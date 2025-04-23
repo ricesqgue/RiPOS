@@ -39,5 +39,5 @@ public class ProductHeader : TrackEntityChanges, IEntity
 
     public ICollection<ProductGender> ProductGenders { get; set; } = new List<ProductGender>();
 
-    public ICollection<ProductDetails> ProductDetails { get; set; } = new List<ProductDetails>();
+    public ICollection<ProductDetail> ProductDetails { get; set; } = new List<ProductDetail>();
 }

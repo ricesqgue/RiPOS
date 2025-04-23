@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RiPOS.Database.Configurations;
-using RiPOS.Domain;
 using RiPOS.Domain.Entities;
 
 namespace RiPOS.Database
@@ -20,10 +19,16 @@ namespace RiPOS.Database
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Gender> Genders { get; set; }
+
+        public DbSet<Inventory> Inventories { get; set; }
+        
+        public DbSet<InventoryTransfer> InventoryTransfers { get; set; }
+        
+        public DbSet<InventoryTransferDetail> InventoryTransferDetails { get; set; }
         
         public DbSet<ProductHeader> ProductHeaders { get; set; }
         
-        public DbSet<ProductDetails> ProductDetails { get; set; }
+        public DbSet<ProductDetail> ProductDetails { get; set; }
         
         public DbSet<ProductCategory> ProductCategories { get; set; }
         

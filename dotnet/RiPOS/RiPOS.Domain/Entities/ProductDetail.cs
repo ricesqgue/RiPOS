@@ -4,9 +4,9 @@ using RiPOS.Domain.Entities;
 using RiPOS.Domain.Interfaces;
 using RiPOS.Domain.Shared;
 
-namespace RiPOS.Domain;
+namespace RiPOS.Domain.Entities;
 
-public class ProductDetails : TrackEntityChanges, IEntity
+public class ProductDetail : TrackEntityChanges, IEntity
 {
     public int Id { get; set; }
     

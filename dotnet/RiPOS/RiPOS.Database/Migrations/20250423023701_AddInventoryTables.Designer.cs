@@ -12,8 +12,8 @@ using RiPOS.Database;
 namespace RiPOS.Database.Migrations
 {
     [DbContext(typeof(RiPosDbContext))]
-    [Migration("20250423004838_AddProductTables")]
-    partial class AddProductTables
+    [Migration("20250423023701_AddInventoryTables")]
+    partial class AddInventoryTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -359,6 +359,83 @@ namespace RiPOS.Database.Migrations
                     b.ToTable("Genders");
                 });
 
+            modelBuilder.Entity("RiPOS.Domain.Entities.Inventory", b =>
+                {
+                    b.Property<int>("ProductDetailId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("ProductDetailId", "StoreId");
+
+                    b.HasIndex("StoreId");
+
+                    b.ToTable("Inventories");
+                });
+
+            modelBuilder.Entity("RiPOS.Domain.Entities.InventoryTransfer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FromStoreId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ToStoreId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("TransferDateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamptz")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromStoreId");
+
+                    b.HasIndex("ToStoreId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("InventoryTransfers");
+                });
+
+            modelBuilder.Entity("RiPOS.Domain.Entities.InventoryTransferDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("InventoryTransferId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductDetailId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InventoryTransferId");
+
+                    b.HasIndex("ProductDetailId");
+
+                    b.ToTable("InventoryTransferDetails");
+                });
+
             modelBuilder.Entity("RiPOS.Domain.Entities.ProductCategory", b =>
                 {
                     b.Property<int>("ProductHeaderId")
@@ -376,17 +453,76 @@ namespace RiPOS.Database.Migrations
 
             modelBuilder.Entity("RiPOS.Domain.Entities.ProductColor", b =>
                 {
-                    b.Property<int>("ProductDetailsId")
+                    b.Property<int>("ProductDetailId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ColorId")
                         .HasColumnType("integer");
 
-                    b.HasKey("ProductDetailsId", "ColorId");
+                    b.HasKey("ProductDetailId", "ColorId");
 
                     b.HasIndex("ColorId");
 
                     b.ToTable("ProductColors");
+                });
+
+            modelBuilder.Entity("RiPOS.Domain.Entities.ProductDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("AdditionalPrice")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int?>("CreationByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreationDateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamptz")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<int?>("LastModificationByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("LastModificationDateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamptz")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("ProductCode")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("ProductHeaderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SizeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("VariantName")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreationByUserId");
+
+                    b.HasIndex("LastModificationByUserId");
+
+                    b.HasIndex("ProductHeaderId");
+
+                    b.HasIndex("SizeId");
+
+                    b.ToTable("ProductDetails");
                 });
 
             modelBuilder.Entity("RiPOS.Domain.Entities.ProductGender", b =>
@@ -804,65 +940,6 @@ namespace RiPOS.Database.Migrations
                     b.ToTable("Vendors");
                 });
 
-            modelBuilder.Entity("RiPOS.Domain.ProductDetails", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("AdditionalPrice")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<int?>("CreationByUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreationDateTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
-
-                    b.Property<int?>("LastModificationByUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("ProductCode")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<int>("ProductHeaderId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SizeId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("VariantName")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreationByUserId");
-
-                    b.HasIndex("LastModificationByUserId");
-
-                    b.HasIndex("ProductHeaderId");
-
-                    b.HasIndex("SizeId");
-
-                    b.ToTable("ProductDetails");
-                });
-
             modelBuilder.Entity("RiPOS.Domain.Entities.Brand", b =>
                 {
                     b.HasOne("RiPOS.Domain.Entities.User", "CreationByUser")
@@ -969,6 +1046,71 @@ namespace RiPOS.Database.Migrations
                     b.Navigation("LastModificationByUser");
                 });
 
+            modelBuilder.Entity("RiPOS.Domain.Entities.Inventory", b =>
+                {
+                    b.HasOne("RiPOS.Domain.Entities.ProductDetail", "ProductDetail")
+                        .WithMany()
+                        .HasForeignKey("ProductDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RiPOS.Domain.Entities.Store", "Store")
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductDetail");
+
+                    b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("RiPOS.Domain.Entities.InventoryTransfer", b =>
+                {
+                    b.HasOne("RiPOS.Domain.Entities.Store", "FromStore")
+                        .WithMany()
+                        .HasForeignKey("FromStoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RiPOS.Domain.Entities.Store", "ToStore")
+                        .WithMany()
+                        .HasForeignKey("ToStoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RiPOS.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FromStore");
+
+                    b.Navigation("ToStore");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RiPOS.Domain.Entities.InventoryTransferDetail", b =>
+                {
+                    b.HasOne("RiPOS.Domain.Entities.InventoryTransfer", "InventoryTransfer")
+                        .WithMany()
+                        .HasForeignKey("InventoryTransferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RiPOS.Domain.Entities.ProductDetail", "ProductDetail")
+                        .WithMany()
+                        .HasForeignKey("ProductDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("InventoryTransfer");
+
+                    b.Navigation("ProductDetail");
+                });
+
             modelBuilder.Entity("RiPOS.Domain.Entities.ProductCategory", b =>
                 {
                     b.HasOne("RiPOS.Domain.Entities.Category", "Category")
@@ -996,15 +1138,46 @@ namespace RiPOS.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RiPOS.Domain.ProductDetails", "ProductDetails")
+                    b.HasOne("RiPOS.Domain.Entities.ProductDetail", "ProductDetail")
                         .WithMany("ProductColors")
-                        .HasForeignKey("ProductDetailsId")
+                        .HasForeignKey("ProductDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Color");
 
-                    b.Navigation("ProductDetails");
+                    b.Navigation("ProductDetail");
+                });
+
+            modelBuilder.Entity("RiPOS.Domain.Entities.ProductDetail", b =>
+                {
+                    b.HasOne("RiPOS.Domain.Entities.User", "CreationByUser")
+                        .WithMany()
+                        .HasForeignKey("CreationByUserId");
+
+                    b.HasOne("RiPOS.Domain.Entities.User", "LastModificationByUser")
+                        .WithMany()
+                        .HasForeignKey("LastModificationByUserId");
+
+                    b.HasOne("RiPOS.Domain.Entities.ProductHeader", "ProductHeader")
+                        .WithMany("ProductDetails")
+                        .HasForeignKey("ProductHeaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RiPOS.Domain.Entities.Size", "Size")
+                        .WithMany()
+                        .HasForeignKey("SizeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreationByUser");
+
+                    b.Navigation("LastModificationByUser");
+
+                    b.Navigation("ProductHeader");
+
+                    b.Navigation("Size");
                 });
 
             modelBuilder.Entity("RiPOS.Domain.Entities.ProductGender", b =>
@@ -1155,35 +1328,9 @@ namespace RiPOS.Database.Migrations
                     b.Navigation("LastModificationByUser");
                 });
 
-            modelBuilder.Entity("RiPOS.Domain.ProductDetails", b =>
+            modelBuilder.Entity("RiPOS.Domain.Entities.ProductDetail", b =>
                 {
-                    b.HasOne("RiPOS.Domain.Entities.User", "CreationByUser")
-                        .WithMany()
-                        .HasForeignKey("CreationByUserId");
-
-                    b.HasOne("RiPOS.Domain.Entities.User", "LastModificationByUser")
-                        .WithMany()
-                        .HasForeignKey("LastModificationByUserId");
-
-                    b.HasOne("RiPOS.Domain.Entities.ProductHeader", "ProductHeader")
-                        .WithMany("ProductDetails")
-                        .HasForeignKey("ProductHeaderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RiPOS.Domain.Entities.Size", "Size")
-                        .WithMany()
-                        .HasForeignKey("SizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreationByUser");
-
-                    b.Navigation("LastModificationByUser");
-
-                    b.Navigation("ProductHeader");
-
-                    b.Navigation("Size");
+                    b.Navigation("ProductColors");
                 });
 
             modelBuilder.Entity("RiPOS.Domain.Entities.ProductHeader", b =>
@@ -1198,11 +1345,6 @@ namespace RiPOS.Database.Migrations
             modelBuilder.Entity("RiPOS.Domain.Entities.User", b =>
                 {
                     b.Navigation("UserStoreRoles");
-                });
-
-            modelBuilder.Entity("RiPOS.Domain.ProductDetails", b =>
-                {
-                    b.Navigation("ProductColors");
                 });
 #pragma warning restore 612, 618
         }
