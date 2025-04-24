@@ -25,6 +25,8 @@ namespace RiPOS.Database
         public DbSet<InventoryTransfer> InventoryTransfers { get; set; }
         
         public DbSet<InventoryTransferDetail> InventoryTransferDetails { get; set; }
+
+        public DbSet<PaymentMethod> PaymentMethods { get; set; }
         
         public DbSet<ProductHeader> ProductHeaders { get; set; }
         
@@ -35,6 +37,14 @@ namespace RiPOS.Database
         public DbSet<ProductGender> ProductGenders { get; set; }
 
         public DbSet<ProductColor> ProductColors { get; set; }
+
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+
+        public DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
+        
+        public DbSet<PurchaseOrderNote> PurchaseOrderNotes { get; set; }
+
+        public DbSet<PurchaseOrderStatus> PurchaseOrderStatus { get; set; }
 
         public DbSet<Role> Roles { get; set; }
         
@@ -49,7 +59,11 @@ namespace RiPOS.Database
         public DbSet<UserStoreRole> UserStoreRoles { get; set; }
 
         public DbSet<Vendor> Vendors { get; set; }
+
+        public DbSet<VendorDebt> VendorDebts { get; set; }
         
+        public DbSet<VendorPayment> VendorPayments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ModelConfigurations.ConfigureDbContext(modelBuilder);

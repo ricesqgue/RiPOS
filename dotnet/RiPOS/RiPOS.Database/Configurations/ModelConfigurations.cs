@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RiPOS.Domain;
 using RiPOS.Domain.Entities;
 
 namespace RiPOS.Database.Configurations
@@ -10,6 +9,7 @@ namespace RiPOS.Database.Configurations
         {
             ConfigureDefaultValues(modelBuilder);
             ConfigureRelationalTables(modelBuilder);
+            ConfigureIndexes(modelBuilder);
         }
         
         private static void ConfigureRelationalTables(ModelBuilder modelBuilder)
@@ -177,6 +177,70 @@ namespace RiPOS.Database.Configurations
                 i.Property(x => x.TransferDateTime)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
+            
+            modelBuilder.Entity<PurchaseOrder>(p =>
+            {
+                p.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                p.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                p.Property(x => x.PurchaseOrderStatusId)
+                    .HasConversion<int>();
+            });
+            
+            modelBuilder.Entity<PurchaseOrderDetail>(p =>
+            {
+                p.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                p.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+            
+            modelBuilder.Entity<PurchaseOrderNote>(p =>
+            {
+                p.Property(x => x.IsDeleted).HasDefaultValue(false);
+                p.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                p.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+            
+            modelBuilder.Entity<PurchaseOrderStatus>(p =>
+            {
+                p.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+            });
+
+            modelBuilder.Entity<PaymentMethod>(p =>
+            {
+                p.Property(x => x.IsActive)
+                    .HasDefaultValue(true);
+            });
+            
+            modelBuilder.Entity<VendorDebt>(v =>
+            {
+                v.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                v.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+            
+            modelBuilder.Entity<VendorPayment>(v =>
+            {
+                v.Property(x => x.IsDeleted)
+                    .HasDefaultValue(false);
+                v.Property(x => x.CreationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                v.Property(x => x.LastModificationDateTime)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+        }
+
+        private static void ConfigureIndexes(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PurchaseOrder>()
+                .HasIndex(po => new { po.VendorId, po.InvoiceNumber })
+                .IsUnique();
         }
     }
 }

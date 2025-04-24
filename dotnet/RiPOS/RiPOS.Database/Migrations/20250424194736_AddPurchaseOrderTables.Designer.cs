@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RiPOS.Database;
@@ -11,9 +12,11 @@ using RiPOS.Database;
 namespace RiPOS.Database.Migrations
 {
     [DbContext(typeof(RiPosDbContext))]
-    partial class RiPosDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250424194736_AddPurchaseOrderTables")]
+    partial class AddPurchaseOrderTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -433,26 +436,6 @@ namespace RiPOS.Database.Migrations
                     b.ToTable("InventoryTransferDetails");
                 });
 
-            modelBuilder.Entity("RiPOS.Domain.Entities.PaymentMethod", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("integer");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PaymentMethods");
-                });
-
             modelBuilder.Entity("RiPOS.Domain.Entities.ProductCategory", b =>
                 {
                     b.Property<int>("ProductHeaderId")
@@ -649,7 +632,7 @@ namespace RiPOS.Database.Migrations
                     b.Property<DateTime>("OrderDateTime")
                         .HasColumnType("timestamptz");
 
-                    b.Property<int>("PurchaseOrderStatusId")
+                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<int>("StoreId")
@@ -666,8 +649,6 @@ namespace RiPOS.Database.Migrations
                     b.HasIndex("CreationByUserId");
 
                     b.HasIndex("LastModificationByUserId");
-
-                    b.HasIndex("PurchaseOrderStatusId");
 
                     b.HasIndex("StoreId");
 
@@ -757,7 +738,8 @@ namespace RiPOS.Database.Migrations
 
                     b.Property<string>("Note")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)");
 
                     b.Property<int>("PurchaseOrderId")
                         .HasColumnType("integer");
@@ -1133,119 +1115,6 @@ namespace RiPOS.Database.Migrations
                     b.ToTable("Vendors");
                 });
 
-            modelBuilder.Entity("RiPOS.Domain.Entities.VendorDebt", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CreationByUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreationDateTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("timestamptz");
-
-                    b.Property<int?>("LastModificationByUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int>("PurchaseOrderId")
-                        .HasColumnType("integer");
-
-                    b.Property<decimal>("RemainingAmount")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<int?>("VendorId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreationByUserId");
-
-                    b.HasIndex("LastModificationByUserId");
-
-                    b.HasIndex("PurchaseOrderId");
-
-                    b.HasIndex("VendorId");
-
-                    b.ToTable("VendorDebts");
-                });
-
-            modelBuilder.Entity("RiPOS.Domain.Entities.VendorPayment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<int?>("CreationByUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("CreationDateTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<int?>("LastModificationByUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("LastModificationDateTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamptz")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("PaymentDateTime")
-                        .HasColumnType("timestamptz");
-
-                    b.Property<int>("PaymentMethodId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ReferenceCode")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<int>("VendorDebtId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreationByUserId");
-
-                    b.HasIndex("LastModificationByUserId");
-
-                    b.HasIndex("PaymentMethodId");
-
-                    b.HasIndex("VendorDebtId");
-
-                    b.ToTable("VendorPayments");
-                });
-
             modelBuilder.Entity("RiPOS.Domain.Entities.Brand", b =>
                 {
                     b.HasOne("RiPOS.Domain.Entities.User", "CreationByUser")
@@ -1538,12 +1407,6 @@ namespace RiPOS.Database.Migrations
                         .WithMany()
                         .HasForeignKey("LastModificationByUserId");
 
-                    b.HasOne("RiPOS.Domain.Entities.PurchaseOrderStatus", "PurchaseOrderStatus")
-                        .WithMany()
-                        .HasForeignKey("PurchaseOrderStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RiPOS.Domain.Entities.Store", "Store")
                         .WithMany()
                         .HasForeignKey("StoreId")
@@ -1559,8 +1422,6 @@ namespace RiPOS.Database.Migrations
                     b.Navigation("CreationByUser");
 
                     b.Navigation("LastModificationByUser");
-
-                    b.Navigation("PurchaseOrderStatus");
 
                     b.Navigation("Store");
 
@@ -1727,64 +1588,6 @@ namespace RiPOS.Database.Migrations
                     b.Navigation("LastModificationByUser");
                 });
 
-            modelBuilder.Entity("RiPOS.Domain.Entities.VendorDebt", b =>
-                {
-                    b.HasOne("RiPOS.Domain.Entities.User", "CreationByUser")
-                        .WithMany()
-                        .HasForeignKey("CreationByUserId");
-
-                    b.HasOne("RiPOS.Domain.Entities.User", "LastModificationByUser")
-                        .WithMany()
-                        .HasForeignKey("LastModificationByUserId");
-
-                    b.HasOne("RiPOS.Domain.Entities.PurchaseOrder", "PurchaseOrder")
-                        .WithMany()
-                        .HasForeignKey("PurchaseOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RiPOS.Domain.Entities.Vendor", null)
-                        .WithMany("VendorDebts")
-                        .HasForeignKey("VendorId");
-
-                    b.Navigation("CreationByUser");
-
-                    b.Navigation("LastModificationByUser");
-
-                    b.Navigation("PurchaseOrder");
-                });
-
-            modelBuilder.Entity("RiPOS.Domain.Entities.VendorPayment", b =>
-                {
-                    b.HasOne("RiPOS.Domain.Entities.User", "CreationByUser")
-                        .WithMany()
-                        .HasForeignKey("CreationByUserId");
-
-                    b.HasOne("RiPOS.Domain.Entities.User", "LastModificationByUser")
-                        .WithMany()
-                        .HasForeignKey("LastModificationByUserId");
-
-                    b.HasOne("RiPOS.Domain.Entities.PaymentMethod", "PaymentMethod")
-                        .WithMany()
-                        .HasForeignKey("PaymentMethodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RiPOS.Domain.Entities.VendorDebt", "VendorDebt")
-                        .WithMany()
-                        .HasForeignKey("VendorDebtId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreationByUser");
-
-                    b.Navigation("LastModificationByUser");
-
-                    b.Navigation("PaymentMethod");
-
-                    b.Navigation("VendorDebt");
-                });
-
             modelBuilder.Entity("RiPOS.Domain.Entities.ProductDetail", b =>
                 {
                     b.Navigation("ProductColors");
@@ -1814,8 +1617,6 @@ namespace RiPOS.Database.Migrations
             modelBuilder.Entity("RiPOS.Domain.Entities.Vendor", b =>
                 {
                     b.Navigation("PurchaseOrders");
-
-                    b.Navigation("VendorDebts");
                 });
 #pragma warning restore 612, 618
         }

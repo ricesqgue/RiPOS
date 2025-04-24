@@ -55,5 +55,9 @@ namespace RiPOS.Domain.Entities
 
         [Required]
         public bool IsActive { get; set; } = true;
+
+        public ICollection<PurchaseOrder> PurchaseOrders { get; set; } = new List<PurchaseOrder>();
+
+        public ICollection<VendorDebt> VendorDebts { get; set; } = new List<VendorDebt>();
     }
 }

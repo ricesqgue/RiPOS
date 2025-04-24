@@ -7,4 +7,8 @@
     <UserSecretsId>e3a632f8-ee1b-4e58-92cf-e36fecd15a96</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RiPOS.Shared\RiPOS.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
