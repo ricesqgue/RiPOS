@@ -1,9 +1,8 @@
 ﻿using RiPOS.Domain.Entities;
 
-namespace RiPOS.Repository.Interfaces
+namespace RiPOS.Repository.Interfaces;
+
+public interface IMiscRepository
 {
-    public interface IMiscRepository
-    {
-        Task<ICollection<CountryState>> GetAllCountryStatesAsync();
-    }
+    Task<ICollection<CountryState>> GetAllCountryStatesAsync();
 }

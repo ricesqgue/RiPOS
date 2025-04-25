@@ -1,8 +1,7 @@
 ﻿using RiPOS.Domain.Entities;
 
-namespace RiPOS.Repository.Interfaces
+namespace RiPOS.Repository.Interfaces;
+
+public interface IColorRepository : IGenericRepository<Color>
 {
-    public interface IColorRepository : IGenericRepository<Color>
-    {
-    }
 }
