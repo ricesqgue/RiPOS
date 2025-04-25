@@ -1,110 +1,109 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
 using RiPOS.Database;
 
-namespace RiPOS.Repository.Session
+namespace RiPOS.Repository.Session;
+
+public class RepositorySession : IRepositorySession, IDisposable
 {
-    public class RepositorySession : IRepositorySession, IDisposable
+    private readonly RiPosDbContext _context;
+    private IDbContextTransaction? _transaction;
+
+    public RepositorySession(RiPosDbContext context)
     {
-        private readonly RiPosDbContext _context;
-        private IDbContextTransaction? _transaction;
+        _context = context;
+        StartTransaction();
+    }
 
-        public RepositorySession(RiPosDbContext context)
+    public RiPosDbContext DbContext => _context;
+
+    private void StartTransaction()
+    {
+        if (_transaction == null)
         {
-            _context = context;
-            StartTransaction();
+            _transaction = _context.Database.BeginTransaction();
         }
+    }
 
-        public RiPosDbContext DbContext => _context;
-
-        private void StartTransaction()
+    public async Task StartTransactionAsync()
+    {
+        if (_transaction == null)
         {
-            if (_transaction == null)
-            {
-                _transaction = _context.Database.BeginTransaction();
-            }
+            _transaction = await _context.Database.BeginTransactionAsync();
         }
+    }
 
-        public async Task StartTransactionAsync()
+    public void Commit()
+    {
+        try
         {
-            if (_transaction == null)
-            {
-                _transaction = await _context.Database.BeginTransactionAsync();
-            }
+            _transaction?.Commit();
         }
-
-        public void Commit()
+        catch
         {
-            try
-            {
-                _transaction?.Commit();
-            }
-            catch
-            {
-                Rollback();
-                throw;
-            }
+            Rollback();
+            throw;
         }
+    }
 
-        public async Task CommitAsync()
+    public async Task CommitAsync()
+    {
+        try
         {
-            try
+            if (_transaction != null)
             {
-                if (_transaction != null)
-                {
-                    await _transaction.CommitAsync();
-                }
-            }
-            catch
-            {
-                await RollbackAsync();
-                throw;
+                await _transaction.CommitAsync();
             }
         }
-
-        public void Rollback () 
+        catch
         {
-            try
-            {
-                _transaction?.Rollback();
-            }
-            finally
-            {
-                _transaction?.Dispose();
-                _transaction = null;
-            }
+            await RollbackAsync();
+            throw;
         }
+    }
 
-        public async Task RollbackAsync()
+    public void Rollback () 
+    {
+        try
         {
-            try
-            {
-                if (_transaction != null)
-                {
-                    await _transaction.RollbackAsync();
-                }
-            }
-            finally
-            {
-                _transaction?.Dispose();
-                _transaction = null;
-            }
+            _transaction?.Rollback();
         }
-
-        public void Dispose()
+        finally
         {
-            _context.Dispose();
             _transaction?.Dispose();
             _transaction = null;
         }
+    }
 
-        public int SaveChanges()
+    public async Task RollbackAsync()
+    {
+        try
         {
-            return _context.SaveChanges();
+            if (_transaction != null)
+            {
+                await _transaction.RollbackAsync();
+            }
         }
+        finally
+        {
+            _transaction?.Dispose();
+            _transaction = null;
+        }
+    }
 
-        public async Task<int> SaveChangesAsync()
-        {
-           return await _context.SaveChangesAsync();
-        }
+    public void Dispose()
+    {
+        _context.Dispose();
+        _transaction?.Dispose();
+        _transaction = null;
+    }
+
+    public int SaveChanges()
+    {
+        return _context.SaveChanges();
+    }
+
+    public async Task<int> SaveChangesAsync()
+    {
+        return await _context.SaveChangesAsync();
     }
 }

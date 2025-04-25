@@ -1,8 +1,7 @@
-﻿namespace RiPOS.Shared.Enums
+﻿namespace RiPOS.Shared.Enums;
+
+public enum RoleEnum
 {
-    public enum RoleEnum
-    {
-        SuperAdmin = 100,
-        Admin = 1,
-    }
+    SuperAdmin = 100,
+    Admin = 1,
 }

@@ -2,13 +2,12 @@
 using RiPOS.Domain.Entities;
 using RiPOS.Shared.Models.Responses;
 
-namespace RiPOS.Core.MapProfiles
+namespace RiPOS.Core.MapProfiles;
+
+public class MiscProfile : Profile
 {
-    public class MiscProfile : Profile
+    public MiscProfile()
     {
-        public MiscProfile()
-        {
-            CreateMap<CountryState, CountryStateResponse>();
-        }
+        CreateMap<CountryState, CountryStateResponse>();
     }
 }

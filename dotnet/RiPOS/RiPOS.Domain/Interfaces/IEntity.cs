@@ -1,7 +1,6 @@
-﻿namespace RiPOS.Domain.Interfaces
+﻿namespace RiPOS.Domain.Interfaces;
+
+public interface IEntity
 {
-    public interface IEntity
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }

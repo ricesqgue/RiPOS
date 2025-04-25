@@ -1,13 +1,12 @@
 ﻿using RiPOS.Database;
 
-namespace RiPOS.Repository.Session
+namespace RiPOS.Repository.Session;
+
+public class RepositorySessionFactory(RiPosDbContext context) : IRepositorySessionFactory
 {
-    public class RepositorySessionFactory(RiPosDbContext context) : IRepositorySessionFactory
+    public RepositorySession Create()
     {
-        public RepositorySession Create()
-        {
-            var dbSession = new RepositorySession(context);
-            return dbSession;
-        }
+        var dbSession = new RepositorySession(context);
+        return dbSession;
     }
 }

@@ -1,11 +1,10 @@
-﻿namespace RiPOS.Shared.Models.Responses
+﻿namespace RiPOS.Shared.Models.Responses;
+
+public class MessageResponse<T> 
 {
-    public class MessageResponse<T> 
-    {
-        public bool Success { get; set; }
+    public bool Success { get; set; }
 
-        public string? Message { get; set; }
+    public string? Message { get; set; }
 
-        public T? Data { get; set; }
-    }
+    public T? Data { get; set; }
 }

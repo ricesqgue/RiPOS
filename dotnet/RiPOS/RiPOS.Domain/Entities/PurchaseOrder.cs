@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using RiPOS.Domain.Interfaces;
 using RiPOS.Domain.Shared;
-using RiPOS.Shared.Enums;
 
 namespace RiPOS.Domain.Entities;
 

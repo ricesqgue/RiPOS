@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using RiPOS.Database;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
-using RiPOS.Repository.Session;
 
 namespace RiPOS.Repository.Repositories;
 

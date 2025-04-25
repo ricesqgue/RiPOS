@@ -2,7 +2,6 @@
 using RiPOS.Database;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
-using RiPOS.Shared.Enums;
 
 namespace RiPOS.Repository.Repositories;
 

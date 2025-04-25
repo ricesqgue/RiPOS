@@ -1,7 +1,6 @@
-﻿namespace RiPOS.Repository.Session
+﻿namespace RiPOS.Repository.Session;
+
+public interface IRepositorySessionFactory
 {
-    public interface IRepositorySessionFactory
-    {
-        RepositorySession Create();
-    }
+    RepositorySession Create();
 }

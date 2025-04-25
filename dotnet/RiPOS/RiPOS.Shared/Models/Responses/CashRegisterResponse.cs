@@ -1,13 +1,12 @@
-﻿namespace RiPOS.Shared.Models.Responses
+﻿namespace RiPOS.Shared.Models.Responses;
+
+public class CashRegisterResponse
 {
-    public class CashRegisterResponse
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public required string Name { get; set; }
+    public required string Name { get; set; }
 
-        public bool IsActive { get; set; }
+    public bool IsActive { get; set; }
         
-        public int StoreId { get; set; }
-    }
+    public int StoreId { get; set; }
 }

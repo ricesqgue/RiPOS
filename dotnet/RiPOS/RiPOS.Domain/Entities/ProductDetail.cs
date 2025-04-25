@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using RiPOS.Domain.Entities;
 using RiPOS.Domain.Interfaces;
 using RiPOS.Domain.Shared;
 

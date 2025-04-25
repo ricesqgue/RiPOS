@@ -1,5 +1,3 @@
-using RiPOS.Shared.Enums;
-
 namespace RiPOS.Shared.Models.Session;
 
 public class UserSession

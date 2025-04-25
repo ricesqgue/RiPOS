@@ -1,11 +1,10 @@
-﻿namespace RiPOS.Shared.Models.Responses
+﻿namespace RiPOS.Shared.Models.Responses;
+
+public class CountryStateResponse
 {
-    public class CountryStateResponse
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public required string Name { get; set; }
+    public required string Name { get; set; }
 
-        public required string ShortName { get; set; }
-    }
+    public required string ShortName { get; set; }
 }

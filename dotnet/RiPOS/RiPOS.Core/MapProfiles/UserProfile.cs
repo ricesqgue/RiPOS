@@ -1,7 +1,5 @@
 using AutoMapper;
 using RiPOS.Domain.Entities;
-using RiPOS.Repository.Repositories;
-using RiPOS.Shared.Enums;
 using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.Core.MapProfiles;

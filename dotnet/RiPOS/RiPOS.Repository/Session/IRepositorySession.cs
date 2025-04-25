@@ -1,18 +1,17 @@
-﻿namespace RiPOS.Repository.Session
+﻿namespace RiPOS.Repository.Session;
+
+public interface IRepositorySession
 {
-    public interface IRepositorySession
-    {
 
-        void Commit();
+    void Commit();
 
-        Task CommitAsync();
+    Task CommitAsync();
 
-        void Rollback();
+    void Rollback();
 
-        Task RollbackAsync();
+    Task RollbackAsync();
 
-        int SaveChanges();
+    int SaveChanges();
 
-        Task<int> SaveChangesAsync();
-    }
+    Task<int> SaveChangesAsync();
 }

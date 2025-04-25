@@ -1,14 +1,12 @@
 using System.Linq.Expressions;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using RiPOS.Core.Interfaces;
 using RiPOS.Core.Services;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
-using RiPOS.Repository.Repositories;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 using RiPOS.Shared.Models.Settings;

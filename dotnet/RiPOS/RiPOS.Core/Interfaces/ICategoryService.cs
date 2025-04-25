@@ -1,16 +1,14 @@
 ﻿using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
-using RiPOS.Shared.Models;
 
-namespace RiPOS.Core.Interfaces
+namespace RiPOS.Core.Interfaces;
+
+public interface ICategoryService
 {
-    public interface ICategoryService
-    {
-        Task<ICollection<CategoryResponse>> GetAllAsync(bool includeInactives = false);
-        Task<CategoryResponse?> GetByIdAsync(int id);
-        Task<bool> ExistsByIdAsync(int id);
-        Task<MessageResponse<CategoryResponse>> AddAsync(CategoryRequest request, int userId);
-        Task<MessageResponse<CategoryResponse>> UpdateAsync(int id, CategoryRequest request, int userId);
-        Task<MessageResponse<string>> DeactivateAsync(int id, int userId);
-    }
+    Task<ICollection<CategoryResponse>> GetAllAsync(bool includeInactives = false);
+    Task<CategoryResponse?> GetByIdAsync(int id);
+    Task<bool> ExistsByIdAsync(int id);
+    Task<MessageResponse<CategoryResponse>> AddAsync(CategoryRequest request, int userId);
+    Task<MessageResponse<CategoryResponse>> UpdateAsync(int id, CategoryRequest request, int userId);
+    Task<MessageResponse<string>> DeactivateAsync(int id, int userId);
 }

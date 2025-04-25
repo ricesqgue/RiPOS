@@ -1,9 +1,8 @@
 ﻿using RiPOS.Shared.Models.Responses;
 
-namespace RiPOS.Core.Interfaces
+namespace RiPOS.Core.Interfaces;
+
+public interface IMiscService
 {
-    public interface IMiscService
-    {
-        Task<ICollection<CountryStateResponse>> GetAllCountryStatesAsync();
-    }
+    Task<ICollection<CountryStateResponse>> GetAllCountryStatesAsync();
 }
