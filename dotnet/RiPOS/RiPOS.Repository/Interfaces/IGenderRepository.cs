@@ -2,6 +2,4 @@
 
 namespace RiPOS.Repository.Interfaces;
 
-public interface IGenderRepository : IGenericRepository<Gender>
-{
-}
+public interface IGenderRepository : IGenericRepository<Gender>;

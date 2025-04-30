@@ -2,6 +2,4 @@
 
 namespace RiPOS.Repository.Interfaces;
 
-public interface IStoreRepository : IGenericRepository<Store>
-{
-}
+public interface IStoreRepository : IGenericRepository<Store>;

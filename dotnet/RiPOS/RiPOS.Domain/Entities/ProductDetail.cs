@@ -18,7 +18,7 @@ public class ProductDetail : TrackEntityChanges, IEntity
     public required string ProductCode { get; set; }
     
     [Column(TypeName = "decimal(10,2)")]
-    public decimal AdditionalPrice { get; set; } = 0;
+    public decimal AdditionalPrice { get; set; }
     
     [Required]
     public int ProductHeaderId { get; set; }

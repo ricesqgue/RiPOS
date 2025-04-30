@@ -2,6 +2,4 @@
 
 namespace RiPOS.Repository.Interfaces;
 
-public interface IBrandRepository : IGenericRepository<Brand>
-{
-}
+public interface IBrandRepository : IGenericRepository<Brand>;

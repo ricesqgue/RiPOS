@@ -2,6 +2,4 @@
 
 namespace RiPOS.Repository.Interfaces;
 
-public interface ICashRegisterRepository : IGenericRepository<CashRegister>
-{
-}
+public interface ICashRegisterRepository : IGenericRepository<CashRegister>;

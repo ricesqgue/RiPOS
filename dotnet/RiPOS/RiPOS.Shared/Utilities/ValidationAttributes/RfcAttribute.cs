@@ -6,10 +6,6 @@ namespace RiPOS.Shared.Utilities.ValidationAttributes;
 public class RfcAttribute : ValidationAttribute
 {
     public bool AllowEmpty { get; set; } = true;
-    public RfcAttribute()
-    {
-
-    }
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {

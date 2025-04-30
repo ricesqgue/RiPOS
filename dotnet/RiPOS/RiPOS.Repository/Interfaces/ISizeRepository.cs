@@ -2,6 +2,4 @@
 
 namespace RiPOS.Repository.Interfaces;
 
-public interface ISizeRepository : IGenericRepository<Size>
-{
-}
+public interface ISizeRepository : IGenericRepository<Size>;

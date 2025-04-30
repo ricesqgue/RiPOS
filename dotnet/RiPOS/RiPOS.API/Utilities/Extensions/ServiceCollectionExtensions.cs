@@ -100,6 +100,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IAuthService, AuthService>();
         services.AddTransient<IMemoryCacheService, MemoryCacheService>();
         services.AddTransient<IMiscService, MiscService>();
+        services.AddTransient<IProductService, ProductService>();
         services.AddTransient<ISizeService, SizeService>();
         services.AddTransient<IStoreService, StoreService>();
         services.AddTransient<IUserService, UserService>();
@@ -118,6 +119,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IGenderRepository, GenderRepository>();
         services.AddTransient<IAuthRepository, AuthRepository>();
         services.AddTransient<IMiscRepository, MiscRepository>();
+        services.AddTransient<IProductHeaderRepository, ProductHeaderRepository>();
+        services.AddTransient<IProductDetailRepository, ProductDetailRepository>();
         services.AddTransient<ISizeRepository, SizeRepository>();
         services.AddTransient<IStoreRepository, StoreRepository>();
         services.AddTransient<IUserRepository, UserRepository>();

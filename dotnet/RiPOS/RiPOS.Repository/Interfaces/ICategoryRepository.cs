@@ -2,6 +2,4 @@
 
 namespace RiPOS.Repository.Interfaces;
 
-public interface ICategoryRepository : IGenericRepository<Category>
-{
-}
+public interface ICategoryRepository : IGenericRepository<Category>;

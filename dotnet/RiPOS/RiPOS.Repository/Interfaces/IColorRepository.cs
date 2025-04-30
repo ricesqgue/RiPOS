@@ -2,6 +2,4 @@
 
 namespace RiPOS.Repository.Interfaces;
 
-public interface IColorRepository : IGenericRepository<Color>
-{
-}
+public interface IColorRepository : IGenericRepository<Color>;

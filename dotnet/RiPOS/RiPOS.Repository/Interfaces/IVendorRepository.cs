@@ -2,6 +2,4 @@
 
 namespace RiPOS.Repository.Interfaces;
 
-public interface IVendorRepository : IGenericRepository<Vendor>
-{
-}
+public interface IVendorRepository : IGenericRepository<Vendor>;

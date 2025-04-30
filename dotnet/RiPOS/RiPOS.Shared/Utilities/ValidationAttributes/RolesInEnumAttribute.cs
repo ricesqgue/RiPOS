@@ -5,11 +5,6 @@ namespace RiPOS.Shared.Utilities.ValidationAttributes;
 
 public class RolesInEnumAttribute : ValidationAttribute
 {
-    public RolesInEnumAttribute()
-    {
-
-    }
-
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         try
