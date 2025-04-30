@@ -2,12 +2,13 @@
 using RiPOS.Core.Interfaces;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
+using RiPOS.Repository.Session;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.Core.Services;
 
-public class GenderService(IGenderRepository genderRepository, IMapper mapper) : IGenderService
+public class GenderService(IRepositorySessionFactory repositorySessionFactory, IGenderRepository genderRepository, IMapper mapper) : IGenderService
 {
     public async Task<ICollection<GenderResponse>> GetAllAsync(bool includeInactives = false)
     {
@@ -33,65 +34,70 @@ public class GenderService(IGenderRepository genderRepository, IMapper mapper) :
     public async Task<MessageResponse<GenderResponse>> AddAsync(GenderRequest request, int userId)
     {
         var messageResponse = new MessageResponse<GenderResponse>();
+        var session = await repositorySessionFactory.CreateAsync();
 
-        var gender = mapper.Map<Gender>(request);
-
-        gender.CreationByUserId = userId;
-        gender.LastModificationByUserId = userId;
-        gender.IsActive = true;
-
-        var exists = await genderRepository
-            .ExistsAsync(g => g.Name.ToUpper() == request.Name.Trim().ToUpper() && g.IsActive);
-
-        if (exists)
+        try
         {
-            messageResponse.Success = false;
-            messageResponse.Message = $"Ya existe un género con el nombre \"{gender.Name}\"";
-            return messageResponse;
-        }
+            var exists = await genderRepository
+                .ExistsAsync(g => g.Name.ToUpper() == request.Name.Trim().ToUpper() && g.IsActive);
 
-        messageResponse.Success = await genderRepository.AddAsync(gender);
+            if (exists)
+            {
+                messageResponse.Success = false;
+                messageResponse.Message = $"Ya existe un género con el nombre \"{request.Name.Trim()}\"";
+                return messageResponse;
+            }
+            
+            var gender = mapper.Map<Gender>(request);
 
-        if (messageResponse.Success)
-        {
+            gender.CreationByUserId = userId;
+            gender.LastModificationByUserId = userId;
+            gender.IsActive = true;
+
+            await genderRepository.AddAsync(gender);
+            await session.CommitAsync();
+            
             messageResponse.Success = true;
             messageResponse.Message = $"Género agregado correctamente";
             messageResponse.Data = mapper.Map<GenderResponse>(gender);
         }
-        else
+        catch
         {
+            await session.RollbackAsync();
             messageResponse.Success = false;
             messageResponse.Message = "No se realizó ningún cambio";
         }
-
+        
         return messageResponse;
     }
 
     public async Task<MessageResponse<GenderResponse>> UpdateAsync(int id, GenderRequest request, int userId)
     {
         var messageResponse = new MessageResponse<GenderResponse>();
+        var session = await repositorySessionFactory.CreateAsync();
 
-        var gender = await genderRepository.GetByIdAsync(id);
-
-        if (gender != null)
+        try
         {
-            var exists = await genderRepository
-                .ExistsAsync(g => g.Id != gender.Id && g.Name.ToUpper() == request.Name.ToUpper() && g.IsActive);
+            var gender = await genderRepository.GetByIdAsync(id);
 
-            if (exists)
+            if (gender != null)
             {
-                messageResponse.Success = false;
-                messageResponse.Message = $"Ya existe un género con el nombre \"{gender.Name}\"";
-                return messageResponse;
-            }
+                var exists = await genderRepository
+                    .ExistsAsync(g => g.Id != gender.Id && g.Name.ToUpper() == request.Name.ToUpper() && g.IsActive);
 
-            gender.Name = request.Name.Trim();
-            gender.LastModificationByUserId = userId;
+                if (exists)
+                {
+                    messageResponse.Success = false;
+                    messageResponse.Message = $"Ya existe un género con el nombre \"{gender.Name}\"";
+                    return messageResponse;
+                }
 
-            messageResponse.Success = await genderRepository.UpdateAsync(gender);
+                gender.Name = request.Name.Trim();
+                gender.LastModificationByUserId = userId;
 
-            if (messageResponse.Success)
-            {
+                genderRepository.Update(gender);
+                await session.CommitAsync();
+                
                 messageResponse.Success = true;
                 messageResponse.Message = $"Género modificado correctamente";
                 messageResponse.Data = mapper.Map<GenderResponse>(gender);
@@ -99,46 +105,52 @@ public class GenderService(IGenderRepository genderRepository, IMapper mapper) :
             else
             {
                 messageResponse.Success = false;
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Message = "Género no encontrado";
             }
         }
-        else
+        catch
         {
+            await session.RollbackAsync();
             messageResponse.Success = false;
-            messageResponse.Message = "Género no encontrado";
+            messageResponse.Message = "No se realizó ningún cambio";
         }
+        
         return messageResponse;
     }
 
     public async Task<MessageResponse<string>> DeactivateAsync(int id, int userId)
     {
         var messageResponse = new MessageResponse<string>();
+        var session = await repositorySessionFactory.CreateAsync();
 
-        var gender = await genderRepository.GetByIdAsync(id);
-
-        if (gender != null)
+        try
         {
-            gender.IsActive = false;
-            gender.LastModificationByUserId = userId;
+            var gender = await genderRepository.GetByIdAsync(id);
 
-            messageResponse.Success = await genderRepository.UpdateAsync(gender);
-
-            if (messageResponse.Success)
+            if (gender != null)
             {
+                gender.IsActive = false;
+                gender.LastModificationByUserId = userId;
+
+                genderRepository.Update(gender);
+                await session.CommitAsync();
+           
                 messageResponse.Success = true;
                 messageResponse.Data = $"Género eliminado correctamente";
             }
             else
             {
                 messageResponse.Success = false;
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Message = "Género no encontrado";
             }
         }
-        else
+        catch
         {
+            await session.RollbackAsync();
             messageResponse.Success = false;
-            messageResponse.Message = "Género no encontrado";
+            messageResponse.Message = "No se realizó ningún cambio";
         }
+        
         return messageResponse;
     }
 }

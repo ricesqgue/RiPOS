@@ -4,11 +4,12 @@ using RiPOS.Repository.Interfaces;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 using RiPOS.Domain.Entities;
+using RiPOS.Repository.Session;
 using RiPOS.Shared.Models.Session;
 
 namespace RiPOS.Core.Services;
 
-public class CashRegisterService(ICashRegisterRepository cashRegisterRepository, IMapper mapper) : ICashRegisterService
+public class CashRegisterService(IRepositorySessionFactory repositorySessionFactory, ICashRegisterRepository cashRegisterRepository, IMapper mapper) : ICashRegisterService
 {
         
     public async Task<ICollection<CashRegisterResponse>> GetAllAsync(int storeId, bool includeInactives = false)
@@ -37,65 +38,74 @@ public class CashRegisterService(ICashRegisterRepository cashRegisterRepository,
     public async Task<MessageResponse<CashRegisterResponse>> AddAsync(CashRegisterRequest request, UserSession userSession)
     {
         var messageResponse = new MessageResponse<CashRegisterResponse>();
+        var session = await repositorySessionFactory.CreateAsync();
 
-        var cashRegister = mapper.Map<CashRegister>(request);
-
-        cashRegister.CreationByUserId = userSession.UserId;
-        cashRegister.LastModificationByUserId = userSession.UserId;
-        cashRegister.StoreId = userSession.StoreId;
-        cashRegister.IsActive = true;
-
-        var exists = await cashRegisterRepository.ExistsAsync(c => c.Name.ToUpper() == request.Name.Trim().ToUpper() && c.IsActive && c.StoreId == userSession.StoreId);
-
-        if (exists)
+        try
         {
-            messageResponse.Success = false;
-            messageResponse.Message = $"Ya existe una caja con el nombre \"{cashRegister.Name}\"";
+            var exists = await cashRegisterRepository
+                .ExistsAsync(c => c.Name.ToUpper() == request.Name.Trim().ToUpper() 
+                                  && c.IsActive && c.StoreId == userSession.StoreId);
 
-            return messageResponse;
-        }
+            if (exists)
+            {
+                messageResponse.Success = false;
+                messageResponse.Message = $"Ya existe una caja con el nombre \"{request.Name.Trim()}\"";
 
-        messageResponse.Success = await cashRegisterRepository.AddAsync(cashRegister);
+                return messageResponse;
+            }
+            
+            var cashRegister = mapper.Map<CashRegister>(request);
 
-        if (messageResponse.Success)
-        {
+            cashRegister.CreationByUserId = userSession.UserId;
+            cashRegister.LastModificationByUserId = userSession.UserId;
+            cashRegister.StoreId = userSession.StoreId;
+            cashRegister.IsActive = true;
+
+            await cashRegisterRepository.AddAsync(cashRegister);
+            await session.CommitAsync();
+            
             messageResponse.Success = true;
             messageResponse.Message = $"Caja agregada correctamente";
             messageResponse.Data = mapper.Map<CashRegisterResponse>(cashRegister);
         }
-        else
+        catch
         {
+            await session.RollbackAsync();
             messageResponse.Success = false;
             messageResponse.Message = "No se realizó ningún cambio";
         }
-
+        
         return messageResponse;
     }
 
     public async Task<MessageResponse<CashRegisterResponse>> UpdateAsync(int id, CashRegisterRequest request, UserSession userSession)
     {
         var messageResponse = new MessageResponse<CashRegisterResponse>();
-        var cashRegister = await cashRegisterRepository.GetByIdAsync(id);
+        var session = await repositorySessionFactory.CreateAsync();
 
-        if (cashRegister != null)
+        try
         {
-            var exists = await cashRegisterRepository.ExistsAsync(c => c.Id != cashRegister.Id && c.Name.ToUpper() == request.Name.ToUpper()
-                && c.StoreId == userSession.StoreId && c.IsActive);
-
-            if (exists)
+            var cashRegister = await cashRegisterRepository.GetByIdAsync(id);
+            if (cashRegister != null)
             {
-                messageResponse.Success = false;
-                messageResponse.Message = $"Ya existe una caja con el nombre \"{cashRegister.Name}\"";
-                return messageResponse;
-            }
+                var exists = await cashRegisterRepository
+                    .ExistsAsync(c => c.Id != cashRegister.Id 
+                                      && c.Name.ToUpper() == request.Name.ToUpper() 
+                                      && c.StoreId == userSession.StoreId && c.IsActive);
 
-            cashRegister.Name = request.Name.Trim();
-            cashRegister.LastModificationByUserId = userSession.UserId;
+                if (exists)
+                {
+                    messageResponse.Success = false;
+                    messageResponse.Message = $"Ya existe una caja con el nombre \"{cashRegister.Name}\"";
+                    return messageResponse;
+                }
 
-            messageResponse.Success = await cashRegisterRepository.UpdateAsync(cashRegister);
+                cashRegister.Name = request.Name.Trim();
+                cashRegister.LastModificationByUserId = userSession.UserId;
 
-            if (messageResponse.Success)
-            {
+                cashRegisterRepository.Update(cashRegister);
+                await session.CommitAsync();
+                
                 messageResponse.Success = true;
                 messageResponse.Message = $"Caja modificada correctamente";
                 messageResponse.Data = mapper.Map<CashRegisterResponse>(cashRegister);
@@ -103,13 +113,14 @@ public class CashRegisterService(ICashRegisterRepository cashRegisterRepository,
             else
             {
                 messageResponse.Success = false;
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Message = "Caja no encontrada";
             }
         }
-        else
+        catch
         {
+            await session.RollbackAsync();
             messageResponse.Success = false;
-            messageResponse.Message = "Caja no encontrada";
+            messageResponse.Message = "No se realizó ningún cambio";
         }
         return messageResponse;
     }
@@ -117,32 +128,36 @@ public class CashRegisterService(ICashRegisterRepository cashRegisterRepository,
     public async Task<MessageResponse<string>> DeactivateAsync(int id, int userId)
     {
         var messageResponse = new MessageResponse<string>();
+        var session = await repositorySessionFactory.CreateAsync();
 
-        var cashRegister = await cashRegisterRepository.GetByIdAsync(id);
-
-        if (cashRegister != null)
+        try
         {
-            cashRegister.IsActive = false;
-            cashRegister.LastModificationByUserId = userId;
+            var cashRegister = await cashRegisterRepository.GetByIdAsync(id);
 
-            messageResponse.Success = await cashRegisterRepository.UpdateAsync(cashRegister);
-
-            if (messageResponse.Success)
+            if (cashRegister != null)
             {
+                cashRegister.IsActive = false;
+                cashRegister.LastModificationByUserId = userId;
+
+                cashRegisterRepository.Update(cashRegister);
+                await session.CommitAsync();
+
                 messageResponse.Success = true;
                 messageResponse.Data = $"Caja eliminada correctamente";
             }
             else
             {
                 messageResponse.Success = false;
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Message = "Caja no encontrada";
             }
         }
-        else
+        catch
         {
+            await session.RollbackAsync();
             messageResponse.Success = false;
-            messageResponse.Message = "Caja no encontrada";
+            messageResponse.Message = "No se realizó ningún cambio";
         }
+
         return messageResponse;
     }
 }

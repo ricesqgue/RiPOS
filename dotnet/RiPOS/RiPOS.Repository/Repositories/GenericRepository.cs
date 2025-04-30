@@ -41,7 +41,7 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         
     public async Task<TEntity?> GetByIdAsync(int id)
     {
-        return await _dbSet.AsNoTracking().SingleOrDefaultAsync(e => e.Id == id);
+        return await _dbSet.FindAsync(id);
     }
         
     public async Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> filter, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null)
@@ -56,15 +56,17 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         return await query.SingleOrDefaultAsync(filter);
     }
         
-    public async Task<bool> AddAsync(TEntity entity)
+    public async Task AddAsync(TEntity entity)
     {
         await _dbSet.AddAsync(entity);
-        return await _context.SaveChangesAsync() > 0;
     }
         
-    public async Task<bool> UpdateAsync(TEntity entity, params Expression<Func<TEntity, object>>[] propsToIgnore)
+    public void Update(TEntity entity, params Expression<Func<TEntity, object>>[] propsToIgnore)
     {
-        _dbSet.Attach(entity);
+        if (_context.Entry(entity).State == EntityState.Detached)
+        {
+            _dbSet.Attach(entity);
+        }
         _context.Entry(entity).State = EntityState.Modified;
         
         entity.LastModificationDateTime = DateTime.UtcNow;
@@ -75,8 +77,6 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity>
         {
             _context.Entry(entity).Property(prop).IsModified = false;
         }
-        
-        return await _context.SaveChangesAsync() > 0;
     }
         
     private IQueryable<TEntity> GenerateQuery(Expression<Func<TEntity, bool>>? filter = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null, Expression<Func<TEntity, object>>? orderBy = null, bool orderDesc = false, int pageNumber = 0, int pageSize = 0)

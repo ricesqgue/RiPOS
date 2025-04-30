@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using RiPOS.Core.Interfaces;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
+using RiPOS.Repository.Session;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.Core.Services;
 
-public class CustomerService(ICustomerRepository customerRepository, IMapper mapper) : ICustomerService
+public class CustomerService(IRepositorySessionFactory repositorySessionFactory, ICustomerRepository customerRepository, IMapper mapper) : ICustomerService
 {
     public async Task<ICollection<CustomerResponse>> GetAllAsync(bool includeInactives = false)
     {
@@ -36,95 +37,100 @@ public class CustomerService(ICustomerRepository customerRepository, IMapper map
     public async Task<MessageResponse<CustomerResponse>> AddAsync(CustomerRequest request, int userId)
     {
         var messageResponse = new MessageResponse<CustomerResponse>();
+        var session = await repositorySessionFactory.CreateAsync();
 
-        var customer = mapper.Map<Customer>(request);
-
-        customer.CreationByUserId = userId;
-        customer.LastModificationByUserId = userId;
-        customer.IsActive = true;
-
-        var exists = await customerRepository
-            .FindAsync(c => (customer.Email != null && c.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() 
-                             || (customer.Rfc != null && c.Rfc != null && customer.Rfc != null && c.Rfc == customer.Rfc))
-                            && c.IsActive);
-
-        if (exists != null)
+        try
         {
-            messageResponse.Success = false;
-            if (exists.Email != null && exists.Email.ToUpper() == request.Email?.Trim().ToUpper())
-            {
-                messageResponse.Message = $"Ya existe un cliente con el email \"{customer.Email}\"";
-            }
-            else if (customer.Rfc != null)
-            {
-                messageResponse.Message = $"Ya existe un cliente con el RFC \"{customer.Rfc.ToUpper()}\"";
-            }
-            return messageResponse;
-        }
+            var customer = mapper.Map<Customer>(request);
 
-        messageResponse.Success = await customerRepository.AddAsync(customer);
+            customer.CreationByUserId = userId;
+            customer.LastModificationByUserId = userId;
+            customer.IsActive = true;
 
-        if (messageResponse.Success)
-        {
+            var exists = await customerRepository
+                .FindAsync(c => (customer.Email != null && c.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() 
+                                 || (customer.Rfc != null && c.Rfc != null && customer.Rfc != null && c.Rfc == customer.Rfc))
+                                && c.IsActive);
+
+            if (exists != null)
+            {
+                messageResponse.Success = false;
+                if (exists.Email != null && exists.Email.ToUpper() == request.Email?.Trim().ToUpper())
+                {
+                    messageResponse.Message = $"Ya existe un cliente con el email \"{customer.Email}\"";
+                }
+                else if (customer.Rfc != null)
+                {
+                    messageResponse.Message = $"Ya existe un cliente con el RFC \"{customer.Rfc.ToUpper()}\"";
+                }
+                return messageResponse;
+            }
+
+            await customerRepository.AddAsync(customer);
+            await session.CommitAsync();
+            
             messageResponse.Success = true;
             messageResponse.Message = $"Cliente agregado correctamente";
             messageResponse.Data = mapper.Map<CustomerResponse>(customer);
         }
-        else
+        catch
         {
+            await session.RollbackAsync();
             messageResponse.Success = false;
             messageResponse.Message = "No se realizó ningún cambio";
         }
-
+        
         return messageResponse;
     }
 
     public async Task<MessageResponse<CustomerResponse>> UpdateAsync(int id, CustomerRequest request, int userId)
     {
         var messageResponse = new MessageResponse<CustomerResponse>();
+        var session = await repositorySessionFactory.CreateAsync();
 
-        var customer = await customerRepository.GetByIdAsync(id);
-
-        if (customer != null)
+        try
         {
-            var exists = await customerRepository
-                .FindAsync(c => c.Id != customer.Id 
-                                && (customer.Email != null && c.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() 
-                                    || (customer.Rfc != null && c.Rfc != null && customer.Rfc != null && c.Rfc == customer.Rfc))
-                                && c.IsActive);
+            var customer = await customerRepository.GetByIdAsync(id);
 
-            if (exists != null)
+            if (customer != null)
             {
-                messageResponse.Success = false;
-                if (exists.Email != null && exists.Email.ToUpper() == request.Name.Trim().ToUpper())
+                var exists = await customerRepository
+                    .FindAsync(c => c.Id != customer.Id 
+                                    && (customer.Email != null && c.Email != null && c.Email.ToUpper() == customer.Email.ToUpper() 
+                                        || (customer.Rfc != null && c.Rfc != null && customer.Rfc != null && c.Rfc == customer.Rfc))
+                                    && c.IsActive);
+
+                if (exists != null)
                 {
-                    messageResponse.Message = $"Ya existe un cliente con el email \"{customer.Email}\"";
+                    messageResponse.Success = false;
+                    if (exists.Email != null && exists.Email.ToUpper() == request.Name.Trim().ToUpper())
+                    {
+                        messageResponse.Message = $"Ya existe un cliente con el email \"{customer.Email}\"";
+                    }
+                    else if (customer.Rfc != null)
+                    {
+                        messageResponse.Message = $"Ya existe un cliente con el RFC  \"{customer.Rfc.ToUpper()}\"";
+                    }
+                    return messageResponse;
                 }
-                else if (customer.Rfc != null)
-                {
-                    messageResponse.Message = $"Ya existe un cliente con el RFC  \"{customer.Rfc.ToUpper()}\"";
-                }
-                return messageResponse;
-            }
 
-            customer.Name = request.Name.Trim();
-            customer.Surname = request.Surname.Trim();
-            customer.SecondSurname = request.SecondSurname?.Trim();
-            customer.Email = request.Email?.Trim();
-            customer.PhoneNumber = request.PhoneNumber?.Trim();
-            customer.MobilePhone = request.MobilePhone?.Trim();
-            customer.Address = request.Address?.Trim();
-            customer.City = request.City?.Trim();
-            customer.ZipCode = request.ZipCode?.Trim();
-            customer.Rfc = request.Rfc?.Trim().ToUpper();
-            customer.CountryStateId = request.CountryStateId;
+                customer.Name = request.Name.Trim();
+                customer.Surname = request.Surname.Trim();
+                customer.SecondSurname = request.SecondSurname?.Trim();
+                customer.Email = request.Email?.Trim();
+                customer.PhoneNumber = request.PhoneNumber?.Trim();
+                customer.MobilePhone = request.MobilePhone?.Trim();
+                customer.Address = request.Address?.Trim();
+                customer.City = request.City?.Trim();
+                customer.ZipCode = request.ZipCode?.Trim();
+                customer.Rfc = request.Rfc?.Trim().ToUpper();
+                customer.CountryStateId = request.CountryStateId;
 
-            customer.LastModificationByUserId = userId;
+                customer.LastModificationByUserId = userId;
 
-            messageResponse.Success = await customerRepository.UpdateAsync(customer);
-
-            if (messageResponse.Success)
-            {
+                customerRepository.Update(customer);
+                await session.CommitAsync();
+                
                 messageResponse.Success = true;
                 messageResponse.Message = $"Cliente modificado correctamente";
                 messageResponse.Data = mapper.Map<CustomerResponse>(customer);
@@ -132,14 +138,17 @@ public class CustomerService(ICustomerRepository customerRepository, IMapper map
             else
             {
                 messageResponse.Success = false;
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Message = "Cliente no encontrado";
             }
         }
-        else
+        catch
         {
+            await session.RollbackAsync();
             messageResponse.Success = false;
-            messageResponse.Message = "Cliente no encontrado";
+            messageResponse.Message = "No se realizó ningún cambio";
         }
+
+        
 
         return messageResponse;
     }
@@ -147,33 +156,36 @@ public class CustomerService(ICustomerRepository customerRepository, IMapper map
     public async Task<MessageResponse<string>> DeactivateAsync(int id, int userId)
     {
         var messageResponse = new MessageResponse<string>();
+        var session = await repositorySessionFactory.CreateAsync();
 
-        var customer = await customerRepository.GetByIdAsync(id);
-
-        if (customer != null)
+        try
         {
-            customer.IsActive = false;
-            customer.LastModificationByUserId = userId;
+            var customer = await customerRepository.GetByIdAsync(id);
 
-            messageResponse.Success = await customerRepository.UpdateAsync(customer);
-
-            if (messageResponse.Success)
+            if (customer != null)
             {
+                customer.IsActive = false;
+                customer.LastModificationByUserId = userId;
+
+                customerRepository.Update(customer);
+                await session.CommitAsync();
+                
                 messageResponse.Success = true;
                 messageResponse.Data = $"Cliente eliminado correctamente";
             }
             else
             {
                 messageResponse.Success = false;
-                messageResponse.Message = "No se realizó ningún cambio";
+                messageResponse.Message = "Cliente no encontrado";
             }
         }
-        else
+        catch
         {
+            await session.RollbackAsync();
             messageResponse.Success = false;
-            messageResponse.Message = "Cliente no encontrado";
+            messageResponse.Message = "No se realizó ningún cambio";
         }
-            
+        
         return messageResponse;
     }
 }

@@ -1,8 +1,9 @@
 ﻿namespace RiPOS.Repository.Session;
 
-public interface IRepositorySession
+public interface IRepositorySession : IDisposable
 {
-
+    void StartTransaction();
+    Task StartTransactionAsync();
     void Commit();
 
     Task CommitAsync();

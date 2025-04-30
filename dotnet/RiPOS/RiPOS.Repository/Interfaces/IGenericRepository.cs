@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
+using RiPOS.Domain.Shared;
 
 namespace RiPOS.Repository.Interfaces;
 
-public interface IGenericRepository<TEntity>
+public interface IGenericRepository<TEntity> where TEntity : TrackEntityChanges
 {
     Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter);
 
@@ -16,7 +17,7 @@ public interface IGenericRepository<TEntity>
     Task<TEntity?> FindAsync(Expression<Func<TEntity, bool>> filter,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProps = null);
 
-    Task<bool> AddAsync(TEntity entity);
+    Task AddAsync(TEntity entity);
 
-    Task<bool> UpdateAsync(TEntity entity, params Expression<Func<TEntity, object>>[] propsToIgnore);
+    void Update(TEntity entity, params Expression<Func<TEntity, object>>[] propsToIgnore);
 }

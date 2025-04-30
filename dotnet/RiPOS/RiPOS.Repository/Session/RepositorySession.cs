@@ -3,24 +3,17 @@ using RiPOS.Database;
 
 namespace RiPOS.Repository.Session;
 
-public class RepositorySession : IRepositorySession, IDisposable
+public class RepositorySession(RiPosDbContext context) : IRepositorySession, IDisposable
 {
-    private readonly RiPosDbContext _context;
-    private IDbContextTransaction? _transaction;
+    private IDbContextTransaction? _transaction = null;
 
-    public RepositorySession(RiPosDbContext context)
-    {
-        _context = context;
-        StartTransaction();
-    }
+    public RiPosDbContext DbContext => context;
 
-    public RiPosDbContext DbContext => _context;
-
-    private void StartTransaction()
+    public void StartTransaction()
     {
         if (_transaction == null)
         {
-            _transaction = _context.Database.BeginTransaction();
+            _transaction = context.Database.BeginTransaction();
         }
     }
 
@@ -28,7 +21,7 @@ public class RepositorySession : IRepositorySession, IDisposable
     {
         if (_transaction == null)
         {
-            _transaction = await _context.Database.BeginTransactionAsync();
+            _transaction = await context.Database.BeginTransactionAsync();
         }
     }
 
@@ -36,6 +29,7 @@ public class RepositorySession : IRepositorySession, IDisposable
     {
         try
         {
+            SaveChanges();
             _transaction?.Commit();
         }
         catch
@@ -49,6 +43,7 @@ public class RepositorySession : IRepositorySession, IDisposable
     {
         try
         {
+            await SaveChangesAsync();
             if (_transaction != null)
             {
                 await _transaction.CommitAsync();
@@ -92,18 +87,18 @@ public class RepositorySession : IRepositorySession, IDisposable
 
     public void Dispose()
     {
-        _context.Dispose();
+        context.Dispose();
         _transaction?.Dispose();
         _transaction = null;
     }
 
     public int SaveChanges()
     {
-        return _context.SaveChanges();
+        return context.SaveChanges();
     }
 
     public async Task<int> SaveChangesAsync()
     {
-        return await _context.SaveChangesAsync();
+        return await context.SaveChangesAsync();
     }
 }

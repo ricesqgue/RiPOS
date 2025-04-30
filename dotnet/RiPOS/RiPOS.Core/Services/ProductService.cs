@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using RiPOS.Core.Interfaces;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
+using RiPOS.Repository.Session;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Responses;
 
 namespace RiPOS.Core.Services;
 
-public class ProductService(IProductHeaderRepository productHeaderRepository, IProductDetailRepository productDetailRepository, IMapper mapper) : IProductService
+public class ProductService(IRepositorySessionFactory repositorySessionFactory, IProductHeaderRepository productHeaderRepository, IProductDetailRepository productDetailRepository, IMapper mapper) : IProductService
 {
     public async Task<ICollection<ProductHeaderResponse>> GetAllHeadersAsync(bool includeInactives = false)
     {
@@ -61,45 +62,48 @@ public class ProductService(IProductHeaderRepository productHeaderRepository, IP
     public async Task<MessageResponse<ProductHeaderResponse>> AddAsync(ProductHeaderRequest request, int userId)
     {
         var messageResponse = new MessageResponse<ProductHeaderResponse>();
+        var session = await repositorySessionFactory.CreateAsync();
 
-        var productHeader = mapper.Map<ProductHeader>(request);
+        try
+        {
+            var productHeader = mapper.Map<ProductHeader>(request);
 
-        productHeader.CreationByUserId = userId;
-        productHeader.LastModificationByUserId = userId;
-        productHeader.IsActive = true;
+            productHeader.CreationByUserId = userId;
+            productHeader.LastModificationByUserId = userId;
+            productHeader.IsActive = true;
         
-        var exists = await productHeaderRepository
-            .FindAsync(c => (c.Name.ToUpper() == request.Name.Trim().ToUpper() ||  c.Sku.ToUpper() == request.Sku.Trim().ToUpper()) 
-                            && c.IsActive);
+            var exists = await productHeaderRepository
+                .FindAsync(c => (c.Name.ToUpper() == request.Name.Trim().ToUpper() ||  c.Sku.ToUpper() == request.Sku.Trim().ToUpper()) 
+                                && c.IsActive);
 
-        if (exists != null)
-        {
-            messageResponse.Success = false;
-            if (string.Equals(exists.Name, request.Name.Trim(), StringComparison.CurrentCultureIgnoreCase))
+            if (exists != null)
             {
-                messageResponse.Message = $"Ya existe un producto con el nombre \"{productHeader.Name}\"";
+                messageResponse.Success = false;
+                if (string.Equals(exists.Name, request.Name.Trim(), StringComparison.CurrentCultureIgnoreCase))
+                {
+                    messageResponse.Message = $"Ya existe un producto con el nombre \"{productHeader.Name}\"";
+                }
+                else
+                {
+                    messageResponse.Message = $"Ya existe un producto con el SKU \"{productHeader.Sku}\"";
+                }
+                return messageResponse;
             }
-            else
-            {
-                messageResponse.Message = $"Ya existe un producto con el SKU \"{productHeader.Sku}\"";
-            }
-            return messageResponse;
-        }
 
-        messageResponse.Success = await productHeaderRepository.AddAsync(productHeader);
-
-        if (messageResponse.Success)
-        {
+            await productHeaderRepository.AddAsync(productHeader);
+            await session.CommitAsync();
+            
             messageResponse.Success = true;
             messageResponse.Message = $"Producto agregado correctamente";
             messageResponse.Data = mapper.Map<ProductHeaderResponse>(productHeader);
         }
-        else
+        catch
         {
+            await session.RollbackAsync();
             messageResponse.Success = false;
             messageResponse.Message = "No se realizó ningún cambio";
         }
-
+        
         return messageResponse;
     }
 }

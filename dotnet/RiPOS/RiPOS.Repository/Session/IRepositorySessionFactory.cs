@@ -2,5 +2,8 @@
 
 public interface IRepositorySessionFactory
 {
-    RepositorySession Create();
+    Task<IRepositorySession> CreateAsync(bool startTransaction = true);
+    
+    IRepositorySession Create(bool startTransaction = true);
+
 }
