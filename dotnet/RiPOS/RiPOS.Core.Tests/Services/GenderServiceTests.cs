@@ -5,6 +5,7 @@ using RiPOS.Core.MapProfiles;
 using RiPOS.Core.Services;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
+using RiPOS.Repository.Session;
 using RiPOS.Shared.Models.Requests;
 
 namespace RiPOS.Core.Tests.Services;
@@ -13,7 +14,7 @@ public class GenderServiceTests
 {
     private readonly GenderService _genderService;
     private readonly Mock<IGenderRepository> _genderRepositoryMock;
-
+    
     public GenderServiceTests()
     {
         var config = new MapperConfiguration(config =>
@@ -23,7 +24,13 @@ public class GenderServiceTests
         
         var mapper = config.CreateMapper();
         _genderRepositoryMock = new Mock<IGenderRepository>();
-        _genderService = new GenderService(_genderRepositoryMock.Object, mapper);
+
+        var repositorySessionMock = new Mock<IRepositorySession>();
+        Mock<IRepositorySessionFactory> repositorySessionFactoryMock = new Mock<IRepositorySessionFactory>();
+        repositorySessionFactoryMock.Setup(f => f.CreateAsync(It.IsAny<bool>()))
+            .ReturnsAsync(repositorySessionMock.Object);
+        
+        _genderService = new GenderService(repositorySessionFactoryMock.Object, _genderRepositoryMock.Object, mapper);
     }
     
     [Fact]
@@ -113,8 +120,6 @@ public class GenderServiceTests
         var request = new GenderRequest { Name = "Boy" };
         _genderRepositoryMock.Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<Gender, bool>>>()))
             .ReturnsAsync(false);
-        _genderRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Gender>()))
-            .ReturnsAsync(true);
 
         var result = await _genderService.AddAsync(request, 1);
 
@@ -144,8 +149,6 @@ public class GenderServiceTests
             .ReturnsAsync(gender);
         _genderRepositoryMock.Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<Gender, bool>>>()))
             .ReturnsAsync(false);
-        _genderRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Gender>()))
-            .ReturnsAsync(true);
 
         var result = await _genderService.UpdateAsync(1, request, 1);
 
@@ -172,8 +175,6 @@ public class GenderServiceTests
         var gender = new Gender { Id = 1, Name = "Male", IsActive = true };
         _genderRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(gender);
-        _genderRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Gender>()))
-            .ReturnsAsync(true);
 
         var result = await _genderService.DeactivateAsync(1, 1);
 

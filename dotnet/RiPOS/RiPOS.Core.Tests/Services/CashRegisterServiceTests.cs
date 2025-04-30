@@ -6,6 +6,7 @@ using RiPOS.Core.MapProfiles;
 using RiPOS.Core.Services;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
+using RiPOS.Repository.Session;
 using RiPOS.Shared.Models.Requests;
 using RiPOS.Shared.Models.Session;
 
@@ -25,7 +26,13 @@ public class CashRegisterServiceTests
         var mapper = config.CreateMapper();
         
         _cashRegisterRepositoryMock = new Mock<ICashRegisterRepository>();
-        _cashRegisterService = new CashRegisterService(_cashRegisterRepositoryMock.Object, mapper);
+        var repositorySessionMock = new Mock<IRepositorySession>();
+        
+        Mock<IRepositorySessionFactory> repositorySessionFactoryMock = new Mock<IRepositorySessionFactory>();
+        repositorySessionFactoryMock.Setup(f => f.CreateAsync(It.IsAny<bool>()))
+            .ReturnsAsync(repositorySessionMock.Object);
+        
+        _cashRegisterService = new CashRegisterService(repositorySessionFactoryMock.Object, _cashRegisterRepositoryMock.Object, mapper);
     }
     
     [Fact]
@@ -127,9 +134,7 @@ public class CashRegisterServiceTests
         var request = new CashRegisterRequest { Name = "NewRegister" };
         _cashRegisterRepositoryMock.Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<CashRegister, bool>>>()))
             .ReturnsAsync(false);
-        _cashRegisterRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<CashRegister>()))
-            .ReturnsAsync(true);
-
+        
         var result = await _cashRegisterService.AddAsync(request, new UserSession() { UserId = 1, StoreId = 1});
 
         Assert.True(result.Success);
@@ -158,9 +163,7 @@ public class CashRegisterServiceTests
             .ReturnsAsync(cashRegister);
         _cashRegisterRepositoryMock.Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<CashRegister, bool>>>()))
             .ReturnsAsync(false);
-        _cashRegisterRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<CashRegister>()))
-            .ReturnsAsync(true);
-
+        
         var result = await _cashRegisterService.UpdateAsync(1, request, new UserSession() { UserId = 1, StoreId = 1});
 
         Assert.True(result.Success);
@@ -186,9 +189,7 @@ public class CashRegisterServiceTests
         var cashRegister = new CashRegister { Id = 1, Name = "RegisterToDeactivate", IsActive = true };
         _cashRegisterRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(cashRegister);
-        _cashRegisterRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<CashRegister>()))
-            .ReturnsAsync(true);
-
+        
         var result = await _cashRegisterService.DeactivateAsync(1, 1);
 
         Assert.True(result.Success);

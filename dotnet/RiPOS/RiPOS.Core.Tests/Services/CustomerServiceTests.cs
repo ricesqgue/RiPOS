@@ -6,6 +6,7 @@ using RiPOS.Core.MapProfiles;
 using RiPOS.Core.Services;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
+using RiPOS.Repository.Session;
 using RiPOS.Shared.Models.Requests;
 
 namespace RiPOS.Core.Tests.Services;
@@ -14,7 +15,7 @@ public class CustomerServiceTests
 {
     private readonly CustomerService _customerService;
     private readonly Mock<ICustomerRepository> _customerRepositoryMock;
-
+    
     public CustomerServiceTests()
     {
         var config = new MapperConfiguration(config =>
@@ -23,7 +24,13 @@ public class CustomerServiceTests
         });
         var mapper = config.CreateMapper();
         _customerRepositoryMock = new Mock<ICustomerRepository>();
-        _customerService = new CustomerService(_customerRepositoryMock.Object, mapper);
+
+        var repositorySessionMock = new Mock<IRepositorySession>();
+        Mock<IRepositorySessionFactory> repositorySessionFactoryMock = new Mock<IRepositorySessionFactory>();
+        repositorySessionFactoryMock.Setup(f => f.CreateAsync(It.IsAny<bool>()))
+            .ReturnsAsync(repositorySessionMock.Object);
+        
+        _customerService = new CustomerService(repositorySessionFactoryMock.Object, _customerRepositoryMock.Object, mapper);
     }
     
     [Fact]
@@ -113,8 +120,6 @@ public class CustomerServiceTests
         var request = new CustomerRequest { Name = "NewCustomer", Surname = "customer1", CountryStateId  = 1, Email = "newcustomer@example.com" };
         _customerRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<Customer, bool>>>(), null))
             .ReturnsAsync((Customer?)null);
-        _customerRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Customer>()))
-            .ReturnsAsync(true);
 
         var result = await _customerService.AddAsync(request, 1);
 
@@ -145,9 +150,7 @@ public class CustomerServiceTests
             .ReturnsAsync(customer);
         _customerRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<Customer, bool>>>(), null))
             .ReturnsAsync((Customer?)null);
-        _customerRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Customer>()))
-            .ReturnsAsync(true);
-
+        
         var result = await _customerService.UpdateAsync(1, request, 1);
 
         Assert.True(result.Success);
@@ -173,8 +176,6 @@ public class CustomerServiceTests
         var customer = new Customer { Id = 1, Name = "Customer1", Surname = "customer1", CountryStateId  = 1, IsActive = true };
         _customerRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(customer);
-        _customerRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Customer>()))
-            .ReturnsAsync(true);
 
         var result = await _customerService.DeactivateAsync(1, 1);
 

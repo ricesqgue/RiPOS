@@ -5,6 +5,7 @@ using RiPOS.Core.MapProfiles;
 using RiPOS.Core.Services;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
+using RiPOS.Repository.Session;
 using RiPOS.Shared.Models.Requests;
 
 namespace RiPOS.Core.Tests.Services;
@@ -23,7 +24,13 @@ public class ColorServiceTests
         
         var mapper = config.CreateMapper();
         _colorRepositoryMock = new Mock<IColorRepository>();
-        _colorService = new ColorService(_colorRepositoryMock.Object, mapper);
+
+        var repositorySessionMock = new Mock<IRepositorySession>();
+        Mock<IRepositorySessionFactory> repositorySessionFactoryMock = new Mock<IRepositorySessionFactory>();
+        repositorySessionFactoryMock.Setup(f => f.CreateAsync(It.IsAny<bool>()))
+            .ReturnsAsync(repositorySessionMock.Object);
+        
+        _colorService = new ColorService(repositorySessionFactoryMock.Object, _colorRepositoryMock.Object, mapper);
     }
     
     [Fact]
@@ -113,9 +120,7 @@ public class ColorServiceTests
         var request = new ColorRequest { Name = "NewColor", RgbHex = "#FFFFFF" };
         _colorRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<Color, bool>>>(), null))
             .ReturnsAsync((Color?)null);
-        _colorRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Color>()))
-            .ReturnsAsync(true);
-
+        
         var result = await _colorService.AddAsync(request, 1);
 
         Assert.True(result.Success);
@@ -145,9 +150,7 @@ public class ColorServiceTests
             .ReturnsAsync(color);
         _colorRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<Color, bool>>>(), null))
             .ReturnsAsync((Color?)null);
-        _colorRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Color>()))
-            .ReturnsAsync(true);
-
+        
         var result = await _colorService.UpdateAsync(1, request, 1);
 
         Assert.True(result.Success);
@@ -173,9 +176,7 @@ public class ColorServiceTests
         var color = new Color { Id = 1, Name = "Color1", RgbHex = "#FFFFFF", IsActive = true };
         _colorRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(color);
-        _colorRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Color>()))
-            .ReturnsAsync(true);
-
+        
         var result = await _colorService.DeactivateAsync(1, 1);
 
         Assert.True(result.Success);

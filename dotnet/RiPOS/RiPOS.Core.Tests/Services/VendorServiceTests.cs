@@ -6,6 +6,7 @@ using RiPOS.Core.MapProfiles;
 using RiPOS.Core.Services;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
+using RiPOS.Repository.Session;
 using RiPOS.Shared.Models.Requests;
 
 namespace RiPOS.Core.Tests.Services;
@@ -14,7 +15,7 @@ public class VendorServiceTests
 {
     private readonly VendorService _vendorService;
     private readonly Mock<IVendorRepository> _vendorRepositoryMock;
-
+    
     public VendorServiceTests()
     {
         var config = new MapperConfiguration(config =>
@@ -24,7 +25,13 @@ public class VendorServiceTests
         
         var mapper = config.CreateMapper();
         _vendorRepositoryMock = new Mock<IVendorRepository>();
-        _vendorService = new VendorService(_vendorRepositoryMock.Object, mapper);
+
+        var repositorySessionMock = new Mock<IRepositorySession>();
+        Mock<IRepositorySessionFactory> repositorySessionFactoryMock = new Mock<IRepositorySessionFactory>();
+        repositorySessionFactoryMock.Setup(f => f.CreateAsync(It.IsAny<bool>()))
+            .ReturnsAsync(repositorySessionMock.Object);
+        
+        _vendorService = new VendorService(repositorySessionFactoryMock.Object, _vendorRepositoryMock.Object, mapper);
     }
     
     [Fact]
@@ -114,8 +121,6 @@ public class VendorServiceTests
         var request = new VendorRequest { Name = "NewVendor", Surname = "Surname", CountryStateId = 1 };
         _vendorRepositoryMock.Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<Vendor, bool>>>()))
             .ReturnsAsync(false);
-        _vendorRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Vendor>()))
-            .ReturnsAsync(true);
 
         var result = await _vendorService.AddAsync(request, 1);
 
@@ -145,8 +150,6 @@ public class VendorServiceTests
             .ReturnsAsync(vendor);
         _vendorRepositoryMock.Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<Vendor, bool>>>()))
             .ReturnsAsync(false);
-        _vendorRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Vendor>()))
-            .ReturnsAsync(true);
 
         var result = await _vendorService.UpdateAsync(1, request, 1);
 
@@ -173,8 +176,6 @@ public class VendorServiceTests
         var vendor = new Vendor { Id = 1, Name = "Vendor1", Surname = "Test", IsActive = true };
         _vendorRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(vendor);
-        _vendorRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Vendor>()))
-            .ReturnsAsync(true);
 
         var result = await _vendorService.DeactivateAsync(1, 1);
 

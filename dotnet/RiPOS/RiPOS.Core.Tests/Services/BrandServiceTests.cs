@@ -5,6 +5,7 @@ using RiPOS.Core.MapProfiles;
 using RiPOS.Core.Services;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
+using RiPOS.Repository.Session;
 using RiPOS.Shared.Models.Requests;
 
 namespace RiPOS.Core.Tests.Services;
@@ -23,7 +24,13 @@ public class BrandServiceTests
         var mapper = config.CreateMapper();
         
         _brandRepositoryMock = new Mock<IBrandRepository>();
-        _brandService = new BrandService(_brandRepositoryMock.Object, mapper);
+        
+        var repositorySessionMock = new Mock<IRepositorySession>();
+        Mock<IRepositorySessionFactory> repositorySessionFactoryMock = new Mock<IRepositorySessionFactory>();
+        repositorySessionFactoryMock.Setup(f => f.CreateAsync(It.IsAny<bool>()))
+            .ReturnsAsync(repositorySessionMock.Object);
+        
+        _brandService = new BrandService(repositorySessionFactoryMock.Object, _brandRepositoryMock.Object, mapper);
     }
     
     [Fact]
@@ -118,9 +125,7 @@ public class BrandServiceTests
         var request = new BrandRequest { Name = "NewBrand" };
         _brandRepositoryMock.Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<Brand, bool>>>()))
             .ReturnsAsync(false);
-        _brandRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Brand>()))
-            .ReturnsAsync(true);
-
+        
         var result = await _brandService.AddAsync(request, 1);
 
         Assert.True(result.Success);
@@ -149,8 +154,6 @@ public class BrandServiceTests
             .ReturnsAsync(brand);
         _brandRepositoryMock.Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<Brand, bool>>>()))
             .ReturnsAsync(false);
-        _brandRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Brand>()))
-            .ReturnsAsync(true);
 
         var result = await _brandService.UpdateAsync(1, request, 1);
 
@@ -177,8 +180,6 @@ public class BrandServiceTests
         var brand = new Brand { Id = 1, Name = "BrandToDeactivate", IsActive = true };
         _brandRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(brand);
-        _brandRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Brand>()))
-            .ReturnsAsync(true);
 
         var result = await _brandService.DeactivateAsync(1, 1);
 

@@ -5,6 +5,7 @@ using RiPOS.Core.MapProfiles;
 using RiPOS.Core.Services;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
+using RiPOS.Repository.Session;
 using RiPOS.Shared.Models.Requests;
 
 namespace RiPOS.Core.Tests.Services;
@@ -13,7 +14,7 @@ public class SizeServiceTests
 {
     private readonly SizeService _sizeService;
     private readonly Mock<ISizeRepository> _sizeRepositoryMock;
-
+    
     public SizeServiceTests()
     {
         var config = new MapperConfiguration(config =>
@@ -23,7 +24,13 @@ public class SizeServiceTests
         
         var mapper = config.CreateMapper();
         _sizeRepositoryMock = new Mock<ISizeRepository>();
-        _sizeService = new SizeService(_sizeRepositoryMock.Object, mapper);
+
+        var repositorySessionMock = new Mock<IRepositorySession>();
+        Mock<IRepositorySessionFactory> repositorySessionFactoryMock = new Mock<IRepositorySessionFactory>();
+        repositorySessionFactoryMock.Setup(f => f.CreateAsync(It.IsAny<bool>()))
+            .ReturnsAsync(repositorySessionMock.Object);
+        
+        _sizeService = new SizeService(repositorySessionFactoryMock.Object, _sizeRepositoryMock.Object, mapper);
     }
     
     [Fact]
@@ -114,8 +121,6 @@ public class SizeServiceTests
 
         _sizeRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<Size, bool>>>(), null))
             .ReturnsAsync((Size?)null);
-        _sizeRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Size>()))
-            .ReturnsAsync(true);
 
         var result = await _sizeService.AddAsync(request, 1);
 
@@ -146,8 +151,6 @@ public class SizeServiceTests
             .ReturnsAsync(size);
         _sizeRepositoryMock.Setup(repo => repo.FindAsync(It.IsAny<Expression<Func<Size, bool>>>(), null))
             .ReturnsAsync((Size?)null);
-        _sizeRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Size>()))
-            .ReturnsAsync(true);
 
         var result = await _sizeService.UpdateAsync(1, request, 1);
 
@@ -174,8 +177,6 @@ public class SizeServiceTests
         var size = new Size { Id = 1, Name = "Small", ShortName = "S", IsActive = true };
         _sizeRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(size);
-        _sizeRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Size>()))
-            .ReturnsAsync(true);
 
         var result = await _sizeService.DeactivateAsync(1, 1);
 

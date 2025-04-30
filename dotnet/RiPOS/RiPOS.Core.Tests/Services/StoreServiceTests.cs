@@ -5,6 +5,7 @@ using RiPOS.Core.MapProfiles;
 using RiPOS.Core.Services;
 using RiPOS.Domain.Entities;
 using RiPOS.Repository.Interfaces;
+using RiPOS.Repository.Session;
 using RiPOS.Shared.Models.Requests;
 
 namespace RiPOS.Core.Tests.Services;
@@ -13,7 +14,7 @@ public class StoreServiceTests
 {
     private readonly StoreService _storeService;
     private readonly Mock<IStoreRepository> _storeRepositoryMock;
-
+    
     public StoreServiceTests()
     {
         var config = new MapperConfiguration(config =>
@@ -23,7 +24,13 @@ public class StoreServiceTests
         
         var mapper = config.CreateMapper();
         _storeRepositoryMock = new Mock<IStoreRepository>();
-        _storeService = new StoreService(_storeRepositoryMock.Object, mapper);
+
+        var repositorySessionMock = new Mock<IRepositorySession>();
+        Mock<IRepositorySessionFactory> repositorySessionFactoryMock = new Mock<IRepositorySessionFactory>();
+        repositorySessionFactoryMock.Setup(f => f.CreateAsync(It.IsAny<bool>()))
+            .ReturnsAsync(repositorySessionMock.Object);
+        
+        _storeService = new StoreService(repositorySessionFactoryMock.Object, _storeRepositoryMock.Object, mapper);
     }
     
     [Fact]
@@ -96,8 +103,6 @@ public class StoreServiceTests
         var request = new StoreRequest { Name = "NewStore" };
         _storeRepositoryMock.Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<Store, bool>>>()))
             .ReturnsAsync(false);
-        _storeRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Store>()))
-            .ReturnsAsync(true);
 
         var result = await _storeService.AddAsync(request, 1);
 
@@ -127,8 +132,6 @@ public class StoreServiceTests
             .ReturnsAsync(store);
         _storeRepositoryMock.Setup(repo => repo.ExistsAsync(It.IsAny<Expression<Func<Store, bool>>>()))
             .ReturnsAsync(false);
-        _storeRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Store>()))
-            .ReturnsAsync(true);
 
         var result = await _storeService.UpdateAsync(1, request, 1);
 
@@ -155,8 +158,6 @@ public class StoreServiceTests
         var store = new Store { Id = 1, Name = "Store1", IsActive = true };
         _storeRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(store);
-        _storeRepositoryMock.Setup(repo => repo.UpdateAsync(It.IsAny<Store>()))
-            .ReturnsAsync(true);
 
         var result = await _storeService.DeactivateAsync(1, 1);
 
